@@ -121,12 +121,36 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
   FDCAN_RxHeaderTypeDef rx_header; // CAN 数据指针
   uint8_t rx_data[8];              // 获取到的数据
 
-  if ((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
-  {
-    HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data);
-    if (hfdcan == &hfdcan2 && Gimbal_CAN_Dispatch(rx_header.Identifier, rx_data))
-      return;
-    // 超电帧
+  // if ((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
+  // {
+  //   HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data);
+  //   if (hfdcan == &hfdcan2 && Gimbal_CAN_Dispatch(rx_header.Identifier, rx_data))
+  //   // 超电帧
+  //   if ((rx_header.Identifier == Supercap_receive_id) ||
+  //       (rx_header.Identifier == Supercap_chassis_power_id))
+  //     Supercup_DecodeCandata(hfdcan, rx_data,rx_header.Identifier);
+  //   // 云台帧
+    
+  //   // 电机帧
+  //   DJIMotor_DecodeCandata(hfdcan, rx_header.Identifier, rx_data);
+  //   DMMotor_DecodeCandata(hfdcan, rx_header.Identifier, rx_data);
+  // }
+  while (HAL_FDCAN_GetRxFifoFillLevel(hfdcan, FDCAN_RX_FIFO0) > 0)
+{
+    if (HAL_FDCAN_GetRxMessage(hfdcan,
+                               FDCAN_RX_FIFO0,
+                               &rx_header,
+                               rx_data) != HAL_OK)
+        break;
+
+    if (hfdcan == &hfdcan2 &&
+        Gimbal_CAN_Dispatch(rx_header.Identifier, rx_data))
+    {
+        continue;   // 只跳过当前帧，不能 return
+    }
+
+    // 处理其他 CAN 电机和超级电容报文
+        // 超电帧
     if ((rx_header.Identifier == Supercap_receive_id) ||
         (rx_header.Identifier == Supercap_chassis_power_id))
       Supercup_DecodeCandata(hfdcan, rx_data,rx_header.Identifier);
@@ -135,7 +159,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     // 电机帧
     DJIMotor_DecodeCandata(hfdcan, rx_header.Identifier, rx_data);
     DMMotor_DecodeCandata(hfdcan, rx_header.Identifier, rx_data);
-  }
+}
 }
 
 /**
