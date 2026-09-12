@@ -2,37 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "STlink",
-      "cwd": "${workspaceRoot}",
-      "executable": "${workspaceRoot}/build/26_Code.elf",
-      "request": "launch",
-      "type": "cortex-debug",
-      "device": "${workspaceRoot}/debug/STM32H723VGTx",
-      "svdFile": "${workspaceRoot}/debug/STM32H723.svd",
-      "servertype": "openocd",
-      "configFiles": [
-        "${workspaceRoot}/debug/stlink.cfg",
-        "${workspaceRoot}/debug/stm32h7x.cfg"
-      ],
-      "liveWatch": {
-        "enabled": true,
-        "samplesPerSecond": 4
-      },
-      "runToEntryPoint": "main",
-      "rtos": "FreeRTOS",
-      "preLaunchTask": "build task"
-    },
-    {
       "name": "DAPlink",
-      "cwd": "${workspaceRoot}",
-      "executable": "${workspaceRoot}/build/26_Code.elf",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/26_Code.elf",
       "request": "launch",
       "type": "cortex-debug",
-      "device": "${workspaceRoot}/debug/STM32H723VGTx",
-      "svdFile": "${workspaceRoot}/debug/STM32H723.svd",
+      "device": "STM32H723VGTx",
+      "svdFile": "${workspaceFolder}/debug/STM32H723.svd",
       "servertype": "openocd",
+      "serverpath": "/opt/homebrew/bin/openocd",
+      "armToolchainPath": "/opt/homebrew/bin",
+      "gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
+      "searchDir": [
+        "/opt/homebrew/share/openocd/scripts",
+        "${workspaceFolder}"
+      ],
       "configFiles": [
-        "${workspaceRoot}/debug/openocd_dap.cfg"
+        "${workspaceFolder}/debug/openocd_dap.cfg"
+      ],
+      "openOCDLaunchCommands": [
+        "adapter speed 1000",
+        "stm32h7x.cpu0 configure -event reset-init { adapter speed 1000 }"
       ],
       "liveWatch": {
         "enabled": true,
@@ -43,23 +33,36 @@
       "preLaunchTask": "build task"
     },
     {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
+      "name": "STlink",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/26_Code.elf",
       "request": "launch",
-      "args": [],
-      "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "d:/RM/code/25-EE-code/Core/Src",
-      "program": "d:/RM/code/25-EE-code/Core/Src/build/Debug/outDebug",
-      "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "type": "cortex-debug",
+      "device": "STM32H723VGTx",
+      "svdFile": "${workspaceFolder}/debug/STM32H723.svd",
+      "servertype": "openocd",
+      "serverpath": "/opt/homebrew/bin/openocd",
+      "armToolchainPath": "/opt/homebrew/bin",
+      "gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
+      "searchDir": [
+        "/opt/homebrew/share/openocd/scripts",
+        "${workspaceFolder}"
+      ],
+      "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32h7x.cfg"
+      ],
+      "openOCDLaunchCommands": [
+        "adapter speed 1000",
+        "stm32h7x.cpu0 configure -event reset-init { adapter speed 1000 }"
+      ],
+      "liveWatch": {
+        "enabled": true,
+        "samplesPerSecond": 4
+      },
+      "runToEntryPoint": "main",
+      "rtos": "FreeRTOS",
+      "preLaunchTask": "build task"
     }
   ]
 }

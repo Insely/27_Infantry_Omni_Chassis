@@ -307,7 +307,6 @@ void Motor_control_Task(void *argument)
       }
   #endif
   #if (USE_SHOOT != 0)
-      DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_1);
       DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_3);
   #endif
   #if (USE_GIMBAL != 0)

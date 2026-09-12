@@ -1,86 +1,50 @@
 {
-    "configurations": [
-        {
-            "name": "macos-gcc-x64",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/Omni/Applications/Software",
-                "/Users/insel/RM/code/25-EE-code/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "MACOS"
-            ],
-            "compilerPath": "$(which gcc)",
-            "compilerArgs": [
-                "-Wall",
-                "-Wextra",
-                "-O0"
-            ],
-            "intelliSenseMode": "macos-gcc-x64",
-            "mergeConfigurations": false,
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/**",
-                    "/Users/insel/RM/code/25-EE-code/**"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "cStandard": "c17",
-            "cppStandard": "c++17"
-        },
-        {
-            "name": "arm-gnu-toolchain-macos",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/User/Algorithm",
-                "${workspaceFolder}/User/Algorithm/Include",
-                "${workspaceFolder}/User/Hardware",
-                "${workspaceFolder}/User/Hardware/IMU",
-                "${workspaceFolder}/User/Hardware/Motor",
-                "${workspaceFolder}/User/Hardware/Remote",
-                "${workspaceFolder}/User/BSP",
-                "${workspaceFolder}/User/Software",
-                "${workspaceFolder}/User/Software/Chassis",
-                "${workspaceFolder}/User/Software/Gimbal",
-                "${workspaceFolder}/User/Software/Shoot",
-                "/Users/insel/STM32Cube/STM32Cube_FW_H7_V1.11.0/Drivers/STM32H7xx_HAL_Driver/Inc",
-                "/Users/insel/STM32Cube/STM32Cube_FW_H7_V1.11.0/Drivers/CMSIS/Include",
-                "/Users/insel/STM32Cube/STM32Cube_FW_H7_V1.11.0/Drivers/CMSIS/Device/ST/STM32H7xx/Include"
-            ],
-            "defines": [
-                "USE_HAL_DRIVER",
-                "STM32H723xx",
-                "DEBUG",
-                "HSE_VALUE=8000000UL"
-            ],
-            "compilerPath": "$(which arm-none-eabi-gcc)",
-            "compilerArgs": [
-                "-mcpu=cortex-m7",
-                "-mthumb",
-                "-mfpu=fpv5-d16",
-                "-mfloat-abi=hard",
-                "-DSTM32H723xx",
-                "-Wall",
-                "-Wextra",
-                "-O0",
-                "-ffunction-sections",
-                "-fdata-sections"
-            ],
-            "cStandard": "c17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "gcc-arm",
-            "mergeConfigurations": false,
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/**",
-                    "/Users/insel/STM32Cube/STM32Cube_FW_H7_V1.11.0/Drivers/**"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "STM32H723 (Arm GCC / macOS)",
+      "compilerPath": "/opt/homebrew/bin/arm-none-eabi-gcc",
+      "compilerArgs": [
+        "-mcpu=cortex-m7",
+        "-mthumb",
+        "-mfpu=fpv5-d16",
+        "-mfloat-abi=hard"
+      ],
+      "intelliSenseMode": "gcc-arm",
+      "includePath": [
+        "${workspaceFolder}/Core/Inc",
+        "${workspaceFolder}/USB_DEVICE/App",
+        "${workspaceFolder}/USB_DEVICE/Target",
+        "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc",
+        "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
+        "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+        "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+        "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+        "${workspaceFolder}/Drivers/CMSIS/Include",
+        "${workspaceFolder}/Drivers/Chip/bmi088",
+        "${workspaceFolder}/Drivers/Chip/ws2812",
+        "${workspaceFolder}/Drivers/Chip/w25q64",
+        "${workspaceFolder}/User/Algorithm",
+        "${workspaceFolder}/User/Algorithm/Include",
+        "${workspaceFolder}/User/BSP",
+        "${workspaceFolder}/User/Hardware",
+        "${workspaceFolder}/User/Hardware/IMU",
+        "${workspaceFolder}/User/Hardware/Motor",
+        "${workspaceFolder}/User/Hardware/Remote",
+        "${workspaceFolder}/User/Software",
+        "${workspaceFolder}/User/ui",
+        "${workspaceFolder}/User/System"
+      ],
+      "defines": [
+        "USE_PWR_LDO_SUPPLY",
+        "USE_HAL_DRIVER",
+        "STM32H723xx"
+      ],
+      "cStandard": "gnu17",
+      "cppStandard": "gnu++17"
+    }
+  ],
+  "version": 4
 }
