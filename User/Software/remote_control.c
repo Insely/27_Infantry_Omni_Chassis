@@ -246,15 +246,15 @@ void RC_Controller()
     if (RC_data.rc.s[0] == RC_SW_UP && RC_data.rc.s[1] == RC_SW_MID) // 滚轮向下，正小陀螺
     {
         Global.Chassis.mode = SPIN_P;
-        Global.Chassis.input.x = -(RC_data.rc.ch[0] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
-        Global.Chassis.input.y = -(RC_data.rc.ch[1] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
+        Global.Chassis.input.y= -(RC_data.rc.ch[2] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
+        Global.Chassis.input.x = (RC_data.rc.ch[3] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
         Chassis_SetX(Global.Chassis.input.x);
         Chassis_SetY(Global.Chassis.input.y);
     }
     else if (Global.Chassis.mode == NO_FOLLOW)
     {
-        Global.Chassis.input.x = -(RC_data.rc.ch[0] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
-        Global.Chassis.input.y = -(RC_data.rc.ch[1] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
+        Global.Chassis.input.y = -(RC_data.rc.ch[2] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
+        Global.Chassis.input.x = (RC_data.rc.ch[3] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
         Global.Chassis.input.r = 0;
         Chassis_SetX(Global.Chassis.input.x);
         Chassis_SetY(Global.Chassis.input.y);
@@ -263,8 +263,8 @@ void RC_Controller()
     else
     {
         Global.Chassis.mode = FLOW;
-        Global.Chassis.input.x = -(RC_data.rc.ch[0] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
-        Global.Chassis.input.y = -(RC_data.rc.ch[1] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
+        Global.Chassis.input.y = -(RC_data.rc.ch[2] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_X;
+        Global.Chassis.input.x = (RC_data.rc.ch[3] / RC_JOYSTICK_MAX) * CHASSIS_MAX_SPEED_Y;
         Chassis_SetX(Global.Chassis.input.x);
         Chassis_SetY(Global.Chassis.input.y);
     }
@@ -272,7 +272,7 @@ void RC_Controller()
     if ((Global.Auto.input.Auto_control_online <= 0 || Global.Auto.mode == NONE || Global.Auto.input.control_mode == 0) && Global.Gimbal.mode == NORMAL)
     {
         Gimbal_SetPitchAngle(Global.Gimbal.input.pitch + RC_data.rc.ch[3] / 2000.0f);
-        Gimbal_SetYawAngle(Global.Gimbal.input.yaw - RC_data.rc.ch[2] / 1500.0f);
+        Gimbal_SetYawAngle(Global.Gimbal.input.yaw + RC_data.rc.ch[0] / 1500.0f);
     }
     /*自瞄控制*/
     if (RC_data.rc.s[0] == RC_SW_DOWN &&

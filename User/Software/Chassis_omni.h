@@ -17,24 +17,22 @@
 //---------------------------
 // 逆运动学宏定义（速度 → 轮速）（M_S → RAD_S）
 //---------------------------
-// 输入：底盘速度 vx, vy, 角速度 omega
+// 右手坐标系：前 X、左 Y、上 Z；vx 向前、vy 向左、omega 俯视逆时针为正。
+// 旧坐标转换：vx_old = -vy，vy_old = vx，omega_old = -omega。
 // 输出：四个轮子的转速（浮点型）
 
-// 前左轮 FL 转速计算单位
+//逆解左前轮 FL 速度计算
 #define IK_WHEEL_FL(vx, vy, omega) \
-    ((SQRT1_2 * (vy) + SQRT1_2 * (vx) + (R_body) * (omega)) / r_wheel)
-
-// 前右轮 FR 转速计算
+    ((+SQRT1_2 * (vx) - SQRT1_2 * (vy) - R_body * (omega)) / r_wheel)
+//逆解右前轮 FR 速度计算
 #define IK_WHEEL_FR(vx, vy, omega) \
-    ((-SQRT1_2 * (vy) + SQRT1_2 * (vx) + (R_body) * (omega)) / r_wheel)
-
-// 后左轮 BL 转速计算
+    ((-SQRT1_2 * (vx) - SQRT1_2 * (vy) - R_body * (omega)) / r_wheel)
+//逆解左后轮 BL 速度计算
 #define IK_WHEEL_BL(vx, vy, omega) \
-    ((+SQRT1_2 * (vy) - SQRT1_2 * (vx) + (R_body) * (omega)) / r_wheel)
-
-// 后右轮 BR 转速计算
+    ((+SQRT1_2 * (vx) + SQRT1_2 * (vy) - R_body * (omega)) / r_wheel)
+//逆解右后轮 BR 速度计算
 #define IK_WHEEL_BR(vx, vy, omega) \
-    ((-SQRT1_2 * (vy) - SQRT1_2 * (vx) + (R_body) * (omega)) / r_wheel)
+    ((-SQRT1_2 * (vx) + SQRT1_2 * (vy) - R_body * (omega)) / r_wheel)
 
 //---------------------------
 // 正运动学宏定义（轮速 → 速度）（RAD_S → M_S）
@@ -42,43 +40,38 @@
 // 输入：四个轮速 wFL, wFR, wBL, wBR
 // 输出：底盘速度 vx, vy, 角速度 omega（通过指针返回）
 
-
-// 计算 vx
+//正解底盘速度 vx 计算
 #define FK_VX(wFL, wFR, wBL, wBR) \
-    (((-(wBR) + (wFR) + (wFL) - (wBL)) * SQRT2 * r_wheel) / 4.0f)
-
-// 计算 vy
+    ((((wFL) + (wBL) - (wFR) - (wBR)) * SQRT2 * r_wheel) / 4.0f)
+//正解底盘速度 vy 计算
 #define FK_VY(wFL, wFR, wBL, wBR) \
-    ((((wFL) - (wBR) - (wFR) + (wBL)) * SQRT2 * r_wheel) / 4.0f)
+    ((((wBL) + (wBR) - (wFL) - (wFR)) * SQRT2 * r_wheel) / 4.0f)
 
 // 计算 omega（角速度）
 #define FK_OMEGA(wFL, wFR, wBL, wBR) \
-    ((((wFL) + (wFR) + (wBL) + (wBR)) * r_wheel) / (4.0f * R_body))
+    (-(((wFL) + (wFR) + (wBL) + (wBR)) * r_wheel) / (4.0f * R_body))
 
 
 
 //---------------------------
 // 逆动力学宏定义（底盘驱动力 → 轮毂力矩）（F → T）
 //---------------------------
-// 输入：底盘驱动力 Fx, Fy, 旋转力矩   T
+// 输入：Fx 向前、Fy 向左、T 绕 +Z 俯视逆时针为正。
 // 输出：四个轮子的力矩（浮点型）
 
-// 前左轮 FL 力矩计算
+#define FORCE_COEF (0.5f * SQRT1_2)  // 1 / (2*sqrt(2))
+
 #define IK_WHEEL_FL_T(Fx, Fy, T) \
-    ((SQRT2 * (Fy) + SQRT2 * (Fx) + (T) / 4.0f / (R_body)) * r_wheel)
+    ((((Fx) - (Fy)) * FORCE_COEF - (T) / (4.0f * R_body)) * r_wheel)
 
-// 前右轮 FR 力矩计算
 #define IK_WHEEL_FR_T(Fx, Fy, T) \
-    ((-SQRT2 * (Fy) + SQRT2 * (Fx) + (T) / 4.0f / (R_body)) * r_wheel)
+    (((-(Fx) - (Fy)) * FORCE_COEF - (T) / (4.0f * R_body)) * r_wheel)
 
-// 后左轮 BL 力矩计算
 #define IK_WHEEL_BL_T(Fx, Fy, T) \
-    ((+SQRT2 * (Fy) - SQRT2 * (Fx) + (T) / 4.0f / (R_body)) * r_wheel)
+    ((((Fx) + (Fy)) * FORCE_COEF - (T) / (4.0f * R_body)) * r_wheel)
 
-// 后右轮 BR 力矩计算
 #define IK_WHEEL_BR_T(Fx, Fy, T) \
-    ((-SQRT2 * (Fy) - SQRT2 * (Fx) + (T) / 4.0f / (R_body)) * r_wheel)
-
+    (((-(Fx) + (Fy)) * FORCE_COEF - (T) / (4.0f * R_body)) * r_wheel)
 
 /*电机配置*/
 //电机初始化函数

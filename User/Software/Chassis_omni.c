@@ -120,9 +120,9 @@ void Chassis_Init()
     /*底盘跟随PID*/
     PID_Set(&Chassis.chassis_follow_pid, 10.0f, 0.0f, 1.0f, 200, 40);
     /*底盘力控PID*/
-    PID_Set(&Chassis.chassis_T_pid_x, 30.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_T_pid_y, 30.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_T_pid_w, 20.0f, 0.0, 20.0, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_x, 40.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_y, 40.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_w, 30.0f, 0.0, 20.0, CHASSISMOTOR_MAX_CURRENT, 10000);
     /*底盘功率控制pid*/
     PID_Set(&Chassis.chassis_power_pid, 0.01f, 0.0f, 0.0f, 0.1f, 0.1f);
 
@@ -172,7 +172,7 @@ void Chassis_Updater()
  * @param          none
  * @retval         none
  */
-#define K (0.01f)
+#define K (0.0001f)
 void Chassis_Calculater()
 {
     // 底盘电机前馈力矩定义
@@ -191,15 +191,18 @@ void Chassis_Calculater()
         float yaw = Chassis.chassis_yaw_angle; // 已是弧度
         Chassis.Vx_set = Vx * cosf(yaw) - Vy * sinf(yaw);
         Chassis.Vy_set = Vx * sinf(yaw) + Vy * cosf(yaw);
-        Chassis.W_set = PID_Cal(&Chassis.chassis_follow_pid, yaw, 0.0f);
+        // yaw 为云台相对底盘的逆时针角度；yaw > 0 时底盘应以 W > 0 跟随。
+        Chassis.W_set = -PID_Cal(&Chassis.chassis_follow_pid, yaw, 0.0f);
     }
     else if (Global.Chassis.mode == SPIN_P || Global.Chassis.mode == SPIN_N)
     {
         float Vx = Chassis.Vx_set;
         float Vy = Chassis.Vy_set;
-        float angle = K * Chassis.W_now + Chassis.chassis_yaw_angle;
+        // 底盘逆时针旋转时，相对 yaw 减小；按反馈角速度补偿延迟。
+        float angle = Chassis.chassis_yaw_angle - K * Chassis.W_now;
         Chassis.Vx_set = Vx * cosf(angle) - Vy * sinf(angle);
         Chassis.Vy_set = Vx * sinf(angle) + Vy * cosf(angle);
+        // SPIN_P：俯视逆时针；SPIN_N：俯视顺时针。
         Chassis.W_set = (Global.Chassis.mode == SPIN_P) ? (60 * RPM_TO_RAD_S) : (-60 * RPM_TO_RAD_S);
     }
     else if (Global.Chassis.mode == NO_FOLLOW)

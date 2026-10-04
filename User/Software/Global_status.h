@@ -11,15 +11,15 @@ typedef struct
         enum chassis_mode_e
         {
             FLOW,      // 底盘跟随
-            SPIN_P,    // 正小陀螺
-            SPIN_N,    // 逆小陀螺
+            SPIN_P,    // 正小陀螺（全向轮：逆时针）
+            SPIN_N,    // 反向小陀螺（全向轮：顺时针）
             NO_FOLLOW, // 底盘不跟随
         } mode;
         struct
         {
-            float x; // x轴移动速度
-            float y; // y轴移动速度
-            float r; // 转速 顺时针正，逆时针负
+            float x; // x轴移动速度（全向轮：向前为正，m/s）
+            float y; // y轴移动速度（全向轮：向左为正，m/s）
+            float r; // 全向轮角速度（rad/s）：俯视逆时针正、顺时针负
             uint8_t reset;
         } input;
     } Chassis;
