@@ -1,8 +1,12 @@
 #ifndef __DM_MOTOR_DRV_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __DM_MOTOR_DRV_H__
 #include "main.h"
 #include "fdcan.h"
-#include "User_math.h"
 
 #define MIT_MODE 			0x000
 #define POS_MODE			0x100
@@ -17,7 +21,7 @@
 #define V_MAX 30.0f
 #define T_MAX 10.0f
 
-#define POS_TO_ANGLE  57.295779513082f
+#define POS_TO_ANGLE  57.6
 
 typedef enum
 {
@@ -43,111 +47,111 @@ typedef enum
 } DM_mode_e;
 
 typedef enum {
-    RID_UV_VALUE=0,    // µÍÑ¹±£»¤Öµ
-    RID_KT_VALUE=1,    // Å¤¾ØÏµÊı
-    RID_OT_VALUE=2,    // ¹ıÎÂ±£»¤Öµ
-    RID_OC_VALUE=3,    // ¹ıÁ÷±£»¤Öµ
-    RID_ACC		=4,    // ¼ÓËÙ¶È
-    RID_DEC		=5,    // ¼õËÙ¶È
-    RID_MAX_SPD	=6,    // ×î´óËÙ¶È
-    RID_MST_ID	=7,    // ·´À¡ID
-    RID_ESC_ID	=8,    // ½ÓÊÕID
-    RID_TIMEOUT	=9,    // ³¬Ê±¾¯±¨Ê±¼ä
-    RID_CMODE	=10,   // ¿ØÖÆÄ£Ê½
-    RID_DAMP	=11,   // µç»úÕ³ÖÍÏµÊı
-    RID_INERTIA =12,   // µç»ú×ª¶¯¹ßÁ¿
-    RID_HW_VER	=13,   // ±£Áô
-    RID_SW_VER	=14,   // Èí¼ş°æ±¾ºÅ
-    RID_SN		=15,   // ±£Áô
-    RID_NPP		=16,   // µç»ú¼«¶ÔÊı
-    RID_RS		=17,   // µç×è
-    RID_LS		=18,   // µç¸Ğ
-    RID_FLUX	=19,   // ´ÅÁ´
-    RID_GR		=20,   // ³İÂÖ¼õËÙ±È
-    RID_PMAX	=21,   // Î»ÖÃÓ³Éä·¶Î§
-    RID_VMAX	=22,   // ËÙ¶ÈÓ³Éä·¶Î§
-    RID_TMAX	=23,   // Å¤¾ØÓ³Éä·¶Î§
-    RID_I_BW	=24,   // µçÁ÷»·¿ØÖÆ´ø¿í
-    RID_KP_ASR	=25,   // ËÙ¶È»·Kp
-    RID_KI_ASR	=26,   // ËÙ¶È»·Ki
-    RID_KP_APR	=27,   // Î»ÖÃ»·Kp
-    RID_KI_APR	=28,   // Î»ÖÃ»·Ki
-    RID_OV_VALUE=29,   // ¹ıÑ¹±£»¤Öµ
-    RID_GREF	=30,   // ³İÂÖÁ¦¾ØĞ§ÂÊ
-    RID_DETA	=31,   // ËÙ¶È»·×èÄáÏµÊı
-    RID_V_BW	=32,   // ËÙ¶È»·ÂË²¨´ø¿í
-    RID_IQ_CL	=33,   // µçÁ÷»·ÔöÇ¿ÏµÊı
-    RID_VL_CL	=34,   // ËÙ¶È»·ÔöÇ¿ÏµÊı
-    RID_CAN_BR	=35,   // CAN²¨ÌØÂÊ´úÂë
-    RID_SUB_VER	=36,   // ×Ó°æ±¾ºÅ
-    RID_U_OFF	=50,   // uÏàÆ«ÖÃ
-    RID_V_OFF	=51,   // vÏàÆ«ÖÃ
-    RID_K1		=52,   // ²¹³¥Òò×Ó1
-    RID_K2		=53,   // ²¹³¥Òò×Ó2
-    RID_M_OFF	=54,   // ½Ç¶ÈÆ«ÒÆ
-    RID_DIR		=55,   // ·½Ïò
-    RID_P_M		=80,   // µç»úÎ»ÖÃ
-    RID_X_OUT	=81    // Êä³öÖáÎ»ÖÃ
+    RID_UV_VALUE=0,    // ä½å‹ä¿æŠ¤å€¼
+    RID_KT_VALUE=1,    // æ‰­çŸ©ç³»æ•°
+    RID_OT_VALUE=2,    // è¿‡æ¸©ä¿æŠ¤å€¼
+    RID_OC_VALUE=3,    // è¿‡æµä¿æŠ¤å€¼
+    RID_ACC		=4,    // åŠ é€Ÿåº¦
+    RID_DEC		=5,    // å‡é€Ÿåº¦
+    RID_MAX_SPD	=6,    // æœ€å¤§é€Ÿåº¦
+    RID_MST_ID	=7,    // åé¦ˆID
+    RID_ESC_ID	=8,    // æ¥æ”¶ID
+    RID_TIMEOUT	=9,    // è¶…æ—¶è­¦æŠ¥æ—¶é—´
+    RID_CMODE	=10,   // æ§åˆ¶æ¨¡å¼
+    RID_DAMP	=11,   // ç”µæœºç²˜æ»ç³»æ•°
+    RID_INERTIA =12,   // ç”µæœºè½¬åŠ¨æƒ¯é‡
+    RID_HW_VER	=13,   // ä¿ç•™
+    RID_SW_VER	=14,   // è½¯ä»¶ç‰ˆæœ¬å·
+    RID_SN		=15,   // ä¿ç•™
+    RID_NPP		=16,   // ç”µæœºæå¯¹æ•°
+    RID_RS		=17,   // ç”µé˜»
+    RID_LS		=18,   // ç”µæ„Ÿ
+    RID_FLUX	=19,   // ç£é“¾
+    RID_GR		=20,   // é½¿è½®å‡é€Ÿæ¯”
+    RID_PMAX	=21,   // ä½ç½®æ˜ å°„èŒƒå›´
+    RID_VMAX	=22,   // é€Ÿåº¦æ˜ å°„èŒƒå›´
+    RID_TMAX	=23,   // æ‰­çŸ©æ˜ å°„èŒƒå›´
+    RID_I_BW	=24,   // ç”µæµç¯æ§åˆ¶å¸¦å®½
+    RID_KP_ASR	=25,   // é€Ÿåº¦ç¯Kp
+    RID_KI_ASR	=26,   // é€Ÿåº¦ç¯Ki
+    RID_KP_APR	=27,   // ä½ç½®ç¯Kp
+    RID_KI_APR	=28,   // ä½ç½®ç¯Ki
+    RID_OV_VALUE=29,   // è¿‡å‹ä¿æŠ¤å€¼
+    RID_GREF	=30,   // é½¿è½®åŠ›çŸ©æ•ˆç‡
+    RID_DETA	=31,   // é€Ÿåº¦ç¯é˜»å°¼ç³»æ•°
+    RID_V_BW	=32,   // é€Ÿåº¦ç¯æ»¤æ³¢å¸¦å®½
+    RID_IQ_CL	=33,   // ç”µæµç¯å¢å¼ºç³»æ•°
+    RID_VL_CL	=34,   // é€Ÿåº¦ç¯å¢å¼ºç³»æ•°
+    RID_CAN_BR	=35,   // CANæ³¢ç‰¹ç‡ä»£ç 
+    RID_SUB_VER	=36,   // å­ç‰ˆæœ¬å·
+    RID_U_OFF	=50,   // uç›¸åç½®
+    RID_V_OFF	=51,   // vç›¸åç½®
+    RID_K1		=52,   // è¡¥å¿å› å­1
+    RID_K2		=53,   // è¡¥å¿å› å­2
+    RID_M_OFF	=54,   // è§’åº¦åç§»
+    RID_DIR		=55,   // æ–¹å‘
+    RID_P_M		=80,   // ç”µæœºä½ç½®
+    RID_X_OUT	=81    // è¾“å‡ºè½´ä½ç½®
 } rid_e;
 
 
 
 
-// µç»ú²ÎÊı
+// ç”µæœºå‚æ•°
 typedef struct
 {
 	uint8_t read_flag;
 	uint8_t write_flag;
 	uint8_t save_flag;
 	
-    float UV_Value;		// µÍÑ¹±£»¤Öµ
-    float KT_Value;		// Å¤¾ØÏµÊı
-    float OT_Value;		// ¹ıÎÂ±£»¤Öµ
-    float OC_Value;		// ¹ıÁ÷±£»¤Öµ
-    float ACC;			// ¼ÓËÙ¶È
-    float DEC;			// ¼õËÙ¶È
-    float MAX_SPD;		// ×î´óËÙ¶È
-    uint32_t MST_ID;	// ·´À¡ID
-    uint32_t ESC_ID;	// ½ÓÊÕID
-    uint32_t TIMEOUT;	// ³¬Ê±¾¯±¨Ê±¼ä
-    uint32_t cmode;		// ¿ØÖÆÄ£Ê½
-    float  	 Damp;		// µç»úÕ³ÖÍÏµÊı
-    float    Inertia;	// µç»ú×ª¶¯¹ßÁ¿
-    uint32_t hw_ver;	// ±£Áô
-    uint32_t sw_ver;	// Èí¼ş°æ±¾ºÅ
-    uint32_t SN;		// ±£Áô
-    uint32_t NPP;		// µç»ú¼«¶ÔÊı
-    float    Rs;		// µç×è
-    float    Ls;		// µç¸Ğ
-    float    Flux;		// ´ÅÁ´
-    float    Gr;		// ³İÂÖ¼õËÙ±È
-    float    PMAX;		// Î»ÖÃÓ³Éä·¶Î§
-    float    VMAX;		// ËÙ¶ÈÓ³Éä·¶Î§
-    float    TMAX;		// Å¤¾ØÓ³Éä·¶Î§
-    float    I_BW;		// µçÁ÷»·¿ØÖÆ´ø¿í
-    float    KP_ASR;	// ËÙ¶È»·Kp
-    float    KI_ASR;	// ËÙ¶È»·Ki
-    float    KP_APR;	// Î»ÖÃ»·Kp
-    float    KI_APR;	// Î»ÖÃ»·Ki
-    float    OV_Value;	// ¹ıÑ¹±£»¤Öµ
-    float    GREF;		// ³İÂÖÁ¦¾ØĞ§ÂÊ
-    float    Deta;		// ËÙ¶È»·×èÄáÏµÊı
-    float 	 V_BW;		// ËÙ¶È»·ÂË²¨´ø¿í
-    float 	 IQ_cl;		// µçÁ÷»·ÔöÇ¿ÏµÊı
-    float    VL_cl;		// ËÙ¶È»·ÔöÇ¿ÏµÊı
-    uint32_t can_br;	// CAN²¨ÌØÂÊ´úÂë
-    uint32_t sub_ver;	// ×Ó°æ±¾ºÅ
-	float 	 u_off;		// uÏàÆ«ÖÃ
-	float	 v_off;		// vÏàÆ«ÖÃ
-	float	 k1;		// ²¹³¥Òò×Ó1
-	float 	 k2;		// ²¹³¥Òò×Ó2
-	float 	 m_off;		// ½Ç¶ÈÆ«ÒÆ
-	float  	 dir;		// ·½Ïò
-	float	 p_m;		// µç»úÎ»ÖÃ
-	float	 x_out;		// Êä³öÖáÎ»ÖÃ
+    float UV_Value;		// ä½å‹ä¿æŠ¤å€¼
+    float KT_Value;		// æ‰­çŸ©ç³»æ•°
+    float OT_Value;		// è¿‡æ¸©ä¿æŠ¤å€¼
+    float OC_Value;		// è¿‡æµä¿æŠ¤å€¼
+    float ACC;			// åŠ é€Ÿåº¦
+    float DEC;			// å‡é€Ÿåº¦
+    float MAX_SPD;		// æœ€å¤§é€Ÿåº¦
+    uint32_t MST_ID;	// åé¦ˆID
+    uint32_t ESC_ID;	// æ¥æ”¶ID
+    uint32_t TIMEOUT;	// è¶…æ—¶è­¦æŠ¥æ—¶é—´
+    uint32_t cmode;		// æ§åˆ¶æ¨¡å¼
+    float  	 Damp;		// ç”µæœºç²˜æ»ç³»æ•°
+    float    Inertia;	// ç”µæœºè½¬åŠ¨æƒ¯é‡
+    uint32_t hw_ver;	// ä¿ç•™
+    uint32_t sw_ver;	// è½¯ä»¶ç‰ˆæœ¬å·
+    uint32_t SN;		// ä¿ç•™
+    uint32_t NPP;		// ç”µæœºæå¯¹æ•°
+    float    Rs;		// ç”µé˜»
+    float    Ls;		// ç”µæ„Ÿ
+    float    Flux;		// ç£é“¾
+    float    Gr;		// é½¿è½®å‡é€Ÿæ¯”
+    float    PMAX;		// ä½ç½®æ˜ å°„èŒƒå›´
+    float    VMAX;		// é€Ÿåº¦æ˜ å°„èŒƒå›´
+    float    TMAX;		// æ‰­çŸ©æ˜ å°„èŒƒå›´
+    float    I_BW;		// ç”µæµç¯æ§åˆ¶å¸¦å®½
+    float    KP_ASR;	// é€Ÿåº¦ç¯Kp
+    float    KI_ASR;	// é€Ÿåº¦ç¯Ki
+    float    KP_APR;	// ä½ç½®ç¯Kp
+    float    KI_APR;	// ä½ç½®ç¯Ki
+    float    OV_Value;	// è¿‡å‹ä¿æŠ¤å€¼
+    float    GREF;		// é½¿è½®åŠ›çŸ©æ•ˆç‡
+    float    Deta;		// é€Ÿåº¦ç¯é˜»å°¼ç³»æ•°
+    float 	 V_BW;		// é€Ÿåº¦ç¯æ»¤æ³¢å¸¦å®½
+    float 	 IQ_cl;		// ç”µæµç¯å¢å¼ºç³»æ•°
+    float    VL_cl;		// é€Ÿåº¦ç¯å¢å¼ºç³»æ•°
+    uint32_t can_br;	// CANæ³¢ç‰¹ç‡ä»£ç 
+    uint32_t sub_ver;	// å­ç‰ˆæœ¬å·
+	float 	 u_off;		// uç›¸åç½®
+	float	 v_off;		// vç›¸åç½®
+	float	 k1;		// è¡¥å¿å› å­1
+	float 	 k2;		// è¡¥å¿å› å­2
+	float 	 m_off;		// è§’åº¦åç§»
+	float  	 dir;		// æ–¹å‘
+	float	 p_m;		// ç”µæœºä½ç½®
+	float	 x_out;		// è¾“å‡ºè½´ä½ç½®
 } esc_inf_t;
 
-// µç»ú»Ø´«ĞÅÏ¢½á¹¹Ìå
+// ç”µæœºå›ä¼ ä¿¡æ¯ç»“æ„ä½“
 typedef struct
 {
     int id;
@@ -170,7 +174,7 @@ typedef struct
     float Tcoil;
 } motor_fbpara_t;
 
-// µç»ú²ÎÊıÉèÖÃ½á¹¹Ìå
+// ç”µæœºå‚æ•°è®¾ç½®ç»“æ„ä½“
 typedef struct
 {
     uint8_t mode;
@@ -216,5 +220,9 @@ void read_motor_ctrl_fbdata(uint16_t id);
 void write_motor_data(uint16_t id, uint8_t rid, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3);
 void save_motor_data(uint16_t id, uint8_t rid);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* __DM_MOTOR_DRV_H__ */
 

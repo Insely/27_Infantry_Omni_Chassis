@@ -1,4 +1,9 @@
 #ifndef __MOTOR_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __MOTOR_H__
 #include "stdint.h"
 
@@ -6,21 +11,22 @@
 #include "robot_param.h"
 #include "CAN_receive_send.h"
 
-// CANÍ¨µÀÊıÁ¿
-#define QUANTITY_OF_CAN 3       // ÄãËùÓÃµÄcanµÄÊıÁ¿£¬£¨±ÈËùÓÃµÄ¶à¾ÍĞĞÁË£¬ß÷°åÉÏÉè3±ğ¸ÄÁË£©
+
+// CANé€šé“æ•°é‡
+#define QUANTITY_OF_CAN 3       // ä½ æ‰€ç”¨çš„cançš„æ•°é‡ï¼Œï¼ˆæ¯”æ‰€ç”¨çš„å¤šå°±è¡Œäº†ï¼Œå–µæ¿ä¸Šè®¾3åˆ«æ”¹äº†ï¼‰
 
 
 #if (USE_DJIMotor == 1)
 
-#define QUANTITY_OF_DJIMOTOR 11 // ¹ÒÔØµç»ú×î¶àµÄÒ»Â·canÉÏËùÓÃµÄµç»ú
-// ´ó½®µç»ú²ÎÊı
-#define ECD_TO_ANGEL_DJI 0.043945f //(360/8192),½«±àÂëÆ÷Öµ×ª»¯Îª½Ç¶ÈÖÆ
-#define DJIMOTOR_T_A 0.3           // 3508×ª¾Ø³£Êı
-#define ECD_MAX 8192.0f            // ±àÂëÆ÷×î´óÖµ
-#define M3508_P WHEEL_RATIO        // M3508µç»ú¼õËÙ±È£¨²»Í¬³µµÄ¼õËÙ±È²»Í¬£¬ËùÒÔÔÚ²ÎÊıÅäÖÃÎÄ¼şÖĞÉèÖÃ£©
-#define M2006_P 36.0f              // M2006µç»ú¼õËÙ±È
-#define MAX_CURRENT 16384          // M2006+M3508×î´óµçÁ÷ 20A / MAX_CURRENT
-#define MAX_6020_VOL 30000         // 6020×î´óµçÑ¹ 24V / MAX_6020_VOL
+#define QUANTITY_OF_DJIMOTOR 11 // æŒ‚è½½ç”µæœºæœ€å¤šçš„ä¸€è·¯canä¸Šæ‰€ç”¨çš„ç”µæœº
+// å¤§ç–†ç”µæœºå‚æ•°
+#define ECD_TO_ANGEL_DJI 0.043945f //(360/8192),å°†ç¼–ç å™¨å€¼è½¬åŒ–ä¸ºè§’åº¦åˆ¶
+#define DJIMOTOR_T_A 0.3           // 3508è½¬çŸ©å¸¸æ•°
+#define ECD_MAX 8192.0f            // ç¼–ç å™¨æœ€å¤§å€¼
+#define M3508_P WHEEL_RATIO        // M3508ç”µæœºå‡é€Ÿæ¯”ï¼ˆä¸åŒè½¦çš„å‡é€Ÿæ¯”ä¸åŒï¼Œæ‰€ä»¥åœ¨å‚æ•°é…ç½®æ–‡ä»¶ä¸­è®¾ç½®ï¼‰
+#define M2006_P 36.0f              // M2006ç”µæœºå‡é€Ÿæ¯”
+#define MAX_CURRENT 16384          // M2006+M3508æœ€å¤§ç”µæµ 20A / MAX_CURRENT
+#define MAX_6020_VOL 30000         // 6020æœ€å¤§ç”µå‹ 24V / MAX_6020_VOL
 
 /* DJImotorCAN send and receive ID */
 typedef enum
@@ -51,9 +57,9 @@ typedef enum
 } DJIcan_send_id_e;
 
 
-// 6020´Ó CAN_1_5(¶ÔÓ¦ID1) µ½ CAN_1_6020_7£¨¶ÔÓ¦ID7£©
-// 3508/2006´Ó CAN_1_1(¶ÔÓ¦ID1) µ½ CAN_1_8£¨¶ÔÓ¦ID8£©
-// ÏÔÈ»£¬6020Óë3508/2006´æÔÚÖØµşID,ÉèÖÃÊ±Çë×¢Òâ
+// 6020ä» CAN_1_5(å¯¹åº”ID1) åˆ° CAN_1_6020_7ï¼ˆå¯¹åº”ID7ï¼‰
+// 3508/2006ä» CAN_1_1(å¯¹åº”ID1) åˆ° CAN_1_8ï¼ˆå¯¹åº”ID8ï¼‰
+// æ˜¾ç„¶ï¼Œ6020ä¸3508/2006å­˜åœ¨é‡å ID,è®¾ç½®æ—¶è¯·æ³¨æ„
 typedef enum
 {
     CAN_1_1 = 0,  // 0
@@ -96,26 +102,23 @@ typedef enum
 
 typedef struct
 {
-    // ¿ØÖÆÊı¾İ
-    int16_t set; // Éè¶¨µÄµçÁ÷ / µçÑ¹
+    // æ§åˆ¶æ•°æ®
+    int16_t set; // è®¾å®šçš„ç”µæµ / ç”µå‹
     Motor_Type_e Motor_type;
 
-    // Ô­Ê¼Êı¾İ
-    uint16_t ecd;          // ±àÂëÆ÷ÊıÖµ
-    int16_t speed_rpm;     // ×ªËÙRPM
-    int16_t given_current; // Êµ¼Ê×ª¾ØµçÁ÷
-    uint8_t temperate;     // ÎÂ¶È£¨»ñÈ¡²»µ½£©
-    uint16_t last_ecd;     // ÉÏÒ»´Î±àÂëÆ÷µÄÊıÖµ
+    // åŸå§‹æ•°æ®
+    uint16_t ecd;          // ç¼–ç å™¨æ•°å€¼
+    int16_t speed_rpm;     // è½¬é€ŸRPM
+    int16_t given_current; // å®é™…è½¬çŸ©ç”µæµ
+    uint8_t temperate;     // æ¸©åº¦ï¼ˆè·å–ä¸åˆ°ï¼‰
+    uint16_t last_ecd;     // ä¸Šä¸€æ¬¡ç¼–ç å™¨çš„æ•°å€¼
 
-    // ¼ÆËãÊı¾İ
-    long long ecd_cnt;  // ±àÂëÆ÷¼ÆÊıÆ÷
-    double angle_cnt;   // ×ª¹ıµÄ×Ü½Ç¶È degree
-    double angle_zero;  // ±àÂëÆ÷0µã½Ç¶È degree
+    // è®¡ç®—æ•°æ®
+    long long ecd_cnt;  // ç¼–ç å™¨è®¡æ•°å™¨
+    double angle_cnt;   // è½¬è¿‡çš„æ€»è§’åº¦ degree
+    double angle_zero;  // ç¼–ç å™¨0ç‚¹è§’åº¦ degree
     double angle;       // -180~180 degree
-    double round_speed; // ³öÖá×ªËÙ rpm
-
-    // ÔÚÏß¼ì²â
-    uint32_t update_cnt; // CANÊı¾İ¸üĞÂ¼ÆÊıÆ÷
+    double round_speed; // å‡ºè½´è½¬é€Ÿ rpm
 } DJI_motor_data_s;
 
 void DJIMotor_Init(Motor_Type_e motor_type, DJIcan_id motor_id);
@@ -134,7 +137,7 @@ DJI_motor_data_s DJIMotor_GetData(DJIcan_id motor_id);
 #include "dm_motor_drv.h"
 #include "dm_motor_ctrl.h"
 
-// Ã¿¸öCAN×ÜÏßµÄµç»úÊıÁ¿
+// æ¯ä¸ªCANæ€»çº¿çš„ç”µæœºæ•°é‡
 #define QUANTITY_OF_DMMOTOR 6
 
 typedef enum
@@ -163,13 +166,15 @@ typedef enum
 
 } DMcan_id;
 
-// ´ïÃîµç»úÊı¾İ½á¹¹
+// è¾¾å¦™ç”µæœºæ•°æ®ç»“æ„
 typedef struct
 {
     float T;
     float W;
     float Pos;
     
+    uint32_t feedback_tick;
+    uint8_t feedback_ready;
     DM_motor_t motor_data;
 } DM_motor_data_s;
 
@@ -187,7 +192,7 @@ extern DM_motor_data_s DM_Motor_data[QUANTITY_OF_CAN][6];
 #if (USE_DMMotor124 == 1)
 
 #define QUANTITY_OF_DMMOTOR124 8
-#define ECD_TO_ANGEL_DM 0.043945f //(360/8192),½«±àÂëÆ÷Öµ×ª»¯Îª½Ç¶ÈÖÆ
+#define ECD_TO_ANGEL_DM 0.043945f //(360/8192),å°†ç¼–ç å™¨å€¼è½¬åŒ–ä¸ºè§’åº¦åˆ¶
 
 /* DJImotorCAN send and receive ID */
 typedef enum
@@ -250,25 +255,25 @@ typedef enum
 
 typedef struct
 {
-    // ¿ØÖÆÊı¾İ
-    int16_t set; // Éè¶¨µÄµçÁ÷ / µçÑ¹
+    // æ§åˆ¶æ•°æ®
+    int16_t set; // è®¾å®šçš„ç”µæµ / ç”µå‹
     DMMotor_Type_e Motor_type;
 
-    // Ô­Ê¼Êı¾İ
-    uint16_t ecd;          // ±àÂëÆ÷ÊıÖµ
-    uint16_t last_ecd;     // ÉÏÒ»´Î±àÂëÆ÷µÄÊıÖµ
-    float speed_rpm;        // ×ªËÙRPM
-    int16_t given_current; // Êµ¼Ê×ª¾ØµçÁ÷ mA
-    uint8_t coil_temp;     // ÏßÈ¦ÎÂ¶È ÉãÊÏ¶È
-    uint8_t pcb_temp;     // pcbÎÂ¶È
+    // åŸå§‹æ•°æ®
+    uint16_t ecd;          // ç¼–ç å™¨æ•°å€¼
+    uint16_t last_ecd;     // ä¸Šä¸€æ¬¡ç¼–ç å™¨çš„æ•°å€¼
+    float speed_rpm;        // è½¬é€ŸRPM
+    int16_t given_current; // å®é™…è½¬çŸ©ç”µæµ mA
+    uint8_t coil_temp;     // çº¿åœˆæ¸©åº¦ æ‘„æ°åº¦
+    uint8_t pcb_temp;     // pcbæ¸©åº¦
     
 
-    // ¼ÆËãÊı¾İ
-    long long ecd_cnt;  // ±àÂëÆ÷¼ÆÊıÆ÷
-    double angle_cnt;   // ×ª¹ıµÄ×Ü½Ç¶È degree
-    double angle_zero;  // ±àÂëÆ÷0µã½Ç¶È degree
+    // è®¡ç®—æ•°æ®
+    long long ecd_cnt;  // ç¼–ç å™¨è®¡æ•°å™¨
+    double angle_cnt;   // è½¬è¿‡çš„æ€»è§’åº¦ degree
+    double angle_zero;  // ç¼–ç å™¨0ç‚¹è§’åº¦ degree
     double angle;       // -180~180 degree
-    double round_speed; // ³öÖá×ªËÙ rpm
+    double round_speed; // å‡ºè½´è½¬é€Ÿ rpm
 } DM_motor124_data_s;
 
 void DMMotor124_Init(DMMotor_Type_e motor_type, DM_can_id motor_id);
@@ -276,7 +281,7 @@ void DMMotor124_Set(int16_t val, DM_can_id motor_id);
 void DMMotor124_GetProcessMotorData(DM_motor124_data_s *ptr, uint8_t data[]);
 void DMMotor124_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data);
 void DMMotor124_SendCurrent(DMcan_send_id_e CAN_Send_ID , DMcan_send_id_e CAN_Type);
-
+void DMMotor124_SetZero(double zero_angle, DM_can_id motor_id);
 extern DM_motor124_data_s DMMotor124_GetData(DM_can_id motor_id);
 
 
@@ -285,10 +290,10 @@ extern DM_motor124_data_s DMMotor124_GetData(DM_can_id motor_id);
 #if (USE_LZMotor == 1)
 #include "LZ_motor_driver.h"
 
-// Ã¿¸öCAN×ÜÏßµÄµç»úÊıÁ¿
+// æ¯ä¸ªCANæ€»çº¿çš„ç”µæœºæ•°é‡
 #define QUANTITY_OF_LZMOTOR 6
 
-// µç»úIDÃ¶¾Ù£¨Ö§³Ö3Â·CAN£¬Ã¿Â·6¸öµç»ú£©
+// ç”µæœºIDæšä¸¾ï¼ˆæ”¯æŒ3è·¯CANï¼Œæ¯è·¯6ä¸ªç”µæœºï¼‰
 typedef enum {
     LZ_CAN_1_1 = 0,
     LZ_CAN_1_2,
@@ -322,8 +327,12 @@ void LZMotor_set_params(LZ_Motor_ID_t motor_id, float pos, float vel, float tor,
 void LZMotor_send_command(LZ_Motor_ID_t motor_id);
 void LZMotor_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data);
 
-// »ñÈ¡µç»ú¶ÔÏóÖ¸Õë
+// è·å–ç”µæœºå¯¹è±¡æŒ‡é’ˆ
 LZ_Motor_t* LZMotor_get(LZ_Motor_ID_t motor_id);
 
 #endif // USE_LINGZU_MOTOR
+
+#ifdef __cplusplus
+}
+#endif
 #endif // !__MOTOR_H__

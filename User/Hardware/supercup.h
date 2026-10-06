@@ -7,21 +7,21 @@
 
 typedef PACKED_STRUCT()
 {
-    uint8_t set_max_power;     // ×î´ó¹¦ÂÊ
-    uint8_t cache_energy;      // »º³åµçÁ¿
-    uint16_t cacheEnergylimit; // »º³åÄÜÁ¿Ê£ÓàÏŞÖÆ
-    uint8_t state;             // ×´Ì¬
+    uint8_t set_max_power;     // æœ€å¤§åŠŸç‡
+    uint8_t cache_energy;      // ç¼“å†²ç”µé‡
+    uint16_t cacheEnergylimit; // ç¼“å†²èƒ½é‡å‰©ä½™é™åˆ¶
+    uint8_t state;             // çŠ¶æ€
     float Chassis_power;
-    float remain_vol;          // Ê£ÓàµçÑ¹
-    float prediect_energy;     // Ô¤²âÈİÁ¿ 0 - 100%
+    float remain_vol;          // å‰©ä½™ç”µå‹
+    float prediect_energy;     // é¢„æµ‹å®¹é‡ 0 - 100%
 } Supercap_t;
 
 
 typedef PACKED_STRUCT()
 {
-    uint8_t setPower;          // ÉèÖÃµ×ÅÌ¹¦ÂÊ
-    uint16_t cacheEnergy;      // »º³åÄÜÁ¿
-    uint16_t cacheEnergylimit; // »º³åÄÜÁ¿Ê£ÓàÏŞÖÆ
+    uint8_t setPower;          // è®¾ç½®åº•ç›˜åŠŸç‡
+    uint16_t cacheEnergy;      // ç¼“å†²èƒ½é‡
+    uint16_t cacheEnergylimit; // ç¼“å†²èƒ½é‡å‰©ä½™é™åˆ¶
 } Supercap_send_t;
 
 

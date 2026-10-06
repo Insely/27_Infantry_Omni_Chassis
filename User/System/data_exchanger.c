@@ -1,10 +1,10 @@
 /**
   ****************************(C) COPYRIGHT 2026 ADAM****************************
   * @file       data_exchanger.c/h
-  * @brief      Êý¾Ý½»»»ÖÐÐÄ£¬ÓÃÓÚ¸÷¸öÄ£¿éÖ®¼äµÄÊý¾Ý½»»»£¬²»ÓÃÏà»¥µ÷ÓÃÍ·ÎÄ¼þ£¬¼ÓÇ¿¸÷Ä£¿éÖ®¼äµÄ½âñî
+  * @brief      æ•°æ®äº¤æ¢ä¸­å¿ƒï¼Œç”¨äºŽå„ä¸ªæ¨¡å—ä¹‹é—´çš„æ•°æ®äº¤æ¢ï¼Œä¸ç”¨ç›¸äº’è°ƒç”¨å¤´æ–‡ä»¶ï¼ŒåŠ å¼ºå„æ¨¡å—ä¹‹é—´çš„è§£è€¦
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0   2025.11.2        Wang Zihao        1. Íê³É×î³õ°æ
+  *  V1.0.0   2025.11.2        Wang Zihao        1. å®Œæˆæœ€åˆç‰ˆ
   *
   @verbatim
   ==============================================================================
@@ -23,14 +23,14 @@
 
 
 static List * DATA_LIST = NULL;
-static uint8_t USED_LEN = 0;  // ÒÑ¾­Ê¹ÓÃµÄÊý¾ÝÁ¿
+static uint8_t USED_LEN = 0;  // å·²ç»ä½¿ç”¨çš„æ•°æ®é‡
 
 
 /**
- * @brief          ·¢²¼Êý¾Ý
- * @param[in]      address Êý¾ÝµØÖ·
- * @param[in]      name Êý¾ÝÃû³Æ(×î´ó³¤¶ÈÎª19×Ö·û)
- * @retval         Êý¾Ý·¢²¼×´Ì¬
+ * @brief          å‘å¸ƒæ•°æ®
+ * @param[in]      address æ•°æ®åœ°å€
+ * @param[in]      name æ•°æ®åç§°(æœ€å¤§é•¿åº¦ä¸º19å­—ç¬¦)
+ * @retval         æ•°æ®å‘å¸ƒçŠ¶æ€
  */
 uint8_t Publish(void * address, char * name)
 {
@@ -39,7 +39,7 @@ uint8_t Publish(void * address, char * name)
     }
 
     Node * node = ListGetHead(DATA_LIST);
-    // ±éÀúÁ´±íÅÐ¶ÏÊý¾ÝÊÇ·ñÒÑ¾­´æÔÚ
+    // éåŽ†é“¾è¡¨åˆ¤æ–­æ•°æ®æ˜¯å¦å·²ç»å­˜åœ¨
     while (node != NULL) {
         if (strcmp(((Data_t *)node->data)->data_name, name) == 0) {
             return PUBLISH_ALREADY_EXIST;
@@ -47,7 +47,7 @@ uint8_t Publish(void * address, char * name)
         node = ListGetNodeNext(node);
     }
 
-    // ±£´æÊý¾Ý
+    // ä¿å­˜æ•°æ®
     Data_t * data = (Data_t *)malloc(sizeof(Data_t));
     memcpy(&data->data_address, &address, 4);
     memcpy(data->data_name, name, NAME_LEN);
@@ -59,9 +59,9 @@ uint8_t Publish(void * address, char * name)
 }
 
 /**
- * @brief          ¶©ÔÄÊý¾Ý
- * @param[in]      name Êý¾ÝÃû³Æ
- * @retval         ¶©ÔÄÊý¾ÝµÄµØÖ·
+ * @brief          è®¢é˜…æ•°æ®
+ * @param[in]      name æ•°æ®åç§°
+ * @retval         è®¢é˜…æ•°æ®çš„åœ°å€
  */
 const void * Subscribe(char * name)
 {
@@ -69,7 +69,7 @@ const void * Subscribe(char * name)
         return NULL;
     }
 
-    // ±éÀúÁ´±íÑ°ÕÒÊý¾Ý
+    // éåŽ†é“¾è¡¨å¯»æ‰¾æ•°æ®
     Node * node = ListGetHead(DATA_LIST);
     while (node != NULL) {
         if (strcmp(((Data_t *)node->data)->data_name, name) == 0) {

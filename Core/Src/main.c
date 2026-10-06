@@ -31,6 +31,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "app_api.h"
 #include "UART_data_txrx.h"
 #include "CAN_receive_send.h"
 
@@ -45,7 +46,7 @@
 #include "music.h"
 #include "Chassis.h"
 #include "Gimbal.h"
-#include "shoot.h"
+#include "Shoot.h"
 #include "Auto_control.h"
 #include "Global_status.h"
 
@@ -142,11 +143,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_IWDG_Refresh(&hiwdg1);
   /*INIT*/
+  App_Init();
   Uart_Init();
   Can_Init();
   Refree_system_init();
-  imu_init(0x01, 0x11, &hfdcan3, &dm_imu_gimbal);
-  imu_change_to_request(&dm_imu_gimbal);
+
+
   HAL_IWDG_Refresh(&hiwdg1);
   HAL_GPIO_WritePin(Power_5V_GPIO_Port, Power_5V_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(Camera_ctrl_GPIO_Port, Camera_ctrl_Pin, GPIO_PIN_SET);
@@ -320,14 +322,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   uint8_t history = 4;
   if (htim->Instance == TIM13) // 1000HZ
   {
-    IMU_Updata();
+    App_ImuStep();
   }
   else if (htim->Instance == TIM14) // 200Hz
   {
     if (i == 0)
     {
       HAL_GPIO_WritePin(Camera_ctrl_GPIO_Port, Camera_ctrl_Pin, GPIO_PIN_SET);
-      STM32_to_MINIPC();
+      App_SendVisionTelemetry();
       i = 1;
     }
     else

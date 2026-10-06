@@ -1,7 +1,7 @@
 /**
  * @file supercup.c
  * @author Siri (lixirui@outlook.com)
- * @brief ³¬µçÏà¹Ø¿ØÖÆ
+ * @brief è¶…ç”µç›¸å…³æ§åˆ¶
  * @version 0.1
  * @date 2024-10-25
  *
@@ -15,20 +15,20 @@
 
 Supercap_t cap;
 Supercap_send_t send_data_cap;
-FDCAN_HandleTypeDef *Supercup_send_hfdcan; // Í¨¹ı´Ë´¦×Ô¶¯È·¶¨³¬µç¹ÒÔØµÄcanÍ¨µÀ
+FDCAN_HandleTypeDef *Supercup_send_hfdcan; // é€šè¿‡æ­¤å¤„è‡ªåŠ¨ç¡®å®šè¶…ç”µæŒ‚è½½çš„cané€šé“
 
 /**
- * @brief ½âÂë³¬µçĞÅÏ¢
+ * @brief è§£ç è¶…ç”µä¿¡æ¯
  *
- * @param hfdcan ÊÕµ½³¬µçĞÅÏ¢µÄcanÍ¨µÀ
- * @param data ÊÕµ½µÄÊı¾İ
+ * @param hfdcan æ”¶åˆ°è¶…ç”µä¿¡æ¯çš„cané€šé“
+ * @param data æ”¶åˆ°çš„æ•°æ®
  */
 void Supercup_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t receive_id)
 {
-    // È·¶¨³¬µçËù¹ÒÔØµÄcanÍ¨µÀ
+    // ç¡®å®šè¶…ç”µæ‰€æŒ‚è½½çš„cané€šé“
     Supercup_send_hfdcan = hfdcan;
 
-    // »ñÈ¡³¬µçµçÑ¹
+    // è·å–è¶…ç”µç”µå‹
     static float rev_vol;
     static float chassis_power;
     if (receive_id == Supercap_receive_id)
@@ -44,7 +44,7 @@ void Supercup_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t
 }
 
 /**
- * @brief ·¢ËÍ³¬µç¿ØÖÆÊı¾İ
+ * @brief å‘é€è¶…ç”µæ§åˆ¶æ•°æ®
  *
  */
 void Supercup_SendData(void)
@@ -53,14 +53,14 @@ void Supercup_SendData(void)
     static FDCAN_TxHeaderTypeDef tx_message;
 
     tx_message.Identifier = Supercap_send_id;
-    tx_message.IdType = FDCAN_STANDARD_ID;              // ±ê×¼ID
-    tx_message.TxFrameType = FDCAN_DATA_FRAME;          // Êı¾İÖ¡
-    tx_message.DataLength = FDCAN_DATA_BYTES_8;         // ·¢ËÍÊı¾İ³¤¶È
-    tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;  // ÉèÖÃ´íÎó×´Ì¬Ö¸Ê¾
-    tx_message.BitRateSwitch = FDCAN_BRS_OFF;           // ²»¿ªÆô¿É±ä²¨ÌØÂÊ
-    tx_message.FDFormat = FDCAN_CLASSIC_CAN;            // ÆÕÍ¨CAN¸ñÊ½
-    tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // ÓÃÓÚ·¢ËÍÊÂ¼şFIFO¿ØÖÆ, ²»´æ´¢
-    tx_message.MessageMarker = 0x00;                    // ÓÃÓÚ¸´ÖÆµ½TX EVENT FIFOµÄÏûÏ¢MakerÀ´Ê¶±ğÏûÏ¢×´Ì¬£¬·¶Î§0µ½0xFF
+    tx_message.IdType = FDCAN_STANDARD_ID;              // æ ‡å‡†ID
+    tx_message.TxFrameType = FDCAN_DATA_FRAME;          // æ•°æ®å¸§
+    tx_message.DataLength = FDCAN_DATA_BYTES_8;         // å‘é€æ•°æ®é•¿åº¦
+    tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;  // è®¾ç½®é”™è¯¯çŠ¶æ€æŒ‡ç¤º
+    tx_message.BitRateSwitch = FDCAN_BRS_OFF;           // ä¸å¼€å¯å¯å˜æ³¢ç‰¹ç‡
+    tx_message.FDFormat = FDCAN_CLASSIC_CAN;            // æ™®é€šCANæ ¼å¼
+    tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // ç”¨äºå‘é€äº‹ä»¶FIFOæ§åˆ¶, ä¸å­˜å‚¨
+    tx_message.MessageMarker = 0x00;                    // ç”¨äºå¤åˆ¶åˆ°TX EVENT FIFOçš„æ¶ˆæ¯Makeræ¥è¯†åˆ«æ¶ˆæ¯çŠ¶æ€ï¼ŒèŒƒå›´0åˆ°0xFF
 
     Supercap_send_t send_data;
 
@@ -74,10 +74,10 @@ void Supercup_SendData(void)
 }
 
 /**
- * @brief ÉèÖÃ³¬µçµÄ¹¦ÂÊ
+ * @brief è®¾ç½®è¶…ç”µçš„åŠŸç‡
  *
- * @param set ÉèÖÃÖµ 50~200
- * @return int ÊÇ·ñÉèÖÃ³É¹¦ 0³É¹¦£¬-1Ê§°Ü
+ * @param set è®¾ç½®å€¼ 50~200
+ * @return int æ˜¯å¦è®¾ç½®æˆåŠŸ 0æˆåŠŸï¼Œ-1å¤±è´¥
  */
 int Supercap_SetPower(uint8_t set)
 {
@@ -88,9 +88,9 @@ int Supercap_SetPower(uint8_t set)
 }
 
 /**
- * @brief »ñÈ¡³¬µçÊ£ÓàµçÑ¹
+ * @brief è·å–è¶…ç”µå‰©ä½™ç”µå‹
  *
- * @return float ³¬µçÊ£ÓàµçÑ¹
+ * @return float è¶…ç”µå‰©ä½™ç”µå‹
  */
 float Supercap_GetRemainVol(void)
 {
@@ -98,9 +98,9 @@ float Supercap_GetRemainVol(void)
 }
 
 /**
- * @brief »ñÈ¡³¬µçÔ¤²âÊ£ÓàÈİÁ¿
+ * @brief è·å–è¶…ç”µé¢„æµ‹å‰©ä½™å®¹é‡
  *
- * @return float ³¬µçÊ£ÓàÈİÁ¿ °Ù·ÖÖµ
+ * @return float è¶…ç”µå‰©ä½™å®¹é‡ ç™¾åˆ†å€¼
  */
 float Supercap_GetPredictEnergy(void)
 {

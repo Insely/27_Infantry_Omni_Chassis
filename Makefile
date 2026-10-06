@@ -13,7 +13,7 @@
 ######################################
 # target
 ######################################
-TARGET = 26_Code
+TARGET = 27_Infantry_Chassis
 
 
 ######################################
@@ -28,27 +28,38 @@ OPT = -Og
 # paths
 #######################################
 # Build path
-BUILD_DIR = build
+BUILD_DIR ?= build
 
 ######################################
 
 
 # source
-# π´π≤∞¸∫¨¬∑æ∂
-COMMON_SOURCES = \
+# ÂÖ¨ÂÖ±ÂåÖÂê´Ë∑ØÂæÑ
+USER_C_SOURCES = \
     $(wildcard User/Algorithm/*.c) \
     $(wildcard User/BSP/*.c) \
     $(wildcard User/Hardware/*.c) \
-	$(wildcard User/Hardware/IMU/*.c) \
-	$(wildcard User/Hardware/Motor/*.c) \
-	$(wildcard User/Hardware/Remote/*.c) \
-    $(wildcard User/Software/*.c) \
-	$(wildcard User/ui/*.c) \
-	$(wildcard User/System/*.c)
+    $(wildcard User/Hardware/IMU/*.c) \
+    $(wildcard User/Hardware/Motor/*.c) \
+    $(wildcard User/Hardware/Remote/*.c) \
+    $(wildcard User/System/*.c) \
+    $(wildcard User/Software/Infantry/*.c) \
+    $(wildcard User/Software/Infantry/ui/*.c) \
+    $(wildcard User/Software/Sentry/*.c) \
+    $(wildcard User/Software/Sentry/ui/*.c)
+
+# Optional C++ is restricted to Software; current application sources are all C.
+USER_CPP_SOURCES = \
+    $(wildcard User/Software/Infantry/*.cpp) \
+    $(wildcard User/Software/Infantry/*.cc) \
+    $(wildcard User/Software/Infantry/*.cxx) \
+    $(wildcard User/Software/Sentry/*.cpp) \
+    $(wildcard User/Software/Sentry/*.cc) \
+    $(wildcard User/Software/Sentry/*.cxx)
 
 ######################################
 # C sources
-C_SOURCES =  \
+C_SOURCES = $(USER_C_SOURCES) \
 Core/Src/main.c \
 Core/Src/gpio.c \
 Core/Src/freertos.c \
@@ -122,6 +133,15 @@ Drivers/Chip/w25q64/w25q64.c \
 ASM_SOURCES =  \
 startup_stm32h723xx.s
 
+# C++ sources
+CPP_SOURCES = $(filter %.cpp,$(USER_CPP_SOURCES))
+
+# C++ sources
+CC_SOURCES = $(filter %.cc,$(USER_CPP_SOURCES))
+
+# C++ sources
+CXX_SOURCES = $(filter %.cxx,$(USER_CPP_SOURCES))
+
 # ASM sources
 ASMM_SOURCES = 
 
@@ -134,11 +154,13 @@ PREFIX = arm-none-eabi-
 # either it can be added to the PATH environment variable.
 ifdef GCC_PATH
 CC = $(GCC_PATH)/$(PREFIX)gcc
+CXX = $(GCC_PATH)/$(PREFIX)g++
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
 else
 CC = $(PREFIX)gcc
+CXX = $(PREFIX)g++
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
@@ -180,8 +202,10 @@ COMMON_INCLUDES = \
 -IUser/Hardware/IMU \
 -IUser/Hardware/Motor \
 -IUser/Hardware/Remote \
--IUser/Software \
--IUser/ui \
+-IUser/Software/Infantry \
+-IUser/Software/Infantry/ui \
+-IUser/Software/Sentry \
+-IUser/Software/Sentry/ui \
 -IUser/System
 # AS includes
 AS_INCLUDES =  \
@@ -219,37 +243,38 @@ C_INCLUDES =  \
 -IDrivers/Chip/ws2812 \
 -IDrivers/Chip/w25q64 \
 -IDrivers/CMSIS/Include \
-# ∫œ≤¢µΩ÷˜≈‰÷√
-C_SOURCES +=  $(COMMON_SOURCES)
+# ÂêàÂπ∂Âà∞‰∏ªÈÖçÁΩÆ
 C_INCLUDES += $(COMMON_INCLUDES) 
 AS_INCLUDES += $(COMMON_INCLUDES)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS += -std=gnu11 $(EXTRA_DEFS) $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CXXFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -std=gnu++14 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
+CXXFLAGS += -g -gdwarf-2
 endif
 
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+CXXFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 
 #######################################
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = stm32h723vgtx_flash.ld
+LDSCRIPT = STM32H723VGTx_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = User/Algorithm/AHRS.lib
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-# printf float
-LDFLAGS += -lc -lrdimon -u _printf_float
+
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
@@ -258,20 +283,35 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 # build the application
 #######################################
 # list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
+OBJECTS = $(addprefix $(BUILD_DIR)/,$(C_SOURCES:.c=.o))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(CPP_SOURCES:.cpp=.o))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(CC_SOURCES:.cc=.o))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(CXX_SOURCES:.cxx=.o))
 # list of ASM program objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES)))
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASMM_SOURCES:.S=.o)))
-vpath %.S $(sort $(dir $(ASMM_SOURCES)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(ASM_SOURCES:.s=.o))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(ASMM_SOURCES:.S=.o))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(@:.o=.lst) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
+	$(CXX) -c $(CXXFLAGS) -Wa,-a,-ad,-alms=$(@:.o=.lst) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cc Makefile | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
+	$(CXX) -c $(CXXFLAGS) -Wa,-a,-ad,-alms=$(@:.o=.lst) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cxx Makefile | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
+	$(CXX) -c $(CXXFLAGS) -Wa,-a,-ad,-alms=$(@:.o=.lst) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
 	$(AS) -c $(CFLAGS) $< -o $@
 $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
 	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
@@ -285,16 +325,26 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(BIN) $< $@	
 	
 $(BUILD_DIR):
-	mkdir $@		
+	mkdir -p $@		
 
 #######################################
 # clean up
 #######################################
 clean:
-	-rm -fR $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
   
 #######################################
 # dependencies
 #######################################
--include $(wildcard $(BUILD_DIR)/*.d)
+-include $(shell find $(BUILD_DIR) -name '*.d' 2>/dev/null)
 # *** EOF ***
+
+
+.PHONY: test check
+test:
+	python3 .doc/AI‰øÆÊîπËÆ∞ÂΩï/tests/test_boardlink.py
+	python3 .doc/AI‰øÆÊîπËÆ∞ÂΩï/tests/test_chassis.py
+	python3 .doc/AI‰øÆÊîπËÆ∞ÂΩï/tests/test_yaw.py
+check: test
+	python3 .doc/AI‰øÆÊîπËÆ∞ÂΩï/tests/build_matrix.py
+	python3 .doc/AI‰øÆÊîπËÆ∞ÂΩï/tests/test_partition.py

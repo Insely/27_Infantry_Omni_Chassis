@@ -74,18 +74,8 @@
     "motor_control_task.h": "c",
     "random": "c"
   },
-  "files.encoding": "gbk",
+  "files.encoding": "utf8",
   "makefile.makefilePath": "${workspaceFolder}/Makefile",
-  "makefile.makePath": "/usr/bin/make",
-  "github.copilot.advanced": {
-    "debug.overrideCAPIUrl": "https://copilot.637274.xyz",
-    "debug.overrideProxyUrl": "https://copilot.637274.xyz",
-    "debug.chatOverrideProxyUrl": "https://copilot.637274.xyz/chat/completions",
-    "authProvider": "github"
-  },
-  "github-enterprise.uri": "https://copilot.637274.xyz",
-  "cortex-debug.variableUseNaturalFormat": true,
-  "cortex-debug.openocdPath": "/opt/homebrew/bin/openocd",
-  "cortex-debug.armToolchainPath": "/opt/homebrew/bin",
-  "cortex-debug.gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb"
+  "makefile.makePath": "make",
+  "cortex-debug.variableUseNaturalFormat": true
 }

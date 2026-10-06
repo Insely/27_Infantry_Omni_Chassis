@@ -9,9 +9,9 @@
 VT13_data_t VT13_data;
 
 /**
- * @brief          Ò£¿ØÆ÷Ð­Òé½âÎö
- * @param[in]      VT13_buf: Ô­ÉúÊý¾ÝÖ¸Õë
- * @param[out]     rc_ctrl: Ò£¿ØÆ÷Êý¾ÝÖ¸
+ * @brief          é¥æŽ§å™¨åè®®è§£æž
+ * @param[in]      VT13_buf: åŽŸç”Ÿæ•°æ®æŒ‡é’ˆ
+ * @param[out]     rc_ctrl: é¥æŽ§å™¨æ•°æ®æŒ‡
  * @retval         none
  */
 void VT13_DataSolve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl)
@@ -32,7 +32,7 @@ void VT13_DataSolve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl)
 			rc_ctrl->rc.left_button = ((VT13_buf[7] >> 7) & 0x01);//fn
 			rc_ctrl->rc.right_button = ((VT13_buf[8] >> 0) & 0x01);
 			rc_ctrl->rc.wheel = ((VT13_buf[8] >> 1) | (VT13_buf[9] << 7)) & 0x07FF;
-			rc_ctrl->rc.shutter = (VT13_buf[9] >> 4) & 0x01;//°â»ú
+			rc_ctrl->rc.shutter = (VT13_buf[9] >> 4) & 0x01;//æ‰³æœº
 			
 			rc_ctrl->mouse.x = (VT13_buf[10] | (VT13_buf[11] << 8));
 			rc_ctrl->mouse.y = (VT13_buf[12] | (VT13_buf[13] << 8));

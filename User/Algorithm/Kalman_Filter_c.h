@@ -9,7 +9,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-//不要删，反正删了会有问题
+//涓嶈鍒狅紝鍙嶆鍒犱簡浼氭湁闂
 typedef struct Attitude_3D_t
 {
     float yaw;
@@ -21,14 +21,14 @@ typedef struct Attitude_3D_t
 } Attitude_3D_t;
 
 typedef struct {
-    float X_last; //上一时刻的最优结�?  X(k-|k-1)
-    float X_mid;  //当前时刻的预测结�?  X(k|k-1)
-    float X_now;  //当前时刻的最优结�?  X(k|k)
-    float P_mid;  //当前时刻预测结果的协方差  P(k|k-1)
-    float P_now;  //当前时刻最优结果的协方�?  P(k|k)
-    float P_last; //上一时刻最优结果的协方�?  P(k-1|k-1)
-    float kg;     //kalman增益
-    float A;      //系统参数
+    float X_last; //涓婁竴鏃跺埢鐨勬渶浼樼粨鏋?  X(k-|k-1)
+    float X_mid;  //褰撳墠鏃跺埢鐨勯娴嬬粨鏋?  X(k|k-1)
+    float X_now;  //褰撳墠鏃跺埢鐨勬渶浼樼粨鏋?  X(k|k)
+    float P_mid;  //褰撳墠鏃跺埢棰勬祴缁撴灉鐨勫崗鏂瑰樊  P(k|k-1)
+    float P_now;  //褰撳墠鏃跺埢鏈�浼樼粨鏋滅殑鍗忔柟宸?  P(k|k)
+    float P_last; //涓婁竴鏃跺埢鏈�浼樼粨鏋滅殑鍗忔柟宸?  P(k-1|k-1)
+    float kg;     //kalman澧炵泭
+    float A;      //绯荤粺鍙傛暟
     float B;
     float Q;
     float R;
@@ -39,8 +39,8 @@ typedef struct
 {
   extKalman_t Angle_KF;
   extKalman_t Out_KF;
-  float Angle;                      //角度  （坐标系的角度其实就是误差）                     //角加速度
-  float Out;//总输�?	
+  float Angle;                      //瑙掑害  锛堝潗鏍囩郴鐨勮搴﹀叾瀹炲氨鏄宸級                     //瑙掑姞閫熷害
+  float Out;//鎬昏緭鍑?	
 }KF_t;
 
 extern KF_t yaw_auto_kf;

@@ -3,26 +3,26 @@
 #include <stdlib.h>
 
 /*
- *    ListCreate ´´½¨Ò»¸öÁ´±í
+ *    ListCreate åˆ›å»ºä¸€ä¸ªé“¾è¡¨
  *
- *    ListPushBack Î²²¿Ìí¼ÓÊı¾İ
- *    ListPushFront Í·²¿Ìí¼ÓÊı¾İ
- *    ListInsert °´Î»ÖÃ²åÈëÊı¾İ
- *    ListInsertForNode ¸ø¶¨½áµã²åÈëÊı¾İ£¬²åÈëµ½½áµãÇ°
+ *    ListPushBack å°¾éƒ¨æ·»åŠ æ•°æ®
+ *    ListPushFront å¤´éƒ¨æ·»åŠ æ•°æ®
+ *    ListInsert æŒ‰ä½ç½®æ’å…¥æ•°æ®
+ *    ListInsertForNode ç»™å®šç»“ç‚¹æ’å…¥æ•°æ®ï¼Œæ’å…¥åˆ°ç»“ç‚¹å‰
  *
- *    ListEraseBack Î²²¿É¾³ı
- *    ListEraseFront Í·²¿É¾³ı
- *    ListEraseForNode ¸ø¶¨½áµãÉ¾³ı
+ *    ListEraseBack å°¾éƒ¨åˆ é™¤
+ *    ListEraseFront å¤´éƒ¨åˆ é™¤
+ *    ListEraseForNode ç»™å®šç»“ç‚¹åˆ é™¤
  *
- *    ListGetHead »ñÈ¡Í·½áµã
- *    ListGetTail »ñÈ¡Î²½áµã
- *    ListGetNode »ñÈ¡Ö¸¶¨Î»ÖÃµÄ½áµã
- *    ListGetNodeNext »ñÈ¡Ö¸¶¨½áµãµÄÏÂÒ»¸ö½áµã
+ *    ListGetHead è·å–å¤´ç»“ç‚¹
+ *    ListGetTail è·å–å°¾ç»“ç‚¹
+ *    ListGetNode è·å–æŒ‡å®šä½ç½®çš„ç»“ç‚¹
+ *    ListGetNodeNext è·å–æŒ‡å®šç»“ç‚¹çš„ä¸‹ä¸€ä¸ªç»“ç‚¹
  *    
- *    ListDestroy Ïú»ÙÁ´±í
+ *    ListDestroy é”€æ¯é“¾è¡¨
  */
 
-/// @brief ´´½¨Ò»¸öÁ´±í
+/// @brief åˆ›å»ºä¸€ä¸ªé“¾è¡¨
 List * ListCreate(void)
 {
     List * list = (List *)malloc(sizeof(List));
@@ -34,7 +34,7 @@ List * ListCreate(void)
     return list;
 }
 
-/// @brief Î²²¿Ìí¼ÓÊı¾İ
+/// @brief å°¾éƒ¨æ·»åŠ æ•°æ®
 void ListPushBack(List * list, void * data)
 {
     if (list == NULL) {
@@ -59,7 +59,7 @@ void ListPushBack(List * list, void * data)
     list->len++;
 }
 
-/// @brief Í·²¿Ìí¼ÓÊı¾İ
+/// @brief å¤´éƒ¨æ·»åŠ æ•°æ®
 void ListPushFront(List * list, void * data)
 {
     if (list == NULL) {
@@ -76,7 +76,7 @@ void ListPushFront(List * list, void * data)
     list->len++;
 }
 
-/// @brief °´Î»ÖÃ²åÈëÊı¾İ
+/// @brief æŒ‰ä½ç½®æ’å…¥æ•°æ®
 int8_t ListInsert(List * list, uint32_t pos, void * data)
 {
     if (list == NULL || pos > list->len + 1) {
@@ -105,7 +105,7 @@ int8_t ListInsert(List * list, uint32_t pos, void * data)
     return 0;
 }
 
-/// @brief ¸ø¶¨½áµã²åÈëÊı¾İ£¬²åÈëµ½½áµãÇ°
+/// @brief ç»™å®šç»“ç‚¹æ’å…¥æ•°æ®ï¼Œæ’å…¥åˆ°ç»“ç‚¹å‰
 int8_t ListInsertForNode(List * list, Node * pos, void * data)
 {
     if (list == NULL || pos == NULL) {
@@ -139,7 +139,7 @@ int8_t ListInsertForNode(List * list, Node * pos, void * data)
     return 0;
 }
 
-/// @brief Î²²¿É¾³ı
+/// @brief å°¾éƒ¨åˆ é™¤
 void ListEraseBack(List * list)
 {
     if (list == NULL || list->head == NULL) {
@@ -165,7 +165,7 @@ void ListEraseBack(List * list)
     list->len--;
 }
 
-/// @brief Í·²¿É¾³ı
+/// @brief å¤´éƒ¨åˆ é™¤
 void ListEraseFront(List * list)
 {
     if (list == NULL || list->head == NULL) {
@@ -178,7 +178,7 @@ void ListEraseFront(List * list)
     list->len--;
 }
 
-/// @brief ¸ø¶¨½áµãÉ¾³ı
+/// @brief ç»™å®šç»“ç‚¹åˆ é™¤
 void ListEraseForNode(List * list, Node * pos)
 {
     if (list == NULL || pos == NULL) {
@@ -206,7 +206,7 @@ void ListEraseForNode(List * list, Node * pos)
     list->len--;
 }
 
-/// @brief »ñÈ¡Í·½áµã
+/// @brief è·å–å¤´ç»“ç‚¹
 Node * ListGetHead(List * list)
 {
     if (list == NULL) {
@@ -215,7 +215,7 @@ Node * ListGetHead(List * list)
     return list->head;
 }
 
-/// @brief »ñÈ¡Î²½áµã
+/// @brief è·å–å°¾ç»“ç‚¹
 Node * ListGetTail(List * list)
 {
     if (list == NULL || list->head == NULL) {
@@ -229,7 +229,7 @@ Node * ListGetTail(List * list)
     return p;
 }
 
-/// @brief »ñÈ¡Ö¸¶¨Î»ÖÃµÄ½áµã
+/// @brief è·å–æŒ‡å®šä½ç½®çš„ç»“ç‚¹
 Node * ListGetNode(List * list, uint32_t pos)
 {
     if (list == NULL || pos >= list->len) {
@@ -243,7 +243,7 @@ Node * ListGetNode(List * list, uint32_t pos)
     return p;
 }
 
-/// @brief »ñÈ¡Ö¸¶¨½áµãµÄÏÂÒ»¸ö½áµã
+/// @brief è·å–æŒ‡å®šç»“ç‚¹çš„ä¸‹ä¸€ä¸ªç»“ç‚¹
 Node * ListGetNodeNext(Node * node)
 {
     if (node == NULL) {
@@ -252,7 +252,7 @@ Node * ListGetNodeNext(Node * node)
     return node->next;
 }
 
-/// @brief Ïú»ÙÁ´±í
+/// @brief é”€æ¯é“¾è¡¨
 void ListDestroy(List * list)
 {
     if (list == NULL) {

@@ -1,6 +1,6 @@
 #include "User_math.h"
 
-//¿ìËÙ¿ª·½
+//å¿«é€Ÿå¼€æ–¹
 fp32 Inv_Sqrt(fp32 num)
 {
     fp32 halfnum = 0.5f * num;
@@ -12,7 +12,7 @@ fp32 Inv_Sqrt(fp32 num)
     return y;
 }
 
-//¾ø¶ÔÏŞÖÆ
+//ç»å¯¹é™åˆ¶
 void Abs_Limit(fp32 * num, fp32 Limit)
 {
     if (*num > Limit) {
@@ -22,7 +22,7 @@ void Abs_Limit(fp32 * num, fp32 Limit)
     }
 }
 
-//ÅĞ¶Ï·ûºÅÎ»
+//åˆ¤æ–­ç¬¦å·ä½
 fp32 Sign(fp32 value)
 {
     if (value >= 0.0f) {
@@ -32,7 +32,7 @@ fp32 Sign(fp32 value)
     }
 }
 
-//¸¡µãËÀÇø
+//æµ®ç‚¹æ­»åŒº
 fp32 fp32_deadline(fp32 Value, fp32 minValue, fp32 maxValue)
 {
     if (Value < maxValue && Value > minValue) {
@@ -41,7 +41,7 @@ fp32 fp32_deadline(fp32 Value, fp32 minValue, fp32 maxValue)
     return Value;
 }
 
-//int16ËÀÇø
+//int16æ­»åŒº
 int16_t int16_deadline(int16_t Value, int16_t minValue, int16_t maxValue)
 {
     if (Value < maxValue && Value > minValue) {
@@ -50,7 +50,7 @@ int16_t int16_deadline(int16_t Value, int16_t minValue, int16_t maxValue)
     return Value;
 }
 
-//¸¡µãÏŞ·ùº¯Êı
+//æµ®ç‚¹é™å¹…å‡½æ•°
 fp32 fp32_constrain(fp32 Value, fp32 minValue, fp32 maxValue)
 {
     if (Value < minValue)
@@ -61,7 +61,7 @@ fp32 fp32_constrain(fp32 Value, fp32 minValue, fp32 maxValue)
         return Value;
 }
 
-//int16ÏŞ·ùº¯Êı
+//int16é™å¹…å‡½æ•°
 int16_t int16_constrain(int16_t Value, int16_t minValue, int16_t maxValue)
 {
     if (Value < minValue)
@@ -72,7 +72,7 @@ int16_t int16_constrain(int16_t Value, int16_t minValue, int16_t maxValue)
         return Value;
 }
 
-//¸¡µãÑ­»·ÏŞ·ùº¯Êı
+//æµ®ç‚¹å¾ªç¯é™å¹…å‡½æ•°
 fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue)
 {
     if (maxValue < minValue) {
@@ -93,10 +93,10 @@ fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue)
     return Input;
 }
 
-// ½«ÈÎÒâ½Ç¶È¹éÒ»»¯µ½ [-PI, PI]
+// å°†ä»»æ„è§’åº¦å½’ä¸€åŒ–åˆ° [-PI, PI]
 float normalize_angle(float angle) {
     const float TWO_PI = 2.0 * PI;
-    angle = fmod(angle, TWO_PI);      // Ô¼¼òµ½ [-2¦Ğ, 2¦Ğ)
+    angle = fmod(angle, TWO_PI);      // çº¦ç®€åˆ° [-2Ï€, 2Ï€)
     if (angle > PI)
         angle -= TWO_PI;
     else if (angle < -PI)
@@ -106,13 +106,13 @@ float normalize_angle(float angle) {
 
 /**
 ************************************************************************
-* @brief:      	float_to_uint: ¸¡µãÊı×ª»»ÎªÎŞ·ûºÅÕûÊıº¯Êı
-* @param[in]:   x_float:	´ı×ª»»µÄ¸¡µãÊı
-* @param[in]:   x_min:		·¶Î§×îĞ¡Öµ
-* @param[in]:   x_max:		·¶Î§×î´óÖµ
-* @param[in]:   bits: 		Ä¿±êÎŞ·ûºÅÕûÊıµÄÎ»Êı
-* @retval:     	ÎŞ·ûºÅÕûÊı½á¹û
-* @details:    	½«¸ø¶¨µÄ¸¡µãÊı x ÔÚÖ¸¶¨·¶Î§ [x_min, x_max] ÄÚ½øĞĞÏßĞÔÓ³Éä£¬Ó³Éä½á¹ûÎªÒ»¸öÖ¸¶¨Î»ÊıµÄÎŞ·ûºÅÕûÊı
+* @brief:      	float_to_uint: æµ®ç‚¹æ•°è½¬æ¢ä¸ºæ— ç¬¦å·æ•´æ•°å‡½æ•°
+* @param[in]:   x_float:	å¾…è½¬æ¢çš„æµ®ç‚¹æ•°
+* @param[in]:   x_min:		èŒƒå›´æœ€å°å€¼
+* @param[in]:   x_max:		èŒƒå›´æœ€å¤§å€¼
+* @param[in]:   bits: 		ç›®æ ‡æ— ç¬¦å·æ•´æ•°çš„ä½æ•°
+* @retval:     	æ— ç¬¦å·æ•´æ•°ç»“æœ
+* @details:    	å°†ç»™å®šçš„æµ®ç‚¹æ•° x åœ¨æŒ‡å®šèŒƒå›´ [x_min, x_max] å†…è¿›è¡Œçº¿æ€§æ˜ å°„ï¼Œæ˜ å°„ç»“æœä¸ºä¸€ä¸ªæŒ‡å®šä½æ•°çš„æ— ç¬¦å·æ•´æ•°
 ************************************************************************
 **/
 int float_to_uint(float x_float, float x_min, float x_max, int bits)
@@ -124,13 +124,13 @@ int float_to_uint(float x_float, float x_min, float x_max, int bits)
 }
 /**
 ************************************************************************
-* @brief:      	uint_to_float: ÎŞ·ûºÅÕûÊı×ª»»Îª¸¡µãÊıº¯Êı
-* @param[in]:   x_int: ´ı×ª»»µÄÎŞ·ûºÅÕûÊı
-* @param[in]:   x_min: ·¶Î§×îĞ¡Öµ
-* @param[in]:   x_max: ·¶Î§×î´óÖµ
-* @param[in]:   bits:  ÎŞ·ûºÅÕûÊıµÄÎ»Êı
-* @retval:     	¸¡µãÊı½á¹û
-* @details:    	½«¸ø¶¨µÄÎŞ·ûºÅÕûÊı x_int ÔÚÖ¸¶¨·¶Î§ [x_min, x_max] ÄÚ½øĞĞÏßĞÔÓ³Éä£¬Ó³Éä½á¹ûÎªÒ»¸ö¸¡µãÊı
+* @brief:      	uint_to_float: æ— ç¬¦å·æ•´æ•°è½¬æ¢ä¸ºæµ®ç‚¹æ•°å‡½æ•°
+* @param[in]:   x_int: å¾…è½¬æ¢çš„æ— ç¬¦å·æ•´æ•°
+* @param[in]:   x_min: èŒƒå›´æœ€å°å€¼
+* @param[in]:   x_max: èŒƒå›´æœ€å¤§å€¼
+* @param[in]:   bits:  æ— ç¬¦å·æ•´æ•°çš„ä½æ•°
+* @retval:     	æµ®ç‚¹æ•°ç»“æœ
+* @details:    	å°†ç»™å®šçš„æ— ç¬¦å·æ•´æ•° x_int åœ¨æŒ‡å®šèŒƒå›´ [x_min, x_max] å†…è¿›è¡Œçº¿æ€§æ˜ å°„ï¼Œæ˜ å°„ç»“æœä¸ºä¸€ä¸ªæµ®ç‚¹æ•°
 ************************************************************************
 **/
 float uint_to_float(int x_int, float x_min, float x_max, int bits)
@@ -141,36 +141,36 @@ float uint_to_float(int x_int, float x_min, float x_max, int bits)
     return ((float)x_int) * span / ((float)((1 << bits) - 1)) + offset;
 }
 
-// ½«float°´×Ö½Ú²ğ·Ö
+// å°†floatæŒ‰å­—èŠ‚æ‹†åˆ†
 void float_to_bytes(float f, uint8_t *bytes) 
 	{
-    uint32_t *p = (uint32_t *)&f;  // ½«floatÖ¸ÕëÇ¿ÖÆ×ª»»Îªuint32_tÖ¸Õë
-    uint32_t temp = *p;            // »ñÈ¡floatµÄ¶ş½øÖÆ±íÊ¾
-    bytes[0] = (temp >> 0) & 0xFF; // ÌáÈ¡×îµÍ×Ö½Ú
-    bytes[1] = (temp >> 8) & 0xFF; // ÌáÈ¡µÚ¶ş¸ö×Ö½Ú
-    bytes[2] = (temp >> 16) & 0xFF; // ÌáÈ¡µÚÈı¸ö×Ö½Ú
-    bytes[3] = (temp >> 24) & 0xFF; // ÌáÈ¡×î¸ß×Ö½Ú
+    uint32_t *p = (uint32_t *)&f;  // å°†floatæŒ‡é’ˆå¼ºåˆ¶è½¬æ¢ä¸ºuint32_tæŒ‡é’ˆ
+    uint32_t temp = *p;            // è·å–floatçš„äºŒè¿›åˆ¶è¡¨ç¤º
+    bytes[0] = (temp >> 0) & 0xFF; // æå–æœ€ä½å­—èŠ‚
+    bytes[1] = (temp >> 8) & 0xFF; // æå–ç¬¬äºŒä¸ªå­—èŠ‚
+    bytes[2] = (temp >> 16) & 0xFF; // æå–ç¬¬ä¸‰ä¸ªå­—èŠ‚
+    bytes[3] = (temp >> 24) & 0xFF; // æå–æœ€é«˜å­—èŠ‚
   }
 
-// ½«×Ö½ÚÊı×é×ª»»Îªfloat
+// å°†å­—èŠ‚æ•°ç»„è½¬æ¢ä¸ºfloat
 float bytes_to_float(uint8_t *bytes) 
 	 {
 	 uint32_t temp = 0;
-	 temp |= (bytes[0] << 0);  // ×îµÍ×Ö½Ú
-	 temp |= (bytes[1] << 8);  // µÚ¶ş¸ö×Ö½Ú
-	 temp |= (bytes[2] << 16); // µÚÈı¸ö×Ö½Ú
-	 temp |= (bytes[3] << 24); // ×î¸ß×Ö½Ú
-	 return *(float *)&temp;   // ½«uint32_tÖ¸ÕëÇ¿ÖÆ×ª»»ÎªfloatÖ¸Õë
+	 temp |= (bytes[0] << 0);  // æœ€ä½å­—èŠ‚
+	 temp |= (bytes[1] << 8);  // ç¬¬äºŒä¸ªå­—èŠ‚
+	 temp |= (bytes[2] << 16); // ç¬¬ä¸‰ä¸ªå­—èŠ‚
+	 temp |= (bytes[3] << 24); // æœ€é«˜å­—èŠ‚
+	 return *(float *)&temp;   // å°†uint32_tæŒ‡é’ˆå¼ºåˆ¶è½¬æ¢ä¸ºfloatæŒ‡é’ˆ
 	 }
 
-// ½«uint16_t°´×Ö½Ú²ğ·Ö
+// å°†uint16_tæŒ‰å­—èŠ‚æ‹†åˆ†
 void uint16_to_bytes(uint16_t value, uint8_t *bytes) 
 {
-    bytes[0] = (value >> 0) & 0xFF; // µÍÎ»×Ö½Ú
-    bytes[1] = (value >> 8) & 0xFF; // ¸ßÎ»×Ö½Ú
+    bytes[0] = (value >> 0) & 0xFF; // ä½ä½å­—èŠ‚
+    bytes[1] = (value >> 8) & 0xFF; // é«˜ä½å­—èŠ‚
 }
 
-// ½«×Ö½ÚÊı×é×ª»»Îªuint16_t
+// å°†å­—èŠ‚æ•°ç»„è½¬æ¢ä¸ºuint16_t
 uint16_t bytes_to_uint16(uint8_t *bytes) 
 {
     uint16_t temp = 0;
@@ -178,13 +178,13 @@ uint16_t bytes_to_uint16(uint8_t *bytes)
     temp |= ((uint16_t)bytes[1] << 8);
     return temp;
 }
-// ½«uint8_t°´×Ö½Ú²ğ·Ö£¨ÆäÊµ¾ÍÊÇ¸³Öµ£©
+// å°†uint8_tæŒ‰å­—èŠ‚æ‹†åˆ†ï¼ˆå…¶å®å°±æ˜¯èµ‹å€¼ï¼‰
 void uint8_to_bytes(uint8_t value, uint8_t *bytes) 
 {
     bytes[0] = value;
 }
 
-// ½«×Ö½ÚÊı×é×ª»»Îªuint8_t
+// å°†å­—èŠ‚æ•°ç»„è½¬æ¢ä¸ºuint8_t
 uint8_t bytes_to_uint8(uint8_t *bytes) 
 {
     return bytes[0];
@@ -192,10 +192,10 @@ uint8_t bytes_to_uint8(uint8_t *bytes)
 
 void int_to_bytes(int value, uint8_t *bytes) 
 {
-    bytes[0] = (value >> 0) & 0xFF; // µÍÎ»×Ö½Ú
-    bytes[1] = (value >> 8) & 0xFF; // ¸ßÎ»×Ö½Ú
-    bytes[2] = (value >> 16) & 0xFF; // µÚÈı×Ö½Ú
-    bytes[3] = (value >> 24) & 0xFF; // µÚËÄ×Ö½Ú
+    bytes[0] = (value >> 0) & 0xFF; // ä½ä½å­—èŠ‚
+    bytes[1] = (value >> 8) & 0xFF; // é«˜ä½å­—èŠ‚
+    bytes[2] = (value >> 16) & 0xFF; // ç¬¬ä¸‰å­—èŠ‚
+    bytes[3] = (value >> 24) & 0xFF; // ç¬¬å››å­—èŠ‚
 }
 
 int bytes_to_int(uint8_t *bytes) 

@@ -3,7 +3,7 @@
 #include "string.h"
 
 /**
- * @brief ½«¸¡µãÊı×ª»»ÎªÖ¸¶¨·¶Î§ÄÚµÄÎŞ·ûºÅÕûÊı
+ * @brief å°†æµ®ç‚¹æ•°è½¬æ¢ä¸ºæŒ‡å®šèŒƒå›´å†…çš„æ— ç¬¦å·æ•´æ•°
  */
 uint16_t float_to_uint_LZ(float x, float x_min, float x_max, uint8_t bits) {
     float span = x_max - x_min;
@@ -16,7 +16,7 @@ uint16_t float_to_uint_LZ(float x, float x_min, float x_max, uint8_t bits) {
 }
 
 /**
- * @brief ½«ÎŞ·ûºÅÕûÊı×ª»»ÎªÖ¸¶¨·¶Î§ÄÚµÄ¸¡µãÊı
+ * @brief å°†æ— ç¬¦å·æ•´æ•°è½¬æ¢ä¸ºæŒ‡å®šèŒƒå›´å†…çš„æµ®ç‚¹æ•°
  */
 float uint_to_float_LZ(uint16_t x, float x_min, float x_max, uint8_t bits) {
     float span = x_max - x_min;
@@ -26,7 +26,7 @@ float uint_to_float_LZ(uint16_t x, float x_min, float x_max, uint8_t bits) {
 }
 
 // /**
-//  * @brief ·¢ËÍ MIT Ğ­ÒéÖ¸Áî£¨Í¨ÓÃ£©
+//  * @brief å‘é€ MIT åè®®æŒ‡ä»¤ï¼ˆé€šç”¨ï¼‰
 //  */
 // void lz_send_command(uint8_t can_bus, uint8_t motor_id, uint8_t cmd_type, uint8_t *data) {
 //     FDCAN_HandleTypeDef *hfdcan = get_can_handle(can_bus);
@@ -34,7 +34,7 @@ float uint_to_float_LZ(uint16_t x, float x_min, float x_max, uint8_t bits) {
 // }
 
 /**
- * @brief Ê¹ÄÜµç»ú£¨Ö¸Áî1£©
+ * @brief ä½¿èƒ½ç”µæœºï¼ˆæŒ‡ä»¤1ï¼‰
  */
 void lz_enable_motor(uint8_t can_bus, uint8_t motor_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC};
@@ -42,7 +42,7 @@ void lz_enable_motor(uint8_t can_bus, uint8_t motor_id) {
 }
 
 /**
- * @brief Í£Ö¹µç»ú£¨Ö¸Áî2£©
+ * @brief åœæ­¢ç”µæœºï¼ˆæŒ‡ä»¤2ï¼‰
  */
 void lz_disable_motor(uint8_t can_bus, uint8_t motor_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFD};
@@ -50,7 +50,7 @@ void lz_disable_motor(uint8_t can_bus, uint8_t motor_id) {
 }
 
 /**
- * @brief ·¢ËÍ MIT ¶¯Ì¬²ÎÊı£¨Ö¸Áî3£©
+ * @brief å‘é€ MIT åŠ¨æ€å‚æ•°ï¼ˆæŒ‡ä»¤3ï¼‰
  */
 void lz_send_mit_params(uint8_t can_bus, uint8_t motor_id, float angle, float speed, float kp, float kd, float torque) {
     uint16_t angle_uint = float_to_uint_LZ(angle, P_MIN, P_MAX, 16);
@@ -73,7 +73,7 @@ void lz_send_mit_params(uint8_t can_bus, uint8_t motor_id, float angle, float sp
 }
 
 /**
- * @brief ÉèÖÃÁãµã£¨Ö¸Áî4£©
+ * @brief è®¾ç½®é›¶ç‚¹ï¼ˆæŒ‡ä»¤4ï¼‰
  */
 void lz_set_zero(uint8_t can_bus, uint8_t motor_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE};
@@ -81,7 +81,7 @@ void lz_set_zero(uint8_t can_bus, uint8_t motor_id) {
 }
 
 /**
- * @brief Çå³ı´íÎó£¨Ö¸Áî5£©
+ * @brief æ¸…é™¤é”™è¯¯ï¼ˆæŒ‡ä»¤5ï¼‰
  */
 void lz_clear_fault(uint8_t can_bus, uint8_t motor_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFB};
@@ -89,7 +89,7 @@ void lz_clear_fault(uint8_t can_bus, uint8_t motor_id) {
 }
 
 /**
- * @brief ÉèÖÃÔËĞĞÄ£Ê½£¨Ö¸Áî6£©
+ * @brief è®¾ç½®è¿è¡Œæ¨¡å¼ï¼ˆæŒ‡ä»¤6ï¼‰
  */
 void lz_set_mode(uint8_t can_bus, uint8_t motor_id, uint8_t mode) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, mode, 0xFC};
@@ -97,7 +97,7 @@ void lz_set_mode(uint8_t can_bus, uint8_t motor_id, uint8_t mode) {
 }
 
 /**
- * @brief ĞŞ¸Äµç»úID£¨Ö¸Áî7£©
+ * @brief ä¿®æ”¹ç”µæœºIDï¼ˆæŒ‡ä»¤7ï¼‰
  */
 void lz_set_id(uint8_t can_bus, uint8_t motor_id, uint8_t new_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, new_id, 0xFA};
@@ -105,7 +105,7 @@ void lz_set_id(uint8_t can_bus, uint8_t motor_id, uint8_t new_id) {
 }
 
 /**
- * @brief ĞŞ¸Äµç»úĞ­Òé£¨Ö¸Áî8£©
+ * @brief ä¿®æ”¹ç”µæœºåè®®ï¼ˆæŒ‡ä»¤8ï¼‰
  */
 void lz_set_protocol(uint8_t can_bus, uint8_t motor_id, uint8_t protocol) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, protocol, 0xFD};
@@ -113,7 +113,7 @@ void lz_set_protocol(uint8_t can_bus, uint8_t motor_id, uint8_t protocol) {
 }
 
 /**
- * @brief ĞŞ¸ÄÖ÷»úID£¨Ö¸Áî9£©
+ * @brief ä¿®æ”¹ä¸»æœºIDï¼ˆæŒ‡ä»¤9ï¼‰
  */
 void lz_set_master_id(uint8_t can_bus, uint8_t motor_id, uint8_t master_id) {
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, master_id, 0x01};
@@ -121,7 +121,7 @@ void lz_set_master_id(uint8_t can_bus, uint8_t motor_id, uint8_t master_id) {
 }
 
 /**
- * @brief Î»ÖÃÄ£Ê½¿ØÖÆÖ¸Áî£¨Ö¸Áî10£©
+ * @brief ä½ç½®æ¨¡å¼æ§åˆ¶æŒ‡ä»¤ï¼ˆæŒ‡ä»¤10ï¼‰
  */
 void lz_set_position(uint8_t can_bus, uint8_t motor_id, float target_pos, float max_speed) {
     uint8_t data[8];
@@ -131,7 +131,7 @@ void lz_set_position(uint8_t can_bus, uint8_t motor_id, float target_pos, float 
 }
 
 /**
- * @brief ËÙ¶ÈÄ£Ê½¿ØÖÆÖ¸Áî£¨Ö¸Áî11£©
+ * @brief é€Ÿåº¦æ¨¡å¼æ§åˆ¶æŒ‡ä»¤ï¼ˆæŒ‡ä»¤11ï¼‰
  */
 void lz_set_velocity(uint8_t can_bus, uint8_t motor_id, float target_vel, float current_limit) {
     uint8_t data[8];

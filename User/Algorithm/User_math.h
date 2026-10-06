@@ -10,30 +10,30 @@
 #include "math.h"
 #include "struct_typedef.h"
 
-//³£ÓÃÊı¾İ
+//å¸¸ç”¨æ•°æ®
 #define PI	3.14159265358979f
 #define SQRT1_2 0.70710678118f  // 1/sqrt(2)
 #define SQRT2   1.41421356237f  // sqrt(2)
 
 
-//µ¥Î»×ª»»
+//å•ä½è½¬æ¢
 #define RAD_S_TO_RPM (30.0f/PI)
-#define RPM_TO_RAD_S (PI / 30.0f) //Rpm×ª»¯Îª½Ç¶È¶È
-#define DEG_TO_RAD (PI / 180.0f) //½Ç¶È×ª»¯Îª»¡¶È
-#define RAD_TO_DEG (180.0f / PI) //»¡¶È×ª»¯Îª½Ç¶È
+#define RPM_TO_RAD_S (PI / 30.0f) //Rpmè½¬åŒ–ä¸ºè§’åº¦åº¦
+#define DEG_TO_RAD (PI / 180.0f) //è§’åº¦è½¬åŒ–ä¸ºå¼§åº¦
+#define RAD_TO_DEG (180.0f / PI) //å¼§åº¦è½¬åŒ–ä¸ºè§’åº¦
 
-//ÉùÃ÷Ò»Ğ©º¯Êı
-extern fp32 Inv_Sqrt(fp32 num); //¿ìËÙ¿ª·½
-extern void Abs_Limit(fp32 * num, fp32 Limit); //¾ø¶ÔÏŞÖÆ
-extern fp32 Sign(fp32 value); //ÅĞ¶Ï·ûºÅ
-extern fp32 fp32_deadline(fp32 Value, fp32 minValue, fp32 maxValue); //¸¡µãËÀÇø
-extern int16_t int16_deadline(int16_t Value, int16_t minValue, int16_t maxValue); //int16ËÀÇø
-extern fp32 fp32_constrain(fp32 Value, fp32 minValue, fp32 maxValue); //¸¡µãÏŞ·ùº¯Êı
-extern int16_t int16_constrain(int16_t Value, int16_t minValue, int16_t maxValue); //int16ÏŞ·ùº¯Êı
-extern fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue); //¸¡µãÑ­»·ÏŞ·ùº¯Êı
+//å£°æ˜ä¸€äº›å‡½æ•°
+extern fp32 Inv_Sqrt(fp32 num); //å¿«é€Ÿå¼€æ–¹
+extern void Abs_Limit(fp32 * num, fp32 Limit); //ç»å¯¹é™åˆ¶
+extern fp32 Sign(fp32 value); //åˆ¤æ–­ç¬¦å·
+extern fp32 fp32_deadline(fp32 Value, fp32 minValue, fp32 maxValue); //æµ®ç‚¹æ­»åŒº
+extern int16_t int16_deadline(int16_t Value, int16_t minValue, int16_t maxValue); //int16æ­»åŒº
+extern fp32 fp32_constrain(fp32 Value, fp32 minValue, fp32 maxValue); //æµ®ç‚¹é™å¹…å‡½æ•°
+extern int16_t int16_constrain(int16_t Value, int16_t minValue, int16_t maxValue); //int16é™å¹…å‡½æ•°
+extern fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue); //æµ®ç‚¹å¾ªç¯é™å¹…å‡½æ•°
 extern float normalize_angle(float angle);
 
-//Êı¾İÀàĞÍ×ª»»
+//æ•°æ®ç±»å‹è½¬æ¢
 extern int float_to_uint(float x_float, float x_min, float x_max, int bits) ;
 extern float uint_to_float(int x_int, float x_min, float x_max, int bits);
 void float_to_bytes(float f, uint8_t *bytes);

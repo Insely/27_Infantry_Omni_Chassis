@@ -1,0 +1,74 @@
+[
+  {
+    "board": "Gimbal",
+    "role": 0,
+    "transport": 1,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 0,
+    "transport": 1,
+    "success": true
+  },
+  {
+    "board": "Gimbal",
+    "role": 0,
+    "transport": 2,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 0,
+    "transport": 2,
+    "success": true
+  },
+  {
+    "board": "Gimbal",
+    "role": 0,
+    "transport": 3,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 0,
+    "transport": 3,
+    "success": true
+  },
+  {
+    "board": "Gimbal",
+    "role": 1,
+    "transport": 1,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 1,
+    "transport": 1,
+    "success": true
+  },
+  {
+    "board": "Gimbal",
+    "role": 1,
+    "transport": 2,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 1,
+    "transport": 2,
+    "success": true
+  },
+  {
+    "board": "Gimbal",
+    "role": 1,
+    "transport": 3,
+    "success": true
+  },
+  {
+    "board": "Chassis",
+    "role": 1,
+    "transport": 3,
+    "success": true
+  }
+]

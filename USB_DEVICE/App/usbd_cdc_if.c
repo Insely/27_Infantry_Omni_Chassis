@@ -22,6 +22,8 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
+#include "app_api.h"
+#include "robot_param.h"
 #include "USB_VirCom.h"
 #include "fifo.h"
 /* USER CODE END INCLUDE */
@@ -266,6 +268,9 @@ static int8_t CDC_Control_HS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_HS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 11 */
+#if BOARD_LINK_TRANSPORT == BOARD_LINK_TRANSPORT_UART
+  App_OnVisionBytes(Buf,(uint16_t)*Len);
+#endif
   USBD_CDC_SetRxBuffer(&hUsbDeviceHS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceHS);
   return (USBD_OK);

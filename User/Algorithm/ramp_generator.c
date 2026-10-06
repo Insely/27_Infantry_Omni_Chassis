@@ -28,14 +28,14 @@ float RampGenerator_GetCurrent(const RampGenerator *ramp)
 
 void RampGenerator_Update(RampGenerator *ramp, unsigned long current_time_ms)
 {
-    // Èç¹ûÊÇµÚÒ»´Îµ÷ÓÃ£¬³õÊ¼»¯ last_update_time ²¢·µ»Ø
+    // å¦‚æžœæ˜¯ç¬¬ä¸€æ¬¡è°ƒç”¨ï¼Œåˆå§‹åŒ– last_update_time å¹¶è¿”å›ž
     if (ramp->last_update_time == 0)
     {
         ramp->last_update_time = current_time_ms;
         return;
     }
 
-    // ¼ÆËã×ÔÉÏ´Î¸üÐÂÒÔÀ´µÄÊ±¼ä¼ä¸ô
+    // è®¡ç®—è‡ªä¸Šæ¬¡æ›´æ–°ä»¥æ¥çš„æ—¶é—´é—´éš”
     unsigned long elapsed = current_time_ms - ramp->last_update_time;
     if (elapsed < ramp->interval_ms)
     {
@@ -63,7 +63,7 @@ void RampGenerator_Update(RampGenerator *ramp, unsigned long current_time_ms)
             delta = rate * time_step * (is_positive_direction ? 1.0f : -1.0f);
         }
 
-        // ·ÀÖ¹¹ý³å
+        // é˜²æ­¢è¿‡å†²
         float new_value = ramp->current_value + delta;
         if ((delta > 0 && new_value > ramp->target_value) ||
             (delta < 0 && new_value < ramp->target_value))
@@ -71,13 +71,13 @@ void RampGenerator_Update(RampGenerator *ramp, unsigned long current_time_ms)
             new_value = ramp->target_value;
         }
 
-        // Ó¦ÓÃÏÞ·ù
+        // åº”ç”¨é™å¹…
         new_value = fminf(new_value, ramp->max_limit);
         new_value = fmaxf(new_value, -ramp->max_limit);
 
         ramp->current_value = new_value;
 
-        // ¾«¶È´¦Àí
+        // ç²¾åº¦å¤„ç†
         if (fabsf(ramp->current_value - ramp->target_value) < 1e-6f)
         {
             ramp->current_value = ramp->target_value;

@@ -3,18 +3,9 @@
   "tasks": [
     {
       "label": "build task",
-      "type": "process",
-      "command": "/usr/bin/make",
-      "args": [
-        "-j12",
-        "GCC_PATH=/opt/homebrew/bin"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
+      "type": "shell",
+      "command": "make -j${nproc}",
+      "problemMatcher": [],
       "group": {
         "kind": "build",
         "isDefault": true

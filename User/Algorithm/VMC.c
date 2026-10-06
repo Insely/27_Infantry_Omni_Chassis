@@ -4,7 +4,7 @@
  * @LastEditTime: 2025-10-30 20:04:44
  * @FilePath: \Season-26-Code\User\Algorithm\VMC.c
  */
-#include "vmc.h"
+#include "VMC.h"
 #include "math.h"
 
 #define DOUBLE_L2(a) ((a->L2) * 2)
@@ -21,9 +21,9 @@ void VMC_Init(VMC_s *VMC, float L1, float L2, float L3, float L4, float L5)
     VMC->L5 = L5;
 }
 /**
- * @brief VMCÊý¾Ý¸üÐÂ
+ * @brief VMCæ•°æ®æ›´æ–°
  *
- * @param VMC VMCÖ¸Õë
+ * @param VMC VMCæŒ‡é’ˆ
  * @param Phi1
  * @param Phi4
  * @param Phi1_dot
@@ -42,15 +42,15 @@ void VMC_Updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_d
 }
 
 /**
- * @brief VMC¼ÆËã£¬¸üÐÂ¼ÆËãÊý¾Ý
+ * @brief VMCè®¡ç®—ï¼Œæ›´æ–°è®¡ç®—æ•°æ®
  *
- * @param VMC VMCÖ¸Õë
+ * @param VMC VMCæŒ‡é’ˆ
  */
 void VMC_Cal(VMC_s *VMC)
 {
-    float sin_Phi3_Phi2, sin_Phi1_Phi2, sin_Phi3_Phi4; // ´¢´æÁÙÊ±Êý¾Ý
+    float sin_Phi3_Phi2, sin_Phi1_Phi2, sin_Phi3_Phi4; // å‚¨å­˜ä¸´æ—¶æ•°æ®
 
-    // B,D×ø±ê½âËã BD³¤¶È¼ÆËã
+    // B,Dåæ ‡è§£ç®— BDé•¿åº¦è®¡ç®—
     VMC->x_B = VMC->L1 * cosf(VMC->Phi1);
     VMC->y_B = VMC->L1 * sinf(VMC->Phi1);
     VMC->x_D = VMC->L5 + VMC->L4 * cosf(VMC->Phi4);
@@ -58,29 +58,29 @@ void VMC_Cal(VMC_s *VMC)
 
     VMC->BD = powf(((VMC->x_D - VMC->x_B) * (VMC->x_D - VMC->x_B) + (VMC->y_D - VMC->y_B) * (VMC->y_D - VMC->y_B)), 0.5f);
 
-    // A0,B0,C0ºÍPhi2¼ÆËã
+    // A0,B0,C0å’ŒPhi2è®¡ç®—
     VMC->A0 = DOUBLE_L2(VMC) * (VMC->x_D - VMC->x_B);
     VMC->B0 = DOUBLE_L2(VMC) * (VMC->y_D - VMC->y_B);
     VMC->C0 = SQUARE_L2(VMC) + VMC->BD * VMC->BD - SQUARE_L3(VMC);
 
     VMC->Phi2 = 2 * atan2f((VMC->B0 + powf((VMC->A0 * VMC->A0 + VMC->B0 * VMC->B0 - VMC->C0 * VMC->C0), 0.5)), (VMC->A0 + VMC->C0));
 
-    // CµãÖ±½ÇºÍ¼«×ø±ê¼ÆËã
+    // Cç‚¹ç›´è§’å’Œæžåæ ‡è®¡ç®—
     VMC->x_C = VMC->x_B + VMC->L2 * cosf(VMC->Phi2);
     VMC->y_C = VMC->y_B + VMC->L2 * sinf(VMC->Phi2);
 
     VMC->L0 = powf(((VMC->x_C - HALF_L5(VMC)) * (VMC->x_C - HALF_L5(VMC)) + VMC->y_C * VMC->y_C), 0.5);
     VMC->Phi0 = atan2(VMC->y_C, (VMC->x_C - HALF_L5(VMC)));
 
-    // Phi3¼ÆËã
+    // Phi3è®¡ç®—
     VMC->Phi3 = atan2(VMC->y_C - VMC->y_D, VMC->x_C - VMC->x_D);
 
-    // ÁÙÊ±¼ÇÂ¼Êý¾Ý¼ÆËã
+    // ä¸´æ—¶è®°å½•æ•°æ®è®¡ç®—
     sin_Phi3_Phi2 = sinf(VMC->Phi3 - VMC->Phi2);
     sin_Phi1_Phi2 = sinf(VMC->Phi1 - VMC->Phi2);
     sin_Phi3_Phi4 = sinf(VMC->Phi3 - VMC->Phi4);
 
-    // ¼ÇÂ¼x_C_dotºÍy_C_dot£¬¼ÆËãPhi0_dot
+    // è®°å½•x_C_dotå’Œy_C_dotï¼Œè®¡ç®—Phi0_dot
     VMC->x_C_dot = VMC->L1 * sin_Phi1_Phi2 * sinf(VMC->Phi3) / -sin_Phi3_Phi2 * VMC->Phi1_dot +
                    VMC->L4 * sin_Phi3_Phi4 * sinf(VMC->Phi2) / -sin_Phi3_Phi2 * VMC->Phi4_dot;
 
@@ -90,7 +90,7 @@ void VMC_Cal(VMC_s *VMC)
     VMC->Phi0_dot = (VMC->y_C_dot * cosf(VMC->Phi0) - VMC->x_C_dot * sinf(VMC->Phi0)) / VMC->L0;
     VMC->L0_dot = VMC->x_C_dot * cosf(VMC->Phi0) + VMC->y_C_dot * sinf(VMC->Phi0);
 
-    // T1,T2½âËã
+    // T1,T2è§£ç®—
     VMC->T1 = VMC->F * VMC->L1 * sinf(VMC->Phi0 - VMC->Phi3) * sin_Phi1_Phi2 / sin_Phi3_Phi2 +
               VMC->Tp * VMC->L1 * cosf(VMC->Phi0 - VMC->Phi3) * sin_Phi1_Phi2 / (VMC->L0 * sin_Phi3_Phi2);
 

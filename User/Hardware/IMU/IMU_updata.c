@@ -26,12 +26,12 @@
 #include "Stm32_time.h"
 
 // made by sethome
-// Ê¹ÓÃTIM14¶¨Æµ¸üĞÂ
+// ä½¿ç”¨TIM14å®šé¢‘æ›´æ–°
 
-// ÍÓÂİÒÇÎÂ¶ÈPID
+// é™€èºä»ªæ¸©åº¦PID
 pid_t IMU_tempure_pid;
 
-// ¼ÓËÙ¶È¼ÆµÍÍ¨ÂË²¨
+// åŠ é€Ÿåº¦è®¡ä½é€šæ»¤æ³¢
 static fp32 accel_fliter_1[3] = {0.0f, 0.0f, 0.0f};
 static fp32 accel_fliter_2[3] = {0.0f, 0.0f, 0.0f};
 static fp32 accel_fliter_3[3] = {0.0f, 0.0f, 0.0f};
@@ -40,20 +40,20 @@ static uint8_t first_temperate;
 
 unsigned long ulTdleCycleCount = 0UL;
 
-// ¶¨Ê±Æ÷±äÁ¿
+// å®šæ—¶å™¨å˜é‡
 extern TIM_HandleTypeDef htim3;
 
-struct IMU_t IMU_data;			   // IMUÊı¾İ½á¹¹Ìå
-struct IMU_t IMU_data_history[10]; // IMUÀúÊ·Êı¾İ½á¹¹Ìå
+struct IMU_t IMU_data;			   // IMUæ•°æ®ç»“æ„ä½“
+struct IMU_t IMU_data_history[10]; // IMUå†å²æ•°æ®ç»“æ„ä½“
 
 hipnuc_raw_t IMU_HI_GIMBAL_data;
 
-// ÄÚ²¿µ÷ÓÃ
-void IMU_HeatSet(uint16_t ccr); // ¼ÓÈÈµç×èPWMÕ¼¿Õ±È
+// å†…éƒ¨è°ƒç”¨
+void IMU_HeatSet(uint16_t ccr); // åŠ çƒ­ç”µé˜»PWMå ç©ºæ¯”
 void shiftArray(float arr[], int size);
 static void IMU_TempControl(fp32 temp);
 
-// ËÄÔªÊı×ªÎªÅ·À­½Ç ·Çµ÷ÓÃlib°æ±¾£¬ÎğÉ¾
+// å››å…ƒæ•°è½¬ä¸ºæ¬§æ‹‰è§’ éè°ƒç”¨libç‰ˆæœ¬ï¼Œå‹¿åˆ 
 void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 {
 	*yaw = atan2f(2.0f * (q[0] * q[3] + q[1] * q[2]), 2.0f * (q[0] * q[0] + q[1] * q[1]) - 1.0f);
@@ -61,10 +61,10 @@ void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 	*roll = atan2f(2.0f * (q[0] * q[1] + q[2] * q[3]), 2.0f * (q[0] * q[0] + q[3] * q[3]) - 1.0f);
 }
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 void IMU_Init()
 {
-	BMI088_init(); // ÍÓÂİÒÇ
+	BMI088_init(); // é™€èºä»ª
 
 	IMU_data.Mahony.q[0] = 1.0f;
 	IMU_data.Mahony.q[1] = 0.0f;
@@ -76,15 +76,15 @@ void IMU_Init()
 	IMU_data.madgwick.q[2] = 0.0f;
 	IMU_data.madgwick.q[3] = 0.0f;
 
-	AHRS_init(IMU_data.AHRS.q, IMU_data.accel, IMU_data.mag); // AHRSÂË²¨²ÎÊı
+	AHRS_init(IMU_data.AHRS.q, IMU_data.accel, IMU_data.mag); // AHRSæ»¤æ³¢å‚æ•°
 
 	PID_Set(&IMU_tempure_pid, 2000, 0.2, 0, 4500, 4400);
 
-	HAL_TIM_Base_Start(&htim3); // ¼ÓÈÈµç×èPWM
+	HAL_TIM_Base_Start(&htim3); // åŠ çƒ­ç”µé˜»PWM
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	HAL_TIM_Base_Start_IT(&htim13); // Ê¹ÄÜ¸üĞÂÖĞ¶Ï£¬1000HZ
+	HAL_TIM_Base_Start_IT(&htim13); // ä½¿èƒ½æ›´æ–°ä¸­æ–­ï¼Œ1000HZ
 
-	// Ğ£×¼¼ÓËÙ¶È£¨Î´Íê³É£©ºÍ½ÇËÙ¶È¼Æ
+	// æ ¡å‡†åŠ é€Ÿåº¦ï¼ˆæœªå®Œæˆï¼‰å’Œè§’é€Ÿåº¦è®¡
 	// for (int i = 0; i < 1000;)
 	// {
 	// 	float x_ = IMU_data.gyro[0];
@@ -102,7 +102,7 @@ void IMU_Init()
 
 void Process_IMUData()
 {
-	// ¼ÆËã×ÜÈ¦Êı
+	// è®¡ç®—æ€»åœˆæ•°
 	if (IMU_data.AHRS.last_yaw > 3.0f && IMU_data.AHRS.yaw < -3.0f)
 		IMU_data.AHRS.yaw_rad_cnt += ((PI - IMU_data.AHRS.last_yaw) + (IMU_data.AHRS.yaw + PI));
 	else if (IMU_data.AHRS.last_yaw < -3.0f && IMU_data.AHRS.yaw > 3.0f)
@@ -110,12 +110,12 @@ void Process_IMUData()
 	else
 		IMU_data.AHRS.yaw_rad_cnt += (IMU_data.AHRS.yaw - IMU_data.AHRS.last_yaw);
 }
-// IMU¸üĞÂº¯Êı
+// IMUæ›´æ–°å‡½æ•°
 void IMU_Updata() // 1000HZ
 {
-	//  ¶ÁÈ¡ÍÓÂİÒÇºÍµØ´Å¼ÆĞÅÏ¢
+	//  è¯»å–é™€èºä»ªå’Œåœ°ç£è®¡ä¿¡æ¯
 	BMI088_read(IMU_data.gyro, IMU_data.accel, &IMU_data.temp);
-	// ÁãÆ¯ÒÆ²¹³¥
+	// é›¶æ¼‚ç§»è¡¥å¿
 	//	IMU_data.gyro[0] -= 0.00103224139;
 	//	IMU_data.gyro[1] += 0.0050994223;
 	//	IMU_data.gyro[2] -= 0.000232788681 ;
@@ -124,10 +124,10 @@ void IMU_Updata() // 1000HZ
 	// IMU_data.gyro[1] += 0.00817589462;
 	// IMU_data.gyro[2] -= 0.000124635975;
 
-	// ¼ÓÈÈÆ÷PID¼ÆËã
+	// åŠ çƒ­å™¨PIDè®¡ç®—
 	IMU_TempControl(IMU_data.temp);
 
-	// ¼ÓËÙ¶È¼ÆµÍÍ¨ÂË²¨
+	// åŠ é€Ÿåº¦è®¡ä½é€šæ»¤æ³¢
 	// accel low-pass filter
 	accel_fliter_1[0] = accel_fliter_2[0];
 	accel_fliter_2[0] = accel_fliter_3[0];
@@ -145,7 +145,7 @@ void IMU_Updata() // 1000HZ
 	accel_fliter_3[2] = accel_fliter_2[2] * fliter_num[0] + accel_fliter_1[2] * fliter_num[1] + IMU_data.accel[2] * fliter_num[2];
 
 	// AHRS.lib
-	// Èç¹ûÊ§°Ü£¬·µ»Ø0
+	// å¦‚æœå¤±è´¥ï¼Œè¿”å›0
 	static uint32_t last_time = 0;
 	IMU_data.AHRS.err_code = AHRS_update(IMU_data.AHRS.q, 0.001f,
 										 IMU_data.gyro,
@@ -163,7 +163,7 @@ void IMU_Updata() // 1000HZ
 		IMU_data.AHRS.yaw_rad_cnt += (IMU_data.AHRS.yaw - IMU_data.AHRS.last_yaw);
 	IMU_data.AHRS.pitch *= -1;
 	IMU_data.AHRS.last_yaw = IMU_data.AHRS.yaw;
-	//ÀúÊ·Êı¾İ¸üĞÂ
+	//å†å²æ•°æ®æ›´æ–°
 	for (int i = 0; i < 8; i++){
 		IMU_data_history[i+1]=IMU_data_history[i];
 	}
@@ -179,30 +179,30 @@ float degree2rad(float a)
 	return a / 180.0f * PI;
 }
 
-void MagUpdate() // ¸üĞÂµØ´Å¼Æ
+void MagUpdate() // æ›´æ–°åœ°ç£è®¡
 {
 	// ist8310_read_mag(IMU_data.mag);
 }
-void MagZero() // ÇåÁãµØ´Å¼Æ
+void MagZero() // æ¸…é›¶åœ°ç£è®¡
 {
 	IMU_data.mag[0] = 0;
 	IMU_data.mag[1] = 0;
 	IMU_data.mag[2] = 0;
 }
-// Éè¶¨¼ÓÈÈµÄPWMÕ¼¿Õ±È
+// è®¾å®šåŠ çƒ­çš„PWMå ç©ºæ¯”
 void IMU_HeatSet(uint16_t ccr)
 {
 	if (ccr < 0)
 	{
 		ccr = 0;
 	}
-	__HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_4, ccr); // HAL¿âPWMµÄCCRÉè¶¨
+	__HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_4, ccr); // HALåº“PWMçš„CCRè®¾å®š
 													  // TIM10->CCR1 = (pwm);
 }
 
 /**
- * @brief          ¿ØÖÆbmi088µÄÎÂ¶È
- * @param[in]      temp:bmi088µÄÎÂ¶È
+ * @brief          æ§åˆ¶bmi088çš„æ¸©åº¦
+ * @param[in]      temp:bmi088çš„æ¸©åº¦
  * @retval         none
  */
 static void IMU_TempControl(fp32 temp)
@@ -222,7 +222,7 @@ static void IMU_TempControl(fp32 temp)
 	}
 }
 
-void IMU_CailProgram(void) // ÍÓÂİÒÇĞ£×¼³ÌĞò£¬·ÅÔÚÏĞÖÃÈÎÎñÀïÃæ£¬ĞèÒªµÄÊ±ºòĞ£×¼Ò»´ÎËã³öÆ½¾ùÊıÖµ¼ÓÉÏ¼´¿É
+void IMU_CailProgram(void) // é™€èºä»ªæ ¡å‡†ç¨‹åºï¼Œæ”¾åœ¨é—²ç½®ä»»åŠ¡é‡Œé¢ï¼Œéœ€è¦çš„æ—¶å€™æ ¡å‡†ä¸€æ¬¡ç®—å‡ºå¹³å‡æ•°å€¼åŠ ä¸Šå³å¯
 {
 	IMU_data.calibration[0] = 0;
 	IMU_data.calibration[1] = 0;

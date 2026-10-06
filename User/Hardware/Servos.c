@@ -18,8 +18,8 @@ void PWM_ControlInit(void)
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
 
 }
-//Éè¶¨¶æ»ú½Ç¶È
-void Set_ServoAngle(uint8_t channel, float angle) //Í³Ò»¸ø180¶æ»ú
+//è®¾å®šèˆµæœºè§’åº¦
+void Set_ServoAngle(uint8_t channel, float angle) //ç»Ÿä¸€ç»™180èˆµæœº
 {
 	uint16_t CCR = (2000.0 / 180.0) * angle + 500;
 	switch (channel)
@@ -28,7 +28,7 @@ void Set_ServoAngle(uint8_t channel, float angle) //Í³Ò»¸ø180¶æ»ú
 		__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, CCR);
 		break;
 	case PWM_PIN_2:
-		__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_3, CCR);//±»´®¿ÚÕ¼ÓÃÁË
+		__HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_3, CCR);//è¢«ä¸²å£å ç”¨äº†
 		break;
 	case PWM_PIN_3:
 		__HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, CCR);

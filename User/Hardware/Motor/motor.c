@@ -1,7 +1,14 @@
+/*
+ * @Author: Nas(1319621819@qq.com)
+ * @Date: 2025-11-03 00:07:24
+ * @LastEditors: Nas(1319621819@qq.com)
+ * @LastEditTime: 2026-03-19 11:50:10
+ * @FilePath: \Season26_Regular_Sentry_Gimbal\User\Hardware\Motor\motor.c
+ */
 /**
  * @file motor.c
  * @author Wang Zihao
- * @brief ¸÷Ààµç»ú¿ØÖÆÓë·´À¡
+ * @brief å„ç±»ç”µæœºæ§åˆ¶ä¸åé¦ˆ
  * @version 0.1
  * @date 2025-9-12
  *
@@ -16,64 +23,64 @@
 #define abs(a) a > 0 ? a : -a
 
 #if (USE_DJIMotor == 1)
-// µç»úÊı¾İ¶¨Òå
+// ç”µæœºæ•°æ®å®šä¹‰
 DJI_motor_data_s DJIMotor_data[QUANTITY_OF_CAN][QUANTITY_OF_DJIMOTOR];
 
 /**
- * @brief ´ó½®µç»ú³õÊ¼»¯£¬ÔİÊ±Ö»ÓÃÀ´³õÊ¼»¯ÀàĞÍ
+ * @brief å¤§ç–†ç”µæœºåˆå§‹åŒ–ï¼Œæš‚æ—¶åªç”¨æ¥åˆå§‹åŒ–ç±»å‹
  *
- * @param motor_type µç»úÖÖÀà
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
+ * @param motor_type ç”µæœºç§ç±»
+ * @param motor_id ç”µæœºcané€šé“åŠID
  */
 void DJIMotor_Init(Motor_Type_e motor_type, DJIcan_id motor_id)
 {
-    uint8_t cantype = motor_id / 11; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 11;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 11; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 11;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
-    DJIMotor_data[cantype][canid].Motor_type = motor_type; // ³õÊ¼»¯ÏàÓ¦µç»ú
+    DJIMotor_data[cantype][canid].Motor_type = motor_type; // åˆå§‹åŒ–ç›¸åº”ç”µæœº
 }
 
 /**
- * @brief ÉèÖÃ´ó½®µç»úÁãµã
+ * @brief è®¾ç½®å¤§ç–†ç”µæœºé›¶ç‚¹
  *
- * @param zero_angle Áãµã½Ç¶È
- * @param motor_id µç»úID
+ * @param zero_angle é›¶ç‚¹è§’åº¦
+ * @param motor_id ç”µæœºID
  */
 void DJIMotor_SetZero(double zero_angle, DJIcan_id motor_id)
 {
-    uint8_t cantype = motor_id / 11; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 11;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 11; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 11;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
-    DJIMotor_data[cantype][canid].angle_zero = zero_angle; // ³õÊ¼»¯ÏàÓ¦µç»ú
+    DJIMotor_data[cantype][canid].angle_zero = zero_angle; // åˆå§‹åŒ–ç›¸åº”ç”µæœº
 }
 
 /**
- * @brief ÉèÖÃ´ó½®µç»úµçÁ÷
+ * @brief è®¾ç½®å¤§ç–†ç”µæœºç”µæµ
  *
- * @param val µçÁ÷Öµ
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
+ * @param val ç”µæµå€¼
+ * @param motor_id ç”µæœºcané€šé“åŠID
  */
 void DJIMotor_Set(int16_t val, DJIcan_id motor_id)
 {
-    DJIMotor_data[motor_id / 11][motor_id % 11].set = val; // ÉèÖÃµçÁ÷
+    DJIMotor_data[motor_id / 11][motor_id % 11].set = val; // è®¾ç½®ç”µæµ
 }
 
 /**
- * @brief »ñÈ¡´ó½®µç»úÊı¾İ
+ * @brief è·å–å¤§ç–†ç”µæœºæ•°æ®
  *
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
- * @return DJI_motor_data_s µç»úÊı¾İ½á¹¹Ìå¡£
+ * @param motor_id ç”µæœºcané€šé“åŠID
+ * @return DJI_motor_data_s ç”µæœºæ•°æ®ç»“æ„ä½“ã€‚
  */
-DJI_motor_data_s DJIMotor_GetData(DJIcan_id motor_id) // »ñÈ¡Âí´ïÊı¾İ
+DJI_motor_data_s DJIMotor_GetData(DJIcan_id motor_id) // è·å–é©¬è¾¾æ•°æ®
 {
     return DJIMotor_data[motor_id / 11][motor_id % 11];
 }
 
 /**
- * @brief ´ó½®µç»úCANÊı¾İ½ÓÊÜÒÔ¼°´¦Àí
+ * @brief å¤§ç–†ç”µæœºCANæ•°æ®æ¥å—ä»¥åŠå¤„ç†
  *
- * @param ptr µç»úÊı¾İ
- * @param data canÊı¾İ
+ * @param ptr ç”µæœºæ•°æ®
+ * @param data canæ•°æ®
  */
 void DJIMotor_GetProcessMotorData(DJI_motor_data_s *ptr, uint8_t data[])
 {
@@ -81,9 +88,8 @@ void DJIMotor_GetProcessMotorData(DJI_motor_data_s *ptr, uint8_t data[])
     (ptr)->last_ecd = (ptr)->ecd;
     (ptr)->ecd = (uint16_t)((data)[0] << 8 | (data)[1]);
     (ptr)->speed_rpm = (uint16_t)((data)[2] << 8 | (data)[3]);
-    (ptr)->given_current = (uint16_t)((data)[4] << 8 | (data)[5]);
+    (ptr)->given_current = (int16_t)(((uint16_t)data[4] << 8) | data[5]);
     (ptr)->temperate = (data)[6];
-    (ptr)->update_cnt++;
 
     // process the data
     // count cnt
@@ -95,27 +101,27 @@ void DJIMotor_GetProcessMotorData(DJI_motor_data_s *ptr, uint8_t data[])
         (ptr)->ecd_cnt += ((ptr)->ecd - (ptr)->last_ecd);
     // process data
     (ptr)->angle_cnt = (ptr)->ecd_cnt * ECD_TO_ANGEL_DJI;
-    // ¸ù¾İ²»Í¬µç»ú½øĞĞ²»Í¬´¦Àí
+    // æ ¹æ®ä¸åŒç”µæœºè¿›è¡Œä¸åŒå¤„ç†
     if ((ptr)->Motor_type == DJI_GM6020)
     {
-        // ¼ÆËã³öÖá×ªËÙ
+        // è®¡ç®—å‡ºè½´è½¬é€Ÿ
         (ptr)->round_speed = (ptr)->speed_rpm;
 
-        // ¼ÆËãÏà¶Ô½Ç¶È -180~180 ½÷·À¾«¶È¶ªÊ§ ×Ü½Ç¶È¹ı´óÊ±
+        // è®¡ç®—ç›¸å¯¹è§’åº¦ -180~180 è°¨é˜²ç²¾åº¦ä¸¢å¤± æ€»è§’åº¦è¿‡å¤§æ—¶
         float angle = (ptr)->angle_cnt - (ptr)->angle_zero;
         uint32_t mul = abs((int)angle) / 180;
         if (angle > 180.0f)
         {
-            if (mul % 2 == 1) // ´¦ÓÚ-180¶È
+            if (mul % 2 == 1) // å¤„äº-180åº¦
                 angle -= (mul + 1) * 180;
-            else // ´¦ÓÚ180¶È
+            else // å¤„äº180åº¦
                 angle -= mul * 180;
         }
         if (angle < -180.0f)
         {
-            if (mul % 2 == 1) // ´¦ÓÚ180¶È
+            if (mul % 2 == 1) // å¤„äº180åº¦
                 angle += (mul + 1) * 180;
-            else // ´¦ÓÚ-180¶È
+            else // å¤„äº-180åº¦
                 angle += mul * 180;
         }
         (ptr)->angle = angle;
@@ -131,17 +137,17 @@ void DJIMotor_GetProcessMotorData(DJI_motor_data_s *ptr, uint8_t data[])
 }
 
 /**
- * @brief ´ó½®µç»úcanÊı¾İ´¦Àí
+ * @brief å¤§ç–†ç”µæœºcanæ•°æ®å¤„ç†
  *
- * @param hfdcan CANÍ¨µÀ
- * @param id can±êÊ¶·û
- * @param data canÊı¾İ
+ * @param hfdcan CANé€šé“
+ * @param id canæ ‡è¯†ç¬¦
+ * @param data canæ•°æ®
  */
 void DJIMotor_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 {
     if (id < CAN_ID1)
         return;
-    if (id - CAN_ID1 <= 11) // ·ÀÖ¹Êı×éÒç³ö
+    if (id - CAN_ID1 < QUANTITY_OF_DJIMOTOR) // é˜²æ­¢æ•°ç»„æº¢å‡º
     {
         if (hfdcan == &hfdcan1)
         {
@@ -159,92 +165,103 @@ void DJIMotor_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *d
 }
 
 /**
- * @brief ´ó½®µç»úµçÁ÷Öµ·¢ËÍ£¬½¨Òé·ÅfreertosÀï¶¨ÆÚ·¢ËÍ
+ * @brief å¤§ç–†ç”µæœºç”µæµå€¼å‘é€ï¼Œå»ºè®®æ”¾freertosé‡Œå®šæœŸå‘é€
  *
  */
-void DJIMotor_SendCurrent(DJIcan_send_id_e CAN_Send_ID , DJIcan_send_id_e CAN_Type)
+void DJIMotor_SendCurrent(DJIcan_send_id_e CAN_Send_ID, DJIcan_send_id_e CAN_Type)
 {
     uint8_t can_send_data[8];
     uint8_t canid;
     uint16_t identifier;
-    FDCAN_HandleTypeDef *hcan ;
+    FDCAN_HandleTypeDef *hcan;
 
-    if (hfdcan1.ErrorCode)
-        HAL_FDCAN_ErrorCallback(&hfdcan1);
-    if (hfdcan2.ErrorCode)
-        HAL_FDCAN_ErrorCallback(&hfdcan2);
-    if (hfdcan3.ErrorCode)
-        HAL_FDCAN_ErrorCallback(&hfdcan3);
+    /*     if (hfdcan1.ErrorCode)
+            HAL_FDCAN_ErrorCallback(&hfdcan1);
+        if (hfdcan2.ErrorCode)
+            HAL_FDCAN_ErrorCallback(&hfdcan2);
+        if (hfdcan3.ErrorCode)
+            HAL_FDCAN_ErrorCallback(&hfdcan3); */
 
-    // ÅĞ¶Ïµç»úÀàĞÍÒÔ¼°µç»úID
+    // åˆ¤æ–­ç”µæœºç±»å‹ä»¥åŠç”µæœºID
     switch (CAN_Send_ID)
     {
-        case CAN_20063508_1_4_ID:
-        {
-            identifier = CAN_20063508_1_4_send_ID;
-            canid = 0;
-            break;
-        }
-        case CAN_20063508_5_8_ID:
-        {
-            identifier = CAN_20063508_5_8_send_ID;
-            canid = 4;
-             break;
-        }
-        case CAN_6020_1_4_ID:
-        {
-            identifier = CAN_6020_1_4_send_ID;
-            canid = 4;
-             break;
-        }
-        case CAN_6020_5_7_ID:
-        {
-            identifier = CAN_6020_5_7_send_ID;
-            canid = 8;
-             break;
-        }
+    case CAN_20063508_1_4_ID:
+    {
+        identifier = CAN_20063508_1_4_send_ID;
+        canid = 0;
+        break;
     }
-    
-    // ÅĞ¶ÏCANÂ·
+    case CAN_20063508_5_8_ID:
+    {
+        identifier = CAN_20063508_5_8_send_ID;
+        canid = 4;
+        break;
+    }
+    case CAN_6020_1_4_ID:
+    {
+        identifier = CAN_6020_1_4_send_ID;
+        canid = 4;
+        break;
+    }
+    case CAN_6020_5_7_ID:
+    {
+        identifier = CAN_6020_5_7_send_ID;
+        canid = 8;
+        break;
+    }
+    default:
+        return;
+    }
+
+    // åˆ¤æ–­CANè·¯
     switch (CAN_Type)
     {
-        case DJI_CAN_1: hcan = &hfdcan1 ; break;
-        case DJI_CAN_2: hcan = &hfdcan2 ; break;
-        case DJI_CAN_3: hcan = &hfdcan3 ; break;
-    }   
-    
-    // ÈıÂ·canÒÀ´Î¸³Öµ
+    case DJI_CAN_1:
+        hcan = &hfdcan1;
+        break;
+    case DJI_CAN_2:
+        hcan = &hfdcan2;
+        break;
+    case DJI_CAN_3:
+        hcan = &hfdcan3;
+        break;
+    default:
+        return;
+    }
+    if (hcan->ErrorCode)
+        HAL_FDCAN_ErrorCallback(hcan);
+    // ä¸‰è·¯canä¾æ¬¡èµ‹å€¼
     for (int i = 0; i < 8; i += 2)
     {
         can_send_data[i] = (DJIMotor_data[CAN_Type][canid].set >> 8);
-        can_send_data[i+1] = DJIMotor_data[CAN_Type][canid].set;
-        canid++;    
+        can_send_data[i + 1] = DJIMotor_data[CAN_Type][canid].set;
+        canid++;
     }
-   
-    // ·¢ËÍCANÊı¾İ
-    Fdcanx_SendData(hcan, identifier, can_send_data, 8);
 
+    // å‘é€CANæ•°æ®
+    Fdcanx_SendData(hcan, identifier, can_send_data, 8);
 }
 
 #endif // USE_DJIMotor
 
-
 #if (USE_DMMotor == 1)
 
-// ´ïÃîµç»úÊı¾İ¶¨Òå
+// è¾¾å¦™ç”µæœºæ•°æ®å®šä¹‰
 DM_motor_data_s DM_Motor_data[QUANTITY_OF_CAN][QUANTITY_OF_DMMOTOR];
 
+static uint8_t yaw_motor_was_non1 = 0U;
+
 /**
- * @brief Ê¹ÄÜ´ïÃîµç»ú
- * @param motor_id µç»úID
+ * @brief ä½¿èƒ½è¾¾å¦™ç”µæœº
+ * @param motor_id ç”µæœºID
  */
 void DMMotor_Enable(DMcan_id motor_id)
 {
     if (motor_id >= DM_MOTOR_NUM)
         return;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
     switch (cantype)
     {
@@ -263,76 +280,76 @@ void DMMotor_Enable(DMcan_id motor_id)
 }
 
 /**
- * @brief Ê§ÄÜ´ïÃîµç»ú
- * @param motor_id µç»úID
+ * @brief å¤±èƒ½è¾¾å¦™ç”µæœº
+ * @param motor_id ç”µæœºID
  */
 void DMMotor_Disable(uint8_t motor_id)
 {
     if (motor_id >= DM_MOTOR_NUM)
         return;
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    dm_motor_disable(&hfdcan1, &DM_Motor_data[cantype][canid].motor_data);
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+    dm_motor_disable(Get_CanHandle(cantype), &DM_Motor_data[cantype][canid].motor_data);
 }
 
 /**
- * @brief ÉèÖÃ´ïÃîµç»ú¿ØÖÆÄ£Ê½
- * @param motor_id µç»úID
- * @param mode ¿ØÖÆÄ£Ê½
+ * @brief è®¾ç½®è¾¾å¦™ç”µæœºæ§åˆ¶æ¨¡å¼
+ * @param motor_id ç”µæœºID
+ * @param mode æ§åˆ¶æ¨¡å¼
  */
 void DMMotor_SetMode(DMcan_id motor_id, DM_mode_e mode)
 {
     if (motor_id >= DM_MOTOR_NUM)
         return;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
     DM_Motor_data[cantype][canid].motor_data.ctrl.mode = mode;
 }
 
 /**
- * @brief ´ïÃîµç»ú³õÊ¼»¯
- * @param motor_id µç»úID (0-5)
+ * @brief è¾¾å¦™ç”µæœºåˆå§‹åŒ–
+ * @param motor_id ç”µæœºID (0-5)
  */
-void DMMotor_Init(Motor_Type_e motor_type,DMcan_id motor_id)
+void DMMotor_Init(Motor_Type_e motor_type, DMcan_id motor_id)
 {
     if (motor_id >= DM_MOTOR_NUM)
         return;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
     memset(&DM_Motor_data[cantype][canid], 0, sizeof(DM_motor_data_s));
 
-    DM_Motor_data[cantype][canid].motor_data.id = canid + 1;
-    DM_Motor_data[cantype][canid].motor_data.mst_id = canid + 1;
+    DM_Motor_data[cantype][canid].motor_data.id = canid + 1;        // CAN_IDï¼š0x01ï½0x06
+    DM_Motor_data[cantype][canid].motor_data.mst_id = canid + DM_FEEDBACK_ID_BASE; // MASTER_IDï¼š0x11ï½0x16
     DM_Motor_data[cantype][canid].motor_data.tmp.read_flag = 1;
     DM_Motor_data[cantype][canid].motor_data.tmp.PMAX = P_MAX;
     DM_Motor_data[cantype][canid].motor_data.tmp.VMAX = V_MAX;
     DM_Motor_data[cantype][canid].motor_data.tmp.TMAX = T_MAX;
-    DM_Motor_data[cantype][canid].motor_data.ctrl.mode = mit_mode; // Ä¬ÈÏMITÄ£Ê½
+    DM_Motor_data[cantype][canid].motor_data.ctrl.mode = mit_mode; // é»˜è®¤MITæ¨¡å¼
 
-    // Ê¹ÄÜµç»ú
+    // ä½¿èƒ½ç”µæœº
     DMMotor_Enable(motor_id);
 }
 
 /**
- * @brief ÉèÖÃ´ïÃîµç»ú¿ØÖÆ²ÎÊı
- * @param motor_id µç»úID
- * @param pos Î»ÖÃÉè¶¨Öµ (rad)
- * @param vel ËÙ¶ÈÉè¶¨Öµ (rad/s)
- * @param tor Å¤¾ØÉè¶¨Öµ (N*M)
- * @param kp Î»ÖÃ±ÈÀıÔöÒæ(N/r)
- * @param kd Î»ÖÃÎ¢·ÖÔöÒæ(N*s/r)
+ * @brief è®¾ç½®è¾¾å¦™ç”µæœºæ§åˆ¶å‚æ•°
+ * @param motor_id ç”µæœºID
+ * @param pos ä½ç½®è®¾å®šå€¼ (rad)
+ * @param vel é€Ÿåº¦è®¾å®šå€¼ (rad/s)
+ * @param tor æ‰­çŸ©è®¾å®šå€¼ (N*M)
+ * @param kp ä½ç½®æ¯”ä¾‹å¢ç›Š(N/r)
+ * @param kd ä½ç½®å¾®åˆ†å¢ç›Š(N*s/r)
  */
 void DMMotor_Set(DMcan_id motor_id, float pos, float vel, float tor, float kp, float kd)
 {
     if (motor_id >= DM_MOTOR_NUM)
         return;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
     DM_motor_t *m = &DM_Motor_data[cantype][canid].motor_data;
     m->ctrl.pos_set = pos;
@@ -343,33 +360,33 @@ void DMMotor_Set(DMcan_id motor_id, float pos, float vel, float tor, float kp, f
 }
 
 /**
- * @brief ÉèÖÃ´ïÃîµç»úÁãµã
- * @param zero_angle Áãµã½Ç¶È
- * @param motor_id µç»úID
+ * @brief è®¾ç½®è¾¾å¦™ç”µæœºé›¶ç‚¹
+ * @param zero_angle é›¶ç‚¹è§’åº¦
+ * @param motor_id ç”µæœºID
  */
 void DMMotor_SetZero(double zero_angle, DMcan_id motor_id)
 {
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
-    DM_Motor_data[cantype][canid].motor_data.angle_zero = zero_angle; // ³õÊ¼»¯ÏàÓ¦µç»ú
+    DM_Motor_data[cantype][canid].motor_data.angle_zero = zero_angle; // åˆå§‹åŒ–ç›¸åº”ç”µæœº
 }
 
 /**
- * @brief ´ïÃîµç»úCANÊı¾İ´¦Àí
- * @param hfdcan CANÍ¨µÀ
- * @param id can±êÊ¶·û
- * @param data canÊı¾İ
+ * @brief è¾¾å¦™ç”µæœºCANæ•°æ®å¤„ç†
+ * @param hfdcan CANé€šé“
+ * @param id canæ ‡è¯†ç¬¦
+ * @param data canæ•°æ®
  */
 void DMMotor_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 {
-      if (id > 0x06)
+    if (id < DM_FEEDBACK_ID_BASE || id >= DM_FEEDBACK_ID_BASE + QUANTITY_OF_DMMOTOR)
         return;
-    uint8_t cantype; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid;   // µÃµ½µç»úIDÖµ£»
-    id--;
+    uint8_t cantype;
+    uint8_t canid;
+    id -= DM_FEEDBACK_ID_BASE;
     if (hfdcan == &hfdcan1)
-    { // ´ïÃîµç»ú·´À¡ID
+    { // è¾¾å¦™ç”µæœºåé¦ˆID
         cantype = 0;
     }
     else if (hfdcan == &hfdcan2)
@@ -380,25 +397,94 @@ void DMMotor_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *da
     {
         cantype = 2;
     }
+    else
+    {
+        return;
+    }
     canid = id;
-    // ¸üĞÂËùÓĞ´ïÃîµç»úµÄ·´À¡Êı¾İ
+    // æ›´æ–°æ‰€æœ‰è¾¾å¦™ç”µæœºçš„åé¦ˆæ•°æ®
     dm_motor_fbdata(&DM_Motor_data[cantype][canid].motor_data, data);
+    DM_Motor_data[cantype][canid].feedback_tick=HAL_GetTick();
+    DM_Motor_data[cantype][canid].feedback_ready=1;
+
+    if (cantype == (uint8_t)(YAWMotor / 6) && canid == (uint8_t)(YAWMotor % 6))
+    {
+        DM_motor_t *yaw = &DM_Motor_data[cantype][canid].motor_data;
+        float abs_torque = fabsf(yaw->para.tor);
+        float abs_velocity_error = fabsf(yaw->ctrl.vel_set - yaw->para.vel);
+
+        if (yaw->para.Tmos > yaw_debug.motor.max_tmos)
+            yaw_debug.motor.max_tmos = yaw->para.Tmos;
+        if (yaw->para.Tcoil > yaw_debug.motor.max_tcoil)
+            yaw_debug.motor.max_tcoil = yaw->para.Tcoil;
+        if (abs_torque > yaw_debug.motor.max_abs_torque)
+            yaw_debug.motor.max_abs_torque = abs_torque;
+        if (abs_velocity_error > yaw_debug.motor.max_abs_velocity_error)
+        {
+            yaw_debug.motor.max_abs_velocity_error = abs_velocity_error;
+            yaw_debug.motor.max_abs_velocity_error_tick_ms = DM_Motor_data[cantype][canid].feedback_tick;
+        }
+
+        if (yaw->para.state != 1)
+        {
+            yaw_debug.motor.non1_feedback_count++;
+            if (!yaw_motor_was_non1)
+                yaw_debug.motor.non1_event_count++;
+            yaw_motor_was_non1 = 1U;
+            yaw_debug.motor.last_non1_tick_ms = DM_Motor_data[cantype][canid].feedback_tick;
+            yaw_debug.motor.last_non1_state = yaw->para.state;
+            yaw_debug.motor.last_non1_tmos = yaw->para.Tmos;
+            yaw_debug.motor.last_non1_tcoil = yaw->para.Tcoil;
+            yaw_debug.motor.last_non1_torque = yaw->para.tor;
+            yaw_debug.motor.last_non1_velocity = yaw->para.vel;
+            yaw_debug.motor.last_non1_velocity_set = yaw->ctrl.vel_set;
+        }
+        else
+        {
+            yaw_motor_was_non1 = 0U;
+        }
+    }
 }
 
 /**
- * @brief ´ïÃîµç»ú¿ØÖÆÃüÁî·¢ËÍ
+ * @brief è¾¾å¦™ç”µæœºæ§åˆ¶å‘½ä»¤å‘é€
  */
 int DMMotor_SendCtrl(DMcan_id motor_id)
 {
-    if (motor_id >= DM_MOTOR_NUM)
-         return 0;
+    static uint8_t yaw_tx_call_seen = 0U;
+    static uint32_t yaw_tx_call_last_tick = 0U;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    if (motor_id >= DM_MOTOR_NUM)
+        return 0;
+
+    if (motor_id == YAWMotor)
+    {
+        uint32_t now = HAL_GetTick();
+
+        if (yaw_tx_call_seen != 0U)
+        {
+            yaw_debug.motor.tx_call_interval_ms = now - yaw_tx_call_last_tick;
+            if (yaw_debug.motor.tx_call_interval_ms > yaw_debug.motor.tx_call_max_interval_ms)
+                yaw_debug.motor.tx_call_max_interval_ms = yaw_debug.motor.tx_call_interval_ms;
+            if (yaw_debug.motor.tx_call_interval_ms > 10U)
+            {
+                yaw_debug.motor.tx_call_gap_over_10ms_count++;
+                yaw_debug.motor.tx_call_last_gap_tick_ms = now;
+                yaw_debug.motor.tx_call_last_gap_interval_ms = yaw_debug.motor.tx_call_interval_ms;
+            }
+        }
+        else
+            yaw_tx_call_seen = 1U;
+        yaw_tx_call_last_tick = now;
+    }
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
     FDCAN_HandleTypeDef *hcan = Get_CanHandle(cantype);
 
+    // if (DM_Motor_data[cantype][canid].motor_data.ctrl.mode != 0)
     if (DM_Motor_data[cantype][canid].motor_data.para.state == 1)
-    { // Èç¹ûµç»úÒÑÊ¹ÄÜ
+    { // å¦‚æœç”µæœºå·²ä½¿èƒ½
         dm_motor_ctrl_send(hcan, &DM_Motor_data[cantype][canid].motor_data);
         return 1;
     }
@@ -407,21 +493,21 @@ int DMMotor_SendCtrl(DMcan_id motor_id)
         DMMotor_Enable(motor_id);
         return 0;
     }
-    else 
+    else
     {
-        dm_motor_clear_err(hcan,&DM_Motor_data[cantype][canid].motor_data);
+        dm_motor_clear_err(hcan, &DM_Motor_data[cantype][canid].motor_data);
         DMMotor_Disable(motor_id);
         return 0;
     }
 }
 
 /**
- * @brief »ñÈ¡´ïÃîµç»úÊı¾İ
+ * @brief è·å–è¾¾å¦™ç”µæœºæ•°æ®
  *
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
- * @return DM_motor_data_s µç»úÊı¾İ½á¹¹Ìå¡£
+ * @param motor_id ç”µæœºcané€šé“åŠID
+ * @return DM_motor_data_s ç”µæœºæ•°æ®ç»“æ„ä½“ã€‚
  */
-DM_motor_data_s DMMotor_GetData(DMcan_id motor_id) // »ñÈ¡Âí´ïÊı¾İ
+DM_motor_data_s DMMotor_GetData(DMcan_id motor_id) // è·å–é©¬è¾¾æ•°æ®
 {
     return DM_Motor_data[motor_id / 6][motor_id % 6];
 }
@@ -430,51 +516,58 @@ DM_motor_data_s DMMotor_GetData(DMcan_id motor_id) // »ñÈ¡Âí´ïÊı¾İ
 
 #if (USE_DMMotor124 == 1)
 
-// µç»úÊı¾İ¶¨Òå
-DM_motor124_data_s DMMotor124_data[QUANTITY_OF_CAN][QUANTITY_OF_DJIMOTOR];
+// ç”µæœºæ•°æ®å®šä¹‰
+DM_motor124_data_s DMMotor124_data[QUANTITY_OF_CAN][QUANTITY_OF_DMMOTOR124];
 
 /**
- * @brief´ïÃîµç»ú³õÊ¼»¯
+ * @briefè¾¾å¦™ç”µæœºåˆå§‹åŒ–
  *
- * @param motor_type µç»úÖÖÀà£ºJ4310
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
+ * @param motor_type ç”µæœºç§ç±»ï¼šJ4310
+ * @param motor_id ç”µæœºcané€šé“åŠID
  */
 void DMMotor124_Init(DMMotor_Type_e motor_type, DM_can_id motor_id)
 {
-    uint8_t cantype = (motor_id + 1) / 8; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 8;         // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = (motor_id + 1) / 8; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 8;         // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
-    DMMotor124_data[cantype][canid].Motor_type = motor_type; // ³õÊ¼»¯ÏàÓ¦µç»ú
+    DMMotor124_data[cantype][canid].Motor_type = motor_type; // åˆå§‹åŒ–ç›¸åº”ç”µæœº
 }
 
+void DMMotor124_SetZero(double zero_angle, DM_can_id motor_id)
+{
+    uint8_t cantype = motor_id / 8; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 8;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
+    DMMotor124_data[cantype][canid].angle_zero = zero_angle; // åˆå§‹åŒ–ç›¸åº”ç”µæœº
+}
 
 /**
- * @brief ÉèÖÃDAMIAOµç»úµçÁ÷
+ * @brief è®¾ç½®DAMIAOç”µæœºç”µæµ
  *
- * @param val µçÁ÷Öµ
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
+ * @param val ç”µæµå€¼
+ * @param motor_id ç”µæœºcané€šé“åŠID
  */
 void DMMotor124_Set(int16_t val, DM_can_id motor_id)
 {
-    DMMotor124_data[(motor_id + 1) / 8][motor_id % 8].set = val; // ÉèÖÃµçÁ÷
+    DMMotor124_data[(motor_id + 1) / 8][motor_id % 8].set = val; // è®¾ç½®ç”µæµ
 }
 
 /**
- * @brief »ñÈ¡DAMIAOµç»úÊı¾İ
+ * @brief è·å–DAMIAOç”µæœºæ•°æ®
  *
- * @param motor_id µç»úcanÍ¨µÀ¼°ID
- * @return DJI_motor_data_s µç»úÊı¾İ½á¹¹Ìå¡£
+ * @param motor_id ç”µæœºcané€šé“åŠID
+ * @return DJI_motor_data_s ç”µæœºæ•°æ®ç»“æ„ä½“ã€‚
  */
-DM_motor124_data_s DMMotor124_GetData(DM_can_id motor_id) // »ñÈ¡Âí´ïÊı¾İ
+DM_motor124_data_s DMMotor124_GetData(DM_can_id motor_id) // è·å–é©¬è¾¾æ•°æ®
 {
     return DMMotor124_data[(motor_id + 1) / 8][motor_id % 8];
 }
 
 /**
- * @brief DAMIAOµç»úCANÊı¾İ½ÓÊÜÒÔ¼°´¦Àí
+ * @brief DAMIAOç”µæœºCANæ•°æ®æ¥å—ä»¥åŠå¤„ç†
  *
- * @param ptr µç»úÊı¾İ
- * @param data canÊı¾İ
+ * @param ptr ç”µæœºæ•°æ®
+ * @param data canæ•°æ®
  */
 void DMMotor124_GetProcessMotorData(DM_motor124_data_s *ptr, uint8_t data[])
 {
@@ -496,46 +589,46 @@ void DMMotor124_GetProcessMotorData(DM_motor124_data_s *ptr, uint8_t data[])
         (ptr)->ecd_cnt += ((ptr)->ecd - (ptr)->last_ecd);
     // process data
     (ptr)->angle_cnt = (ptr)->ecd_cnt * ECD_TO_ANGEL_DM;
-    // ¸ù¾İ²»Í¬µç»ú½øĞĞ²»Í¬´¦Àí
+    // æ ¹æ®ä¸åŒç”µæœºè¿›è¡Œä¸åŒå¤„ç†
     if ((ptr)->Motor_type == J4310)
     {
-        // ¼ÆËã³öÖá×ªËÙ
+        // è®¡ç®—å‡ºè½´è½¬é€Ÿ
         (ptr)->round_speed = (ptr)->speed_rpm;
 
-        // ¼ÆËãÏà¶Ô½Ç¶È -180~180 ½÷·À¾«¶È¶ªÊ§ ×Ü½Ç¶È¹ı´óÊ±
+        // è®¡ç®—ç›¸å¯¹è§’åº¦ -180~180 è°¨é˜²ç²¾åº¦ä¸¢å¤± æ€»è§’åº¦è¿‡å¤§æ—¶
         float angle = (ptr)->angle_cnt - (ptr)->angle_zero;
         uint32_t mul = abs((int)angle) / 180;
         if (angle > 180.0f)
         {
-            if (mul % 2 == 1) // ´¦ÓÚ-180¶È
+            if (mul % 2 == 1) // å¤„äº-180åº¦
                 angle -= (mul + 1) * 180;
-            else // ´¦ÓÚ180¶È
+            else // å¤„äº180åº¦
                 angle -= mul * 180;
         }
         if (angle < -180.0f)
         {
-            if (mul % 2 == 1) // ´¦ÓÚ180¶È
+            if (mul % 2 == 1) // å¤„äº180åº¦
                 angle += (mul + 1) * 180;
-            else // ´¦ÓÚ-180¶È
+            else // å¤„äº-180åº¦
                 angle += mul * 180;
         }
         (ptr)->angle = angle;
     }
-    else{}
-   
-
+    else
+    {
+    }
 }
 
 /**
- * @brief DAMIAOµç»úcanÊı¾İ´¦Àí
+ * @brief DAMIAOç”µæœºcanæ•°æ®å¤„ç†
  *
- * @param hfdcan CANÍ¨µÀ
- * @param id can±êÊ¶·û
- * @param data canÊı¾İ
+ * @param hfdcan CANé€šé“
+ * @param id canæ ‡è¯†ç¬¦
+ * @param data canæ•°æ®
  */
 void DMMotor124_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 {
-    if (id - DM_ID1 <= 8 && id - DM_ID1 >= 0) // ·ÀÖ¹Êı×éÒç³ö
+    if (id - DM_ID1 <= 8 && id - DM_ID1 >= 0) // é˜²æ­¢æ•°ç»„æº¢å‡º
     {
         if (hfdcan == &hfdcan1)
         {
@@ -553,15 +646,15 @@ void DMMotor124_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t 
 }
 
 /**
- * @brief DAMIAOµç»úµçÁ÷Öµ·¢ËÍ£¬½¨Òé·ÅfreertosÀï¶¨ÆÚ·¢ËÍ
+ * @brief DAMIAOç”µæœºç”µæµå€¼å‘é€ï¼Œå»ºè®®æ”¾freertosé‡Œå®šæœŸå‘é€
  *
  */
-void DMMotor124_SendCurrent(DMcan_send_id_e CAN_Send_ID , DMcan_send_id_e CAN_Type)
+void DMMotor124_SendCurrent(DMcan_send_id_e CAN_Send_ID, DMcan_send_id_e CAN_Type)
 {
     uint8_t can_send_data[8];
     uint8_t canid;
     uint16_t identifier;
-    FDCAN_HandleTypeDef *hcan ;
+    FDCAN_HandleTypeDef *hcan;
 
     if (hfdcan1.ErrorCode)
         HAL_FDCAN_ErrorCallback(&hfdcan1);
@@ -570,128 +663,150 @@ void DMMotor124_SendCurrent(DMcan_send_id_e CAN_Send_ID , DMcan_send_id_e CAN_Ty
     if (hfdcan3.ErrorCode)
         HAL_FDCAN_ErrorCallback(&hfdcan3);
 
-        // ÅĞ¶Ïµç»úÀàĞÍÒÔ¼°µç»úID
+    // åˆ¤æ–­ç”µæœºç±»å‹ä»¥åŠç”µæœºID
     switch (CAN_Send_ID)
     {
-        case DM_J4310_1_4_ID:
-        {
-            identifier = DM_J4310_1_4_send_ID;
-            canid = 0;
-            break;
-        }
-        
-        case DM_J4310_5_8_ID:
-        {
-            identifier = DM_J4310_5_8_send_ID;
-            canid = 4;
-             break;
-        }
+    case DM_J4310_1_4_ID:
+    {
+        identifier = DM_J4310_1_4_send_ID;
+        canid = 0;
+        break;
     }
 
-    // ÅĞ¶ÏCANÂ·
+    case DM_J4310_5_8_ID:
+    {
+        identifier = DM_J4310_5_8_send_ID;
+        canid = 4;
+        break;
+    }
+    }
+
+    // åˆ¤æ–­CANè·¯
     switch (CAN_Type)
     {
-        case DJI_CAN_1: hcan = &hfdcan1 ; break;
-        case DJI_CAN_2: hcan = &hfdcan2 ; break;
-        case DJI_CAN_3: hcan = &hfdcan3 ; break;
-    }   
+    case DM_CAN_1:
+        hcan = &hfdcan1;
+        break;
+    case DM_CAN_2:
+        hcan = &hfdcan2;
+        break;
+    case DM_CAN_3:
+        hcan = &hfdcan3;
+        break;
+    }
 
-    // ÈıÂ·canÒÀ´Î¸³Öµ
+    // ä¸‰è·¯canä¾æ¬¡èµ‹å€¼
     for (int i = 0; i < 8; i += 2)
     {
-        can_send_data[i]     = (DMMotor124_data[CAN_Type][canid].set);      // µÍ 8 Î»
-        can_send_data[i + 1] = (DMMotor124_data[CAN_Type][canid].set >> 8); // ¸ß 8 Î»
+        can_send_data[i] = DMMotor124_data[CAN_Type][canid].set;
+        can_send_data[i + 1] = (DMMotor124_data[CAN_Type][canid].set >> 8);
         canid++;
     }
-    
-    
-    // ·¢ËÍCANÊı¾İ
+    // å‘é€CANæ•°æ®
     Fdcanx_SendData(hcan, identifier, can_send_data, 8);
 }
 
 #endif // USE_DMMotor
 
 #if (USE_LZMotor == 1)
-// µç»úÊı¾İÊı×é
+// ç”µæœºæ•°æ®æ•°ç»„
 LZ_Motor_t LZ_Motors[QUANTITY_OF_CAN][QUANTITY_OF_LZMOTOR];
 
 /**
- * @brief ³õÊ¼»¯Áé×ãµç»ú
+ * @brief åˆå§‹åŒ–çµè¶³ç”µæœº
  */
-void LZMotor_init(LZ_Motor_ID_t motor_id) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
+void LZMotor_init(LZ_Motor_ID_t motor_id)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
 
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
 
     memset(&LZ_Motors[cantype][canid], 0, sizeof(LZ_Motor_t));
-    
-    // ÉèÖÃÄ¬ÈÏID
+
+    // è®¾ç½®é»˜è®¤ID
     LZ_Motors[cantype][canid].id = canid + 1;
     LZ_Motors[cantype][canid].master_id = DEFAULT_MASTER_ID;
-    
-    // ÉèÖÃÄ¬ÈÏÄ£Ê½
+
+    // è®¾ç½®é»˜è®¤æ¨¡å¼
     LZ_Motors[cantype][canid].mode = LZ_MODE_MIT;
 
     LZMotor_enable(motor_id);
 }
 
 /**
- * @brief Ê¹ÄÜÁé×ãµç»ú
+ * @brief ä½¿èƒ½çµè¶³ç”µæœº
  */
-void LZMotor_enable(LZ_Motor_ID_t motor_id) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+void LZMotor_enable(LZ_Motor_ID_t motor_id)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     lz_enable_motor(cantype, LZ_Motors[cantype][canid].id);
-    LZ_Motors[cantype][canid].mode = LZ_MODE_MIT; // Ä¬ÈÏÊ¹ÄÜºó½øÈëMITÄ£Ê½
+    LZ_Motors[cantype][canid].mode = LZ_MODE_MIT; // é»˜è®¤ä½¿èƒ½åè¿›å…¥MITæ¨¡å¼
 }
 
 /**
- * @brief Ê§ÄÜÁé×ãµç»ú
+ * @brief å¤±èƒ½çµè¶³ç”µæœº
  */
-void LZMotor_disable(LZ_Motor_ID_t motor_id) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+void LZMotor_disable(LZ_Motor_ID_t motor_id)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     lz_disable_motor(cantype, LZ_Motors[cantype][canid].id);
     LZ_Motors[cantype][canid].mode = LZ_MODE_DISABLE;
 }
 
 /**
- * @brief ÉèÖÃÁé×ãµç»ú¿ØÖÆÄ£Ê½
+ * @brief è®¾ç½®çµè¶³ç”µæœºæ§åˆ¶æ¨¡å¼
  */
-void LZMotor_set_mode(LZ_Motor_ID_t motor_id, LZ_Mode_t mode) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+void LZMotor_set_mode(LZ_Motor_ID_t motor_id, LZ_Mode_t mode)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     uint8_t mode_val;
-    switch (mode) {
-        case LZ_MODE_MIT: mode_val = 0; break;
-        case LZ_MODE_POSITION: mode_val = 1; break;
-        case LZ_MODE_VELOCITY: mode_val = 2; break;
-        default: return;
+    switch (mode)
+    {
+    case LZ_MODE_MIT:
+        mode_val = 0;
+        break;
+    case LZ_MODE_POSITION:
+        mode_val = 1;
+        break;
+    case LZ_MODE_VELOCITY:
+        mode_val = 2;
+        break;
+    default:
+        return;
     }
-    
+
     lz_set_mode(cantype, LZ_Motors[cantype][canid].id, mode_val);
     LZ_Motors[cantype][canid].mode = mode;
 }
 
 /**
- * @brief ÉèÖÃÁé×ãµç»ú¿ØÖÆ²ÎÊı
+ * @brief è®¾ç½®çµè¶³ç”µæœºæ§åˆ¶å‚æ•°
  */
-void LZMotor_set_params(LZ_Motor_ID_t motor_id, float pos, float vel, float tor, float kp, float kd, float current_limit) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+void LZMotor_set_params(LZ_Motor_ID_t motor_id, float pos, float vel, float tor, float kp, float kd, float current_limit)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     LZ_Motors[cantype][canid].pos_set = pos;
     LZ_Motors[cantype][canid].vel_set = vel;
     LZ_Motors[cantype][canid].tor_set = tor;
@@ -701,75 +816,84 @@ void LZMotor_set_params(LZ_Motor_ID_t motor_id, float pos, float vel, float tor,
 }
 
 /**
- * @brief ·¢ËÍÁé×ãµç»ú¿ØÖÆÃüÁî
+ * @brief å‘é€çµè¶³ç”µæœºæ§åˆ¶å‘½ä»¤
  */
-void LZMotor_send_command(LZ_Motor_ID_t motor_id) {
-    if (motor_id >= LZ_MOTOR_NUM) return;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+void LZMotor_send_command(LZ_Motor_ID_t motor_id)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     LZ_Motor_t *motor = &LZ_Motors[cantype][canid];
-    
-    switch (motor->mode) {
-        case LZ_MODE_MIT:
-            lz_send_mit_params(cantype, motor->id, motor->pos_set, motor->vel_set, 
-                              motor->kp_set, motor->kd_set, motor->tor_set);
-            break;
-            
-        case LZ_MODE_POSITION:
-            lz_set_position(cantype, motor->id, motor->pos_set, motor->vel_set);
-            break;
-            
-        case LZ_MODE_VELOCITY:
-            lz_set_velocity(cantype, motor->id, motor->vel_set, motor->current_limit);
-            break;
-            
-        default:
-            // ÆäËûÄ£Ê½²»·¢ËÍ¿ØÖÆÃüÁî
-            break;
+
+    switch (motor->mode)
+    {
+    case LZ_MODE_MIT:
+        lz_send_mit_params(cantype, motor->id, motor->pos_set, motor->vel_set,
+                           motor->kp_set, motor->kd_set, motor->tor_set);
+        break;
+
+    case LZ_MODE_POSITION:
+        lz_set_position(cantype, motor->id, motor->pos_set, motor->vel_set);
+        break;
+
+    case LZ_MODE_VELOCITY:
+        lz_set_velocity(cantype, motor->id, motor->vel_set, motor->current_limit);
+        break;
+
+    default:
+        // å…¶ä»–æ¨¡å¼ä¸å‘é€æ§åˆ¶å‘½ä»¤
+        break;
     }
 }
 
 /**
- * @brief »ñÈ¡µç»ú¶ÔÏóÖ¸Õë
+ * @brief è·å–ç”µæœºå¯¹è±¡æŒ‡é’ˆ
  */
-LZ_Motor_t* LZMotor_get(LZ_Motor_ID_t motor_id) {
-    if (motor_id >= LZ_MOTOR_NUM) return NULL;
-    
-    uint8_t cantype = motor_id / 6; // »ñµÃµç»úËùÔÚcanÂ·
-    uint8_t canid = motor_id % 6;   // µÃµ½µç»úIDÖµ£»
-    
+LZ_Motor_t *LZMotor_get(LZ_Motor_ID_t motor_id)
+{
+    if (motor_id >= LZ_MOTOR_NUM)
+        return NULL;
+
+    uint8_t cantype = motor_id / 6; // è·å¾—ç”µæœºæ‰€åœ¨canè·¯
+    uint8_t canid = motor_id % 6;   // å¾—åˆ°ç”µæœºIDå€¼ï¼›
+
     return &LZ_Motors[cantype][canid];
 }
 
 /**
- * @brief Áé×ãµç»úCANÊı¾İ´¦Àí
+ * @brief çµè¶³ç”µæœºCANæ•°æ®å¤„ç†
  */
-void LZMotor_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data) {
-    // ¸ù¾İËµÃ÷Êé£¬MITĞ­Òé·´À¡Ö¡µÄID¸ñÊ½Îª (µç»úID << 8) | Ö÷»úID
+void LZMotor_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
+{
+    // æ ¹æ®è¯´æ˜ä¹¦ï¼ŒMITåè®®åé¦ˆå¸§çš„IDæ ¼å¼ä¸º (ç”µæœºID << 8) | ä¸»æœºID
     uint8_t motor_id = (id >> 8) & 0xFF;
     uint8_t master_id = id & 0xFF;
-    
-    // È·¶¨CAN×ÜÏß
+
+    // ç¡®å®šCANæ€»çº¿
     uint8_t can_bus = 0;
-    if (hfdcan == &hfdcan2) can_bus = 1;
-    else if (hfdcan == &hfdcan3) can_bus = 2;
-    
-    // ²éÕÒ¶ÔÓ¦µÄµç»ú
-    for (int i = 0; i < MOTORS_PER_CAN; i++) {
-        if (LZ_Motors[can_bus][i].id == motor_id && LZ_Motors[can_bus][i].master_id == master_id) {
-            // ½âÎö·´À¡Êı¾İ£¨¸ù¾İËµÃ÷ÊéÖĞµÄÍ¨ĞÅÀàĞÍ2¸ñÊ½£©
-            // ÕâÀïĞèÒª¸ù¾İÊµ¼Ê·´À¡Êı¾İ¸ñÊ½½øĞĞ½âÎö
-            // Ê¾Àı´úÂë£¬Êµ¼ÊÓ¦¸ù¾İËµÃ÷Êéµ÷Õû
+    if (hfdcan == &hfdcan2)
+        can_bus = 1;
+    else if (hfdcan == &hfdcan3)
+        can_bus = 2;
+
+    // æŸ¥æ‰¾å¯¹åº”çš„ç”µæœº
+    for (int i = 0; i < MOTORS_PER_CAN; i++)
+    {
+        if (LZ_Motors[can_bus][i].id == motor_id && LZ_Motors[can_bus][i].master_id == master_id)
+        {
+            // è§£æåé¦ˆæ•°æ®ï¼ˆæ ¹æ®è¯´æ˜ä¹¦ä¸­çš„é€šä¿¡ç±»å‹2æ ¼å¼ï¼‰
+            // è¿™é‡Œéœ€è¦æ ¹æ®å®é™…åé¦ˆæ•°æ®æ ¼å¼è¿›è¡Œè§£æ
+            // ç¤ºä¾‹ä»£ç ï¼Œå®é™…åº”æ ¹æ®è¯´æ˜ä¹¦è°ƒæ•´
             LZ_Motors[can_bus][i].state.angle = uint_to_float_LZ((data[0] << 8) | data[1], P_MIN, P_MAX, 16);
             LZ_Motors[can_bus][i].state.velocity = uint_to_float_LZ((data[2] << 4) | (data[3] >> 4), V_MIN, V_MAX, 12);
             LZ_Motors[can_bus][i].state.torque = uint_to_float_LZ(((data[3] & 0x0F) << 8) | data[4], T_MIN, T_MAX, 12);
-            LZ_Motors[can_bus][i].state.temperature = data[5] * 0.1f; // ¼ÙÉèÎÂ¶ÈÊı¾İÔÚdata[5]
+            LZ_Motors[can_bus][i].state.temperature = data[5] * 0.1f; // å‡è®¾æ¸©åº¦æ•°æ®åœ¨data[5]
             break;
         }
     }
 }
-
 
 #endif // USE_LZMotor

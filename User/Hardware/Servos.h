@@ -9,6 +9,6 @@
 #define PWM_PIN_4 4
 
 void PWM_ControlInit(void);
-void Set_ServoAngle(uint8_t channel, float angle); //Í³Ò»¸ø180¶æ»ú
+void Set_ServoAngle(uint8_t channel, float angle); //ç»Ÿä¸€ç»™180èˆµæœº
 
 #endif

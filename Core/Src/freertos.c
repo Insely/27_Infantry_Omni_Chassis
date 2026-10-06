@@ -25,26 +25,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
-#include "remote_control.h"
-#include "Chassis.h"
-#include "Gimbal.h"
-#include "Global_status.h"
-#include "Auto_control.h"
-#include "shoot.h"
-#include "music.h"
-
-#include "referee_system.h"
-#include "supercup.h"
-#include "LED.h"
-#include "DT7.h"
-#include "VT13.h"
-#include "motor.h"
-#include <cmsis_os2.h>
-#include "ui.h"
-
+#include "app_api.h"
 #include "iwdg.h"
-#include "buzzer.h"
+#include "LED.h"
+#include "BoardLink.h"
+#include "Vofa_Justfloat_Send.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +49,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-uint32_t color = 0;
+
 /* USER CODE END Variables */
 /* Definitions for Remote_control */
 osThreadId_t Remote_controlHandle;
@@ -136,17 +121,8 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 void vApplicationIdleHook(void);
 
 /* USER CODE BEGIN 2 */
-void vApplicationIdleHook( void )
+void vApplicationIdleHook(void)
 {
-   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-   to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
-   task. It is essential that code added to this hook function never attempts
-   to block in any way (for example, call xQueueReceive() with a block time
-   specified, or call vTaskDelay()). If the application makes use of the
-   vTaskDelete() API function (as this demo application does) then it is also
-   important that vApplicationIdleHook() is permitted to return to its calling
-   function, because it is the responsibility of the idle task to clean up
-   memory allocated by the kernel to any task that has since been deleted. */
 }
 /* USER CODE END 2 */
 
@@ -220,12 +196,12 @@ void Remote_control_Task(void *argument)
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN Remote_control_Task */
-  
+  (void)argument;
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
-    Remote_Tasks();
+    App_RemoteStep();
     osDelay(1);
   }
   /* USER CODE END Remote_control_Task */
@@ -241,14 +217,14 @@ void Remote_control_Task(void *argument)
 void Gimbal_Task(void *argument)
 {
   /* USER CODE BEGIN Gimbal_Task */
+  (void)argument;
   osDelay(500);
-  Gimbal_Init();
+  App_GimbalInit();
   osDelay(500);
   /* Infinite loop */
   for(;;)
   {
-    
-    Gimbal_Tasks();
+    App_GimbalStep();
     osDelay(1);
   }
   /* USER CODE END Gimbal_Task */
@@ -264,17 +240,14 @@ void Gimbal_Task(void *argument)
 void Chassis_Task(void *argument)
 {
   /* USER CODE BEGIN Chassis_Task */
+  (void)argument;
   osDelay(500);
-#if (USE_CHASSIS_HELM != 0 || USE_CHASSIS_OMNI != 0)
-  Chassis_Init();
-#endif
+  App_ChassisInit();
   /* Infinite loop */
   for(;;)
   {
-#if (USE_CHASSIS_HELM != 0 || USE_CHASSIS_OMNI != 0)
-    Chassis_Tasks();
-#endif
-    Supercup_SendData();
+    App_ChassisStep();
+    App_LinkStep();
     osDelay(1);
   }
   /* USER CODE END Chassis_Task */
@@ -290,31 +263,13 @@ void Chassis_Task(void *argument)
 void Motor_control_Task(void *argument)
 {
   /* USER CODE BEGIN Motor_control_Task */
+  (void)argument;
   /* Infinite loop */
   for(;;)
   {
-  #if (USE_CHASSIS_HELM !=0 )
-      if (Global.Control.mode != LOCK){
-      DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_1);
-      DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_3); 
-      DJIMotor_SendCurrent(CAN_6020_1_4_ID, DJI_CAN_1);
-      DJIMotor_SendCurrent(CAN_6020_1_4_ID, DJI_CAN_3);
-      }
-  #endif
-  #if(USE_CHASSIS_OMNI !=0)
-      if (Global.Control.mode != LOCK){
-      DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_1);
-      }
-  #endif
-  #if (USE_SHOOT != 0)
-      DJIMotor_SendCurrent(CAN_20063508_1_4_ID, DJI_CAN_3);
-  #endif
-  #if (USE_GIMBAL != 0)
-      DMMotor_SendCtrl(DM_CAN_3_2);
-  #endif
-    if (Global.Chassis.input.reset != 1)
+    App_MotorStep();
+    if (App_WatchdogRefreshAllowed())
       HAL_IWDG_Refresh(&hiwdg1);
-    // Fdcanx_SendData(&hfdcan1,0x200,can_data,8);
     osDelay(1);
   }
   /* USER CODE END Motor_control_Task */
@@ -330,17 +285,18 @@ void Motor_control_Task(void *argument)
 void Shoot_Task(void *argument)
 {
   /* USER CODE BEGIN Shoot_Task */
+  (void)argument;
   osDelay(500);
-  Shoot_Init();
+  App_ShootInit();
   /* Infinite loop */
   for(;;)
   {
-    
-  if (Global.Auto.mode != NONE && Global.Auto.input.Auto_control_online > 0 && Global.Auto.input.control_mode != 0)
-  Auto_Control();
-  Shoot_Tasks();
-  osDelay(1);
- 
+    static float tx_buf[2]={0.0f, 0.0f};
+    tx_buf[0] = BoardLink.body_gyro_z;
+    tx_buf[1] = 0.0f;
+    Vofa_SendFloat(tx_buf, 2);
+    App_ShootStep();
+    osDelay(1);
   }
   /* USER CODE END Shoot_Task */
 }
@@ -355,39 +311,11 @@ void Shoot_Task(void *argument)
 void Referee_Task(void *argument)
 {
   /* USER CODE BEGIN Referee_Task */
-  Refree_system_init();
-  // �ȴ�����ϵͳ���ߣ���ȡ��ȷ��robot_id
-  while(Referee_data.robot_id == 0) {
-    Referee_unpack_fifo_data(&referee_fifo, &referee_unpack_obj);
-    osDelay(100);
-  }
-  ui_self_id = Referee_data.robot_id;
-  ui_init_helm();
-  osDelay(200); // �ȴ�����ϵͳ����ADD֡
+  (void)argument;
   /* Infinite loop */
-  int reinit_cnt = 0;
   for(;;)
   {
-    Referee_unpack_fifo_data(&referee_fifo, &referee_unpack_obj);
-    ui_self_id = Referee_data.robot_id;
-    Supercapui_change(cap.remain_vol);
-    Shootui_change();
-    #if (USE_CHASSIS_HELM != 0)
-    Chassisui_change(chassis.relative_angle);
-    #elif (USE_CHASSIS_OMNI != 0)
-    Chassisui_change(Chassis.chassis_yaw_angle);
-    #else
-    Chassisui_change(0);
-    #endif
-    Autoui_change();
-    // ÿ10�����·���һ��ADD����ֹͼ�ζ�ʧ
-    reinit_cnt++;
-    if (reinit_cnt >= 100) {
-      reinit_cnt = 0;
-      ui_init_helm();
-      osDelay(100);
-    }
-    ui_updata();
+    App_RefereeStep();
     osDelay(100);
   }
   /* USER CODE END Referee_Task */
@@ -403,15 +331,16 @@ void Referee_Task(void *argument)
 void Log_and_debug_Task(void *argument)
 {
   /* USER CODE BEGIN Log_and_debug_Task */
-  LED_ShowColor(RED);
-  osDelay(500);
-  LED_ShowColor(BLUE);
-  osDelay(500);
-  LED_ShowColor(GREEN);
+  (void)argument;
   /* Infinite loop */
   for(;;)
   {
-
+    LED_ShowColor(RED);
+    osDelay(500);
+    LED_ShowColor(BLUE);
+    osDelay(500);
+    LED_ShowColor(GREEN);
+    osDelay(500);
   }
   /* USER CODE END Log_and_debug_Task */
 }

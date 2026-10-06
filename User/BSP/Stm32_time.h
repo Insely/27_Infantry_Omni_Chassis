@@ -1,7 +1,7 @@
 /**
  * @file Stm32_time.h
  * @author sethome 
- * @brief STM32F4µÄ¿ª»úÊ±¼ä¼ÆËã
+ * @brief STM32F4çš„å¼€æœºæ—¶é—´è®¡ç®—
  * @version 0.1
  * @date 2022-11-20
  * 
@@ -14,7 +14,7 @@
 #include "stm32h7xx_hal.h"
 #include "stdint.h"
 
-// »ñÈ¡ÏµÍ³Ê±¼ä
+// è·å–ç³»ç»Ÿæ—¶é—´
 uint32_t Get_SysTime_ms(void); // recommend
 uint32_t Get_SysTime_us(void);
 

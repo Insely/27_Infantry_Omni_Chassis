@@ -7,16 +7,16 @@
 #ifndef __PID_H_
 #define __PID_H_
 
-typedef struct // PID¿ØÖÆÊı¾İ½á¹¹Ìå
+typedef struct // PIDæ§åˆ¶æ•°æ®ç»“æ„ä½“
 {
-  float p, i, d;                        // ±ÈÀı£¬»ı·Ö£¬Î¢·Ö
-  float set, err, err_last;             // ÉèÖÃÖµ£¬Îó²îÖµ£¬ÉÏ´ÎµÄÎó²îÖµ
-  float diff;                           // Îó²îÎ¢·Ö
-  float p_out, i_out, d_out, total_out; // ±ÈÀı£¬»ı·Ö£¬Î¢·ÖµÄÊä³öºÍ×ÜÊä³ö
-  float lim_i_out, lim_out;             // Êä³ö»ı·ÖÏŞÖÆ£¬×ÜÊä³öÏŞÖÆ
+  float p, i, d;                        // æ¯”ä¾‹ï¼Œç§¯åˆ†ï¼Œå¾®åˆ†
+  float set, err, err_last;             // è®¾ç½®å€¼ï¼Œè¯¯å·®å€¼ï¼Œä¸Šæ¬¡çš„è¯¯å·®å€¼
+  float diff;                           // è¯¯å·®å¾®åˆ†
+  float p_out, i_out, d_out, total_out; // æ¯”ä¾‹ï¼Œç§¯åˆ†ï¼Œå¾®åˆ†çš„è¾“å‡ºå’Œæ€»è¾“å‡º
+  float lim_i_out, lim_out;             // è¾“å‡ºç§¯åˆ†é™åˆ¶ï¼Œæ€»è¾“å‡ºé™åˆ¶
 } pid_t;
 
-void PID_Set(pid_t *PidSet, float p_set, float i_set, float d_set, float lim_out_set, float lim_i_outset); // PIDÉèÖÃ
-float PID_Cal(pid_t *PidGoal, float Now, float Set);                                                       // PID¼ÆËã
+void PID_Set(pid_t *PidSet, float p_set, float i_set, float d_set, float lim_out_set, float lim_i_outset); // PIDè®¾ç½®
+float PID_Cal(pid_t *PidGoal, float Now, float Set);                                                       // PIDè®¡ç®—
 
 #endif

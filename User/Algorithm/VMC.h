@@ -1,7 +1,7 @@
 /**
  * @file VMC.h
  * @author Siri (lixirui2017@outlook.com)
- * @brief VMC¼ÆËã
+ * @brief VMCè®¡ç®—
  * @version 0.1
  * @date 2025-07-20
  *
@@ -11,51 +11,51 @@
 #ifndef __VMC_H__
 #define __VMC_H__
 
-// ±äÁ¿¶¨Òå£¬²Î¿¼(./.doc/.assets/image-202507201333.png)
+// å˜é‡å®šä¹‰ï¼Œå‚è€ƒ(./.doc/.assets/image-202507201333.png)
 typedef struct
 {
-    // ¹Ø½Ú½Ç¶È
+    // å…³èŠ‚è§’åº¦
     float Phi1;
     float Phi2;
     float Phi3;
     float Phi4;
-    // ½ÇËÙ¶È
+    // è§’é€Ÿåº¦
     float Phi0_dot;
     float Phi1_dot;
     float Phi4_dot;
-    // ½Ç¼ÓËÙ¶È
+    // è§’åŠ é€Ÿåº¦
     float Phi1_ddot;
     float Phi4_ddot;
-    // ×ø±êÎ»ÖÃ
+    // åæ ‡ä½ç½®
     float x_D;
     float y_D;
     float x_B;
     float y_B;
     float x_C;
     float y_C;
-    //×ø±êËÙ¶È
+    //åæ ‡é€Ÿåº¦
     float x_C_dot;
     float y_C_dot;
-    // ¾àÀë
+    // è·ç¦»
     float BD;
-    //¸Ë³¤¶È±äÁ¿
+    //æ†é•¿åº¦å˜é‡
     float L1;
     float L2;
     float L3;
     float L4;
     float L5;
-    // ÖĞ¼ä±äÁ¿
+    // ä¸­é—´å˜é‡
     float A0;
     float B0;
     float C0;
-    // ÍÈ³¤Óë½Ç¶È
+    // è…¿é•¿ä¸è§’åº¦
     float Phi0;
     float L0;
     float L0_dot;
-    //µç»úÁ¦¾Ø
+    //ç”µæœºåŠ›çŸ©
     float T1;
     float T2;
-    //ÍÈ²¿Á¦¾Ø
+    //è…¿éƒ¨åŠ›çŸ©
     float F;
     float Tp;
 } VMC_s;

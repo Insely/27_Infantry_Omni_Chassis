@@ -4,14 +4,14 @@
 
 
 typedef enum {
-    RED     = 0xFF0000,  // 红色
-    GREEN   = 0x00FF00,  // 绿色
-    BLUE    = 0x0000FF,  // 蓝色
-    YELLOW  = 0xFFFF00,  // 黄色
-    CYAN    = 0x00FFFF,  // 青色
-    MAGENTA = 0xFF00FF,  // 品红
-    BLACK   = 0x000000,  // 黑色
-    WHITE   = 0xFFFFFF   // 白色
+    RED     = 0xFF0000,  // 绾㈣壊
+    GREEN   = 0x00FF00,  // 缁胯壊
+    BLUE    = 0x0000FF,  // 钃濊壊
+    YELLOW  = 0xFFFF00,  // 榛勮壊
+    CYAN    = 0x00FFFF,  // 闈掕壊
+    MAGENTA = 0xFF00FF,  // 鍝佺孩
+    BLACK   = 0x000000,  // 榛戣壊
+    WHITE   = 0xFFFFFF   // 鐧借壊
 } Color;
 
 

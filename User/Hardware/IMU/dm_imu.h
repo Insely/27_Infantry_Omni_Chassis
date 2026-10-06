@@ -1,18 +1,25 @@
 /*
- * @Date: 2025-10-04 11:35:55
- * @LastEditors: hao && (hao@qlu.edu.cn)
- * @LastEditTime: 2025-10-04 19:33:15
- * @FilePath: \Season-26-Code\User\Hardware\IMU\dm_imu.h
+ * @Author: Nas(1319621819@qq.com)
+ * @Date: 2025-12-25 19:37:17
+ * @LastEditors: Nas(1319621819@qq.com)
+ * @LastEditTime: 2025-12-27 08:37:56
+ * @FilePath: \Regular_Sentry_Gimbal\User\Hardware\IMU\dm_imu.h
  */
+
 #ifndef __DM_IMU_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __DM_IMU_H
 
 #include "stm32h7xx_hal.h"
 
-//canЭ��
 
-#define ACCEL_CAN_MAX (58.8f)
-#define ACCEL_CAN_MIN	(-58.8f)
+
+#define ACCEL_CAN_MAX (235.2f)
+#define ACCEL_CAN_MIN	(-235.2f)
 #define GYRO_CAN_MAX	(34.88f)
 #define GYRO_CAN_MIN	(-34.88f)
 #define PITCH_CAN_MAX	(90.0f)
@@ -25,7 +32,6 @@
 #define TEMP_MAX			(60.0f)
 #define Quaternion_MIN	(-1.0f)
 #define Quaternion_MAX	(1.0f)
-#define IMU_MST_ID      (0x11)
 
 #define CMD_READ 0
 #define CMD_WRITE 1
@@ -75,14 +81,15 @@ typedef enum
 }reg_id_e;
 
 
+
 typedef struct
 {
-    uint8_t can_id;
+	uint8_t can_id;
 	uint8_t mst_id;
 	
 	FDCAN_HandleTypeDef *can_handle;
-
-	float pitch;
+	
+	float pitch;//旋转坐标系
 	float roll;
 	float yaw;
 
@@ -95,23 +102,13 @@ typedef struct
 
 	float last_yaw;
 	float yaw_cnt;
-
-    uint32_t request_cnt;
+	
+	uint32_t request_cnt;
 
 
 }imu_t;
-
 extern imu_t dm_imu_gimbal;
-
 void imu_init(uint8_t can_id,uint8_t mst_id,FDCAN_HandleTypeDef *hfdcan,imu_t *imu);
-
-void IMU_RequestData(FDCAN_HandleTypeDef* hfdcan,uint16_t can_id,uint8_t reg);
-void IMU_UpdateAccel(uint8_t* pData,imu_t *imu);
-void IMU_UpdateGyro(uint8_t* pData,imu_t *imu);
-void IMU_UpdateEuler(uint8_t* pData,imu_t *imu);
-void IMU_UpdateQuaternion(uint8_t* pData,imu_t *imu);
-void IMU_UpdateData(uint8_t* pData,imu_t *imu);
-
 void imu_write_reg(uint8_t reg_id,uint32_t data,imu_t *imu);
 void imu_read_reg(uint8_t reg_id,imu_t *imu);
 void imu_reboot(imu_t *imu);
@@ -130,7 +127,12 @@ void imu_request_accel(imu_t *imu);
 void imu_request_gyro(imu_t *imu);
 void imu_request_euler(imu_t *imu);
 void imu_request_quat(imu_t *imu);
- 
+void IMU_Rotate_Frame(float angle_deg,imu_t *imu);
 void IMU_MatchData(imu_t *imu);
+void IMU_UpdateData(uint8_t* pData,imu_t *imu);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif

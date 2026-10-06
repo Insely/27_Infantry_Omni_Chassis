@@ -7,30 +7,30 @@ extern "C"
 #endif
 
     /**
-     * @brief Ğ±ÆÂ·¢ÉúÆ÷Ä£¿é
+     * @brief æ–œå¡å‘ç”Ÿå™¨æ¨¡å—
      *
-     * Ìá¹©´ø¼ÓËÙ¶È¿ØÖÆºÍÆ½»¬¹ı¶ÉµÄÊıÖµÉú³É¹¦ÄÜ£¬Ö§³Ö¶¯Ì¬²ÎÊıµ÷ÕûºÍÏŞ·ù±£»¤
-     * µäĞÍÓ¦ÓÃ£ºµç»ú¿ØÖÆ¡¢ÎÂ¶Èµ÷½Ú¡¢ÔË¶¯¿ØÖÆµÈĞèÒªÆ½»¬¹ı¶ÉµÄ³¡¾°
+     * æä¾›å¸¦åŠ é€Ÿåº¦æ§åˆ¶å’Œå¹³æ»‘è¿‡æ¸¡çš„æ•°å€¼ç”ŸæˆåŠŸèƒ½ï¼Œæ”¯æŒåŠ¨æ€å‚æ•°è°ƒæ•´å’Œé™å¹…ä¿æŠ¤
+     * å…¸å‹åº”ç”¨ï¼šç”µæœºæ§åˆ¶ã€æ¸©åº¦è°ƒèŠ‚ã€è¿åŠ¨æ§åˆ¶ç­‰éœ€è¦å¹³æ»‘è¿‡æ¸¡çš„åœºæ™¯
      */
 
     typedef struct
     {
-        float current_value;            // µ±Ç°Êä³öÖµ£¨µ¥Î»£ºÓÃ»§¶¨Òåµ¥Î»£©
-        float target_value;             // Ä¿±êÖµ
-        unsigned int interval_ms;       // ¿ØÖÆ¼ä¸ô£¨µ¥Î»£ººÁÃë£©
-        float accel;                    // ¼ÓËÙ¶È£¨µ¥Î»£ºÊıÖµ/Ãë?£©
-        float decel;                    // ¼õËÙ¶È£¨µ¥Î»£ºÊıÖµ/Ãë?£©
-        float max_limit;                // ¾ø¶ÔÖµ×î´óÖµÏŞÖÆ
-        unsigned long last_update_time; // ÉÏ´Î¸üĞÂÊ±¼ä´Á£¨ºÁÃë£©
+        float current_value;            // å½“å‰è¾“å‡ºå€¼ï¼ˆå•ä½ï¼šç”¨æˆ·å®šä¹‰å•ä½ï¼‰
+        float target_value;             // ç›®æ ‡å€¼
+        unsigned int interval_ms;       // æ§åˆ¶é—´éš”ï¼ˆå•ä½ï¼šæ¯«ç§’ï¼‰
+        float accel;                    // åŠ é€Ÿåº¦ï¼ˆå•ä½ï¼šæ•°å€¼/ç§’?ï¼‰
+        float decel;                    // å‡é€Ÿåº¦ï¼ˆå•ä½ï¼šæ•°å€¼/ç§’?ï¼‰
+        float max_limit;                // ç»å¯¹å€¼æœ€å¤§å€¼é™åˆ¶
+        unsigned long last_update_time; // ä¸Šæ¬¡æ›´æ–°æ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰
     } RampGenerator;
 
     /**
-     * @brief ³õÊ¼»¯Ğ±ÆÂ·¢ÉúÆ÷
-     * @param ramp ÊµÀıÖ¸Õë
-     * @param interval_ms ¿ØÖÆ¼ä¸ô£¨¡İ1ms£©
-     * @param accel ¼ÓËÙ¶È£¨¡İ0£©
-     * @param decel ¼õËÙ¶È£¨¡İ0£©
-     * @param max_limit ×î´ó¾ø¶ÔÖµÏŞÖÆ
+     * @brief åˆå§‹åŒ–æ–œå¡å‘ç”Ÿå™¨
+     * @param ramp å®ä¾‹æŒ‡é’ˆ
+     * @param interval_ms æ§åˆ¶é—´éš”ï¼ˆâ‰¥1msï¼‰
+     * @param accel åŠ é€Ÿåº¦ï¼ˆâ‰¥0ï¼‰
+     * @param decel å‡é€Ÿåº¦ï¼ˆâ‰¥0ï¼‰
+     * @param max_limit æœ€å¤§ç»å¯¹å€¼é™åˆ¶
      */
     void RampGenerator_Init(RampGenerator *ramp,
                             unsigned int interval_ms,
@@ -39,46 +39,46 @@ extern "C"
                             float max_limit);
 
     /**
-     * @brief ÉèÖÃÄ¿±êÖµ£¨ÔÊĞí³¬³öÏŞÖÆ·¶Î§£©
+     * @brief è®¾ç½®ç›®æ ‡å€¼ï¼ˆå…è®¸è¶…å‡ºé™åˆ¶èŒƒå›´ï¼‰
      */
     void RampGenerator_SetTarget(RampGenerator *ramp, float target);
 
     /**
-     * @brief »ñÈ¡µ±Ç°Êä³öÖµ£¨ÒÑÏŞ·ù£©
+     * @brief è·å–å½“å‰è¾“å‡ºå€¼ï¼ˆå·²é™å¹…ï¼‰
      */
     float RampGenerator_GetCurrent(const RampGenerator *ramp);
 
     /**
-     * @brief ¸üĞÂ·¢ÉúÆ÷×´Ì¬£¨Ğè¶¨ÆÚµ÷ÓÃ£©
-     * @param current_time_ms µ¥µ÷µİÔöµÄµ±Ç°Ê±¼ä´Á
+     * @brief æ›´æ–°å‘ç”Ÿå™¨çŠ¶æ€ï¼ˆéœ€å®šæœŸè°ƒç”¨ï¼‰
+     * @param current_time_ms å•è°ƒé€’å¢çš„å½“å‰æ—¶é—´æˆ³
      */
     void RampGenerator_Update(RampGenerator *ramp, unsigned long current_time_ms);
 
     /**
-     * @brief ĞŞ¸Ä¿ØÖÆ¼ä¸ô£¨Á¢¼´ÉúĞ§£©
-     * @param interval_ms ĞÂ¼ä¸ô£¨1-1000ms£©
+     * @brief ä¿®æ”¹æ§åˆ¶é—´éš”ï¼ˆç«‹å³ç”Ÿæ•ˆï¼‰
+     * @param interval_ms æ–°é—´éš”ï¼ˆ1-1000msï¼‰
      */
     void RampGenerator_SetInterval(RampGenerator *ramp, unsigned int interval_ms);
 
     /**
-     * @brief ĞŞ¸Ä¼ÓËÙ¶È£¨ÏÂ´Î¸üĞÂÉúĞ§£©
-     * @param accel ĞÂ¼ÓËÙ¶È£¨¡İ0£©
+     * @brief ä¿®æ”¹åŠ é€Ÿåº¦ï¼ˆä¸‹æ¬¡æ›´æ–°ç”Ÿæ•ˆï¼‰
+     * @param accel æ–°åŠ é€Ÿåº¦ï¼ˆâ‰¥0ï¼‰
      */
     void RampGenerator_SetAccel(RampGenerator *ramp, float accel);
 
     /**
-     * @brief ĞŞ¸Ä¼õËÙ¶È£¨ÏÂ´Î¸üĞÂÉúĞ§£©
-     * @param decel ĞÂ¼õËÙ¶È£¨¡İ0£©
+     * @brief ä¿®æ”¹å‡é€Ÿåº¦ï¼ˆä¸‹æ¬¡æ›´æ–°ç”Ÿæ•ˆï¼‰
+     * @param decel æ–°å‡é€Ÿåº¦ï¼ˆâ‰¥0ï¼‰
      */
     void RampGenerator_SetDecel(RampGenerator *ramp, float decel);
 
     /**
-     * @brief ĞŞ¸Ä×î´óÖµÏŞÖÆ£¨Á¢¼´ÉúĞ§²¢Ç¯Î»µ±Ç°Öµ£©
+     * @brief ä¿®æ”¹æœ€å¤§å€¼é™åˆ¶ï¼ˆç«‹å³ç”Ÿæ•ˆå¹¶é’³ä½å½“å‰å€¼ï¼‰
      */
     void RampGenerator_SetMaxLimit(RampGenerator *ramp, float max_limit);
 
     /**
-     * @brief Ç¿ÖÆÉèÖÃµ±Ç°Öµ
+     * @brief å¼ºåˆ¶è®¾ç½®å½“å‰å€¼
      * 
      */
     void RampGenerator_SetCurrent(RampGenerator *ramp, float current_value);

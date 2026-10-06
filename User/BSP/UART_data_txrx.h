@@ -2,7 +2,7 @@
  * @file UART_data_txrx.h
  * @author set
  \home
- * @brief ´®¿ÚÊı¾İ·¢ËÍ½ÓÊÜ
+ * @brief ä¸²å£æ•°æ®å‘é€æ¥å—
  * @version 0.1
  * @date 2022-11-20
  *
@@ -19,8 +19,8 @@
 #include "usart.h"
 #include "struct_typedef.h"
 
-#define UART_BUFFER_SIZE 256//´®¿Ú»º³åÇø´óĞ¡
-//´®¿ÚÊı¾İ½á¹¹Ìå
+#define UART_BUFFER_SIZE 256//ä¸²å£ç¼“å†²åŒºå¤§å°
+//ä¸²å£æ•°æ®ç»“æ„ä½“
 
 typedef PACKED_STRUCT()
 {
@@ -37,12 +37,12 @@ extern transmit_data UART10_data;
 extern transmit_data UART1_data;
 extern transmit_data UART8_data;
 
-//Íâ²¿µ÷ÓÃ
-void Uart_Init(void);                                                                                                                         //³õÊ¼»¯
-void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //³õÊ¼»¯                                                                                               //½ÓÊÜÖĞ¶Ï
-void UART_SendData(transmit_data uart, uint8_t data[], uint16_t size);                                                                       //·¢ËÍ
+//å¤–éƒ¨è°ƒç”¨
+void Uart_Init(void);                                                                                                                         //åˆå§‹åŒ–
+void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //åˆå§‹åŒ–                                                                                               //æ¥å—ä¸­æ–­
+void UART_SendData(transmit_data uart, uint8_t data[], uint16_t size);                                                                       //å‘é€
 
-//ÄÚ²¿µ÷ÓÃ
-void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //³õÊ¼»¯
+//å†…éƒ¨è°ƒç”¨
+void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //åˆå§‹åŒ–
 #endif
 // end of file

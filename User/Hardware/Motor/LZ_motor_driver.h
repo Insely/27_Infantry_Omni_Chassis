@@ -4,16 +4,21 @@
  * @LastEditors: hao hao@qlu.edu.cn
  * @LastEditTime: 2025-09-02 23:30:31
  * @FilePath: \Season-26-Code\User\Hardware\LZ_motor_driver.h
- * @Description: ÕâÊÇÄ¬ÈÏÉèÖÃ,ÇëÉèÖÃ`customMade`, ´ò¿ªkoroFileHeader²é¿´ÅäÖÃ ½øĞĞÉèÖÃ: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: è¿™æ˜¯é»˜è®¤è®¾ç½®,è¯·è®¾ç½®`customMade`, æ‰“å¼€koroFileHeaderæŸ¥çœ‹é…ç½® è¿›è¡Œè®¾ç½®: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 #ifndef __LZ_MOTOR_DRIVER_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __LZ_MOTOR_DRIVER_H
 
 #include "main.h"
 #include "stdint.h"
 #include "fdcan.h"
 
-// MIT Ğ­ÒéÖ¸ÁîÀàĞÍ£¨¸ß3Î»£©
+// MIT åè®®æŒ‡ä»¤ç±»å‹ï¼ˆé«˜3ä½ï¼‰
 #define MIT_CMD_ENABLE     0x00
 #define MIT_CMD_DISABLE    0x01
 #define MIT_CMD_MIT_PARAM  0x02
@@ -26,11 +31,11 @@
 #define MIT_CMD_POSITION   0x09
 #define MIT_CMD_VELOCITY   0x0A
 
-// Ä¬ÈÏµç»úºÍÖ÷»úID
+// é»˜è®¤ç”µæœºå’Œä¸»æœºID
 #define DEFAULT_MOTOR_ID   1
 #define DEFAULT_MASTER_ID  0xFD
 
-// ²ÎÊı·¶Î§¶¨Òå
+// å‚æ•°èŒƒå›´å®šä¹‰
 #define P_MIN -12.57f
 #define P_MAX 12.57f
 #define V_MIN -33.0f
@@ -42,27 +47,27 @@
 #define T_MIN -14.0f
 #define T_MAX 14.0f
 
-// µç»ú¿ØÖÆÄ£Ê½
+// ç”µæœºæ§åˆ¶æ¨¡å¼
 typedef enum {
-    LZ_MODE_MIT = 0,    // MITÄ£Ê½
-    LZ_MODE_POSITION,   // Î»ÖÃÄ£Ê½
-    LZ_MODE_VELOCITY,   // ËÙ¶ÈÄ£Ê½
-    LZ_MODE_CURRENT,    // µçÁ÷Ä£Ê½
-    LZ_MODE_DISABLE     // Ê§ÄÜÄ£Ê½
+    LZ_MODE_MIT = 0,    // MITæ¨¡å¼
+    LZ_MODE_POSITION,   // ä½ç½®æ¨¡å¼
+    LZ_MODE_VELOCITY,   // é€Ÿåº¦æ¨¡å¼
+    LZ_MODE_CURRENT,    // ç”µæµæ¨¡å¼
+    LZ_MODE_DISABLE     // å¤±èƒ½æ¨¡å¼
 } LZ_Mode_t;
 
-// µç»ú×´Ì¬½á¹¹Ìå
+// ç”µæœºçŠ¶æ€ç»“æ„ä½“
 typedef struct {
     uint8_t motor_id;
-    float angle;        // ½Ç¶È (rad)
-    float velocity;     // ËÙ¶È (rad/s)
-    float torque;       // ×ª¾Ø (N.m)
-    float temperature;  // ÎÂ¶È (¡ãC)
-    uint32_t fault;     // ¹ÊÕÏÂë
-    uint8_t uid[8];     // Î¨Ò»±êÊ¶·û
+    float angle;        // è§’åº¦ (rad)
+    float velocity;     // é€Ÿåº¦ (rad/s)
+    float torque;       // è½¬çŸ© (N.m)
+    float temperature;  // æ¸©åº¦ (Â°C)
+    uint32_t fault;     // æ•…éšœç 
+    uint8_t uid[8];     // å”¯ä¸€æ ‡è¯†ç¬¦
 } LZ_Motor_State_t;
 
-// µç»ú¿ØÖÆ½á¹¹Ìå
+// ç”µæœºæ§åˆ¶ç»“æ„ä½“
 typedef struct {
     uint8_t id;
     uint8_t master_id;
@@ -76,7 +81,7 @@ typedef struct {
     LZ_Motor_State_t state;
 } LZ_Motor_t;
 
-// º¯ÊıÉùÃ÷
+// å‡½æ•°å£°æ˜
 void lz_send_command(uint8_t can_bus, uint8_t motor_id, uint8_t cmd_type, uint8_t *data);
 void lz_enable_motor(uint8_t can_bus, uint8_t motor_id);
 void lz_disable_motor(uint8_t can_bus, uint8_t motor_id);
@@ -90,8 +95,12 @@ void lz_set_master_id(uint8_t can_bus, uint8_t motor_id, uint8_t master_id);
 void lz_set_position(uint8_t can_bus, uint8_t motor_id, float target_pos, float max_speed);
 void lz_set_velocity(uint8_t can_bus, uint8_t motor_id, float target_vel, float current_limit);
 
-// ¸¨Öúº¯Êı
+// è¾…åŠ©å‡½æ•°
 uint16_t float_to_uint_LZ(float x, float x_min, float x_max, uint8_t bits);
 float uint_to_float_LZ(uint16_t x, float x_min, float x_max, uint8_t bits);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* __MIT_MOTOR_H */

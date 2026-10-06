@@ -9,15 +9,15 @@
 
 void HexToRGB(uint32_t hex, uint8_t *r, uint8_t *g, uint8_t *b)
 {
-    *r = (hex >> 16) & 0xFF; // ÌáÈ¡ºìÉ«·ÖÁ¿
-    *g = (hex >> 8) & 0xFF;  // ÌáÈ¡ÂÌÉ«·ÖÁ¿
-    *b = hex & 0xFF;         // ÌáÈ¡À¶É«·ÖÁ¿
+    *r = (hex >> 16) & 0xFF; // æå–çº¢è‰²åˆ†é‡
+    *g = (hex >> 8) & 0xFF;  // æå–ç»¿è‰²åˆ†é‡
+    *b = hex & 0xFF;         // æå–è“è‰²åˆ†é‡
 }
 
 /**
- * @brief LEDµÆÏÔÊ¾ÑÕÉ«
+ * @brief LEDç¯æ˜¾ç¤ºé¢œè‰²
  *
- * @param color ÑÕÉ«µÄrgb±àÂë
+ * @param color é¢œè‰²çš„rgbç¼–ç 
  */
 void LED_ShowColor(uint32_t color)
 {

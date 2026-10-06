@@ -1,4 +1,9 @@
 #ifndef __DM_MOTOR_CTRL_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __DM_MOTOR_CTRL_H__
 #include "main.h"
 #include "dm_motor_drv.h"
@@ -20,5 +25,9 @@ void dm_motor_init(DM_motor_t *motor);
 void read_all_motor_data(DM_motor_t *motor);
 void receive_motor_data(DM_motor_t *motor, uint8_t *data);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* __DM_MOTOR_CTRL_H__ */
 

@@ -11,29 +11,29 @@ typedef struct Node
 
 typedef struct
 {
-    Node *head; // Í·Ö¸Õë
-    // Node *tail; // Î²Ö¸Õë
+    Node *head; // å¤´æŒ‡é’ˆ
+    // Node *tail; // å°¾æŒ‡é’ˆ
     uint32_t len;
 } List;
 
 /*
- *    ListCreate ´´½¨Ò»¸öÁ´±í
+ *    ListCreate åˆ›å»ºä¸€ä¸ªé“¾è¡¨
  *
- *    ListPushBack Î²²¿Ìí¼ÓÊı¾İ
- *    ListPushFront Í·²¿Ìí¼ÓÊı¾İ
- *    ListInsert °´Î»ÖÃ²åÈëÊı¾İ
- *    ListInsertForNode ¸ø¶¨½áµã²åÈëÊı¾İ£¬²åÈëµ½½áµãÇ°
+ *    ListPushBack å°¾éƒ¨æ·»åŠ æ•°æ®
+ *    ListPushFront å¤´éƒ¨æ·»åŠ æ•°æ®
+ *    ListInsert æŒ‰ä½ç½®æ’å…¥æ•°æ®
+ *    ListInsertForNode ç»™å®šç»“ç‚¹æ’å…¥æ•°æ®ï¼Œæ’å…¥åˆ°ç»“ç‚¹å‰
  *
- *    ListEraseBack Î²²¿É¾³ı
- *    ListEraseFront Í·²¿É¾³ı
- *    ListEraseForNode ¸ø¶¨½áµãÉ¾³ı
+ *    ListEraseBack å°¾éƒ¨åˆ é™¤
+ *    ListEraseFront å¤´éƒ¨åˆ é™¤
+ *    ListEraseForNode ç»™å®šç»“ç‚¹åˆ é™¤
  *
- *    ListGetHead »ñÈ¡Í·½áµã
- *    ListGetTail »ñÈ¡Î²½áµã
- *    ListGetNode »ñÈ¡Ö¸¶¨Î»ÖÃµÄ½áµã
- *    ListGetNodeNext »ñÈ¡Ö¸¶¨½áµãµÄÏÂÒ»¸ö½áµã
+ *    ListGetHead è·å–å¤´ç»“ç‚¹
+ *    ListGetTail è·å–å°¾ç»“ç‚¹
+ *    ListGetNode è·å–æŒ‡å®šä½ç½®çš„ç»“ç‚¹
+ *    ListGetNodeNext è·å–æŒ‡å®šç»“ç‚¹çš„ä¸‹ä¸€ä¸ªç»“ç‚¹
  *
- *    ListDestroy Ïú»ÙÁ´±í
+ *    ListDestroy é”€æ¯é“¾è¡¨
  */
 
 extern List *ListCreate(void);

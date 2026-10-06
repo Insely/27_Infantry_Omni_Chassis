@@ -1,7 +1,7 @@
 /**
  * @file UART_data_txrx.c
  * @author sethome
- * @brief ´®¿ÚÊý¾Ý·¢ËÍ½ÓÊÜ
+ * @brief ä¸²å£æ•°æ®å‘é€æŽ¥å—
  * @version 0.1
  * @date 2022-11-20
  *
@@ -23,32 +23,34 @@
 
 #include "Global_status.h"
 #include "Auto_control.h"
+#include "app_api.h"
+#include "BoardLink.h"
 
 
-// DMA¿ØÖÆ±äÁ¿
-extern DMA_HandleTypeDef hdma_uart5_rx;    // Ò£¿ØÆ÷£¬½öÓÃ½ÓÊÜ
-extern DMA_HandleTypeDef hdma_uart8_rx;    // À©Õ¹´®¿Ú8£¬Á¬½ÓÔÆÌ¨IMU
-extern DMA_HandleTypeDef hdma_uart7_rx;    // ´®¿Ú7£¬Á¬½ÓµçÔ´¹ÜÀíÄ£¿é
+// DMAæŽ§åˆ¶å˜é‡
+extern DMA_HandleTypeDef hdma_uart5_rx;    // é¥æŽ§å™¨ï¼Œä»…ç”¨æŽ¥å—
+extern DMA_HandleTypeDef hdma_uart8_rx;    // æ‰©å±•ä¸²å£8ï¼Œè¿žæŽ¥äº‘å°IMU
+extern DMA_HandleTypeDef hdma_uart7_rx;    // ä¸²å£7ï¼Œè¿žæŽ¥ç”µæºç®¡ç†æ¨¡å—
 extern DMA_HandleTypeDef hdma_uart7_tx;
-extern DMA_HandleTypeDef hdma_usart10_rx;  // ´®¿Ú10£¬Á¬½ÓÍ¼´«Ä£¿é
+extern DMA_HandleTypeDef hdma_usart10_rx;  // ä¸²å£10ï¼Œè¿žæŽ¥å›¾ä¼ æ¨¡å—
 extern DMA_HandleTypeDef hdma_usart10_tx;
-extern DMA_HandleTypeDef hdma_usart1_rx;   //´®¿Ú1£¬Á¬½ÓÊÓ¾õÐ¡µçÄÔ
+extern DMA_HandleTypeDef hdma_usart1_rx;   //ä¸²å£1ï¼Œè¿žæŽ¥è§†è§‰å°ç”µè„‘
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 extern DMA_HandleTypeDef hdma_usart2_tx;
 extern DMA_HandleTypeDef hdma_usart3_rx;
 extern DMA_HandleTypeDef hdma_usart3_tx;
 
-// ´®¿Ú¿ØÖÆ±äÁ¿
+// ä¸²å£æŽ§åˆ¶å˜é‡
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
-extern UART_HandleTypeDef huart5; // Ò£¿ØÆ÷£¬¿ÉÄÜÓÃ²»µ½
+extern UART_HandleTypeDef huart5; // é¥æŽ§å™¨ï¼Œå¯èƒ½ç”¨ä¸åˆ°
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart8;
 extern UART_HandleTypeDef huart10;
 
-// ½«ÉÏÊö´®¿Ú+DMAÕûºÏ£¬²¢°üº¬»º³åÇø
+// å°†ä¸Šè¿°ä¸²å£+DMAæ•´åˆï¼Œå¹¶åŒ…å«ç¼“å†²åŒº
 transmit_data UART1_data;
 transmit_data UART2_data;
 transmit_data UART3_data;
@@ -58,15 +60,22 @@ transmit_data UART8_data;
 transmit_data UART10_data;
 
 /**
- * @brief ´®¿Ú³õÊ¼»¯
+ * @brief ä¸²å£åˆå§‹åŒ–
  *
  * @return * void
  */
 void Uart_Init(void)
 {
-  Uart_DMARxTxStart(&UART1_data, &huart1, &hdma_usart1_rx, &hdma_usart1_rx);
-  Uart_DMARxTxStart(&UART2_data, &huart2, &hdma_usart2_rx, &hdma_usart2_rx);
-  Uart_DMARxTxStart(&UART3_data, &huart3, &hdma_usart3_rx, &hdma_usart3_rx);
+#if BOARD_LINK_TRANSPORT == BOARD_LINK_TRANSPORT_UART
+  /* æ™®é€š UART æ¿é—´é€šä¿¡ä½¿ç”¨ 1 Mbaudï¼›é…ç½®æ”¾åœ¨ BSP å±‚ï¼Œé¿å…ä¿®æ”¹ CubeMX ç”ŸæˆåŒºã€‚ */
+  huart1.Init.BaudRate = 1000000U;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+    Error_Handler();
+#endif
+
+  Uart_DMARxTxStart(&UART1_data, &huart1, &hdma_usart1_rx, &hdma_usart1_tx);
+  Uart_DMARxTxStart(&UART2_data, &huart2, &hdma_usart2_rx, &hdma_usart2_tx);
+  Uart_DMARxTxStart(&UART3_data, &huart3, &hdma_usart3_rx, &hdma_usart3_tx);
   Uart_DMARxTxStart(&UART5_data, &huart5, &hdma_uart5_rx, &hdma_uart5_rx);
   Uart_DMARxTxStart(&UART7_data, &huart7, &hdma_uart7_rx, &hdma_uart7_tx);
   Uart_DMARxTxStart(&UART8_data, &huart8, &hdma_uart8_rx, &hdma_uart8_rx);
@@ -74,173 +83,80 @@ void Uart_Init(void)
 }
 
 /**
- * @brief DMA£¬´®¿ÚÖÐ¶ÏÆô¶¯£¬©d(?¦Ø?`)oÎÂÜ°ÌáÊ¾£¬¿ÉÒÔÔÚÍ·ÎÄ¼þÀïÓÃºê×Ô¶¨Òå´®¿Ú»º³åÇø´óÐ¡£¬
- * @param data ´®¿ÚÕûºÏ°üÖ¸Õë
- * @param huart ´®¿ÚÖ¸Õë
- * @param hdma_usart_rx ´®¿Ú½ÓÊÜdmaÖ¸Õë
- * @param hdma_usart_tx ´®¿Ú·¢ËÍdmaÖ¸Õë
+ * @brief DMAï¼Œä¸²å£ä¸­æ–­å¯åŠ¨ï¼Œãƒ¾(?Ï‰?`)oæ¸©é¦¨æç¤ºï¼Œå¯ä»¥åœ¨å¤´æ–‡ä»¶é‡Œç”¨å®è‡ªå®šä¹‰ä¸²å£ç¼“å†²åŒºå¤§å°ï¼Œ
+ * @param data ä¸²å£æ•´åˆåŒ…æŒ‡é’ˆ
+ * @param huart ä¸²å£æŒ‡é’ˆ
+ * @param hdma_usart_rx ä¸²å£æŽ¥å—dmaæŒ‡é’ˆ
+ * @param hdma_usart_tx ä¸²å£å‘é€dmaæŒ‡é’ˆ
  */
 void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx)
 {
-  data->huart = huart;                 // ´®¿Ú¿ØÖÆ±äÁ¿
-  data->hdma_usart_rx = hdma_usart_rx; // DMA½ÓÊÕ»º³å
-  data->hdma_usart_tx = hdma_usart_tx; // DMA·¢ËÍ»º³å
+  data->huart = huart;                 // ä¸²å£æŽ§åˆ¶å˜é‡
+  data->hdma_usart_rx = hdma_usart_rx; // DMAæŽ¥æ”¶ç¼“å†²
+  data->hdma_usart_tx = hdma_usart_tx; // DMAå‘é€ç¼“å†²
 
-  HAL_UARTEx_ReceiveToIdle_DMA(huart, data->rev_data, UART_BUFFER_SIZE); // ¿ªÆôDMAÅúÁ¿Êý¾Ý½ÓÊÜ
-  __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);                        // ¹Ø±Õ½ÓÊÜ¹ý°ëÖÐ¶Ï
+  HAL_UARTEx_ReceiveToIdle_DMA(huart, data->rev_data, UART_BUFFER_SIZE); // å¼€å¯DMAæ‰¹é‡æ•°æ®æŽ¥å—
+  __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);                        // å…³é—­æŽ¥å—è¿‡åŠä¸­æ–­
 }
 
 /**
- * @brief ´®¿Ú·¢ËÍÊý¾Ý
+ * @brief ä¸²å£å‘é€æ•°æ®
  *
- * @param uart ·¢ËÍ´®¿ÚÕûºÏ°ü
- * @param data ·¢ËÍÊý¾Ý£¨Êý¾Ý±ðÊÍ·ÅÁË£¬²»È»ºóÃæÊÕ²»µ½£©
- * @param size Êý¾Ý´óÐ¡
+ * @param uart å‘é€ä¸²å£æ•´åˆåŒ…
+ * @param data å‘é€æ•°æ®ï¼ˆæ•°æ®åˆ«é‡Šæ”¾äº†ï¼Œä¸ç„¶åŽé¢æ”¶ä¸åˆ°ï¼‰
+ * @param size æ•°æ®å¤§å°
  */
 void UART_SendData(transmit_data uart, uint8_t data[], uint16_t size)
 {
   //+++++++++++++++//while(HAL_DMA_GetState(UART6_data.hdma_usart_tx) != HAL_DMA_STATE_READY)
-  HAL_UART_Transmit_DMA(uart.huart, data, size); // Ì×ÍÞ©d(?¦Ø?`)o
+  HAL_UART_Transmit_DMA(uart.huart, data, size); // å¥—å¨ƒãƒ¾(?Ï‰?`)o
 }
 
 /**
-?* @brief ´®¿Ú½ÓÊÜ¿Õ»Øµ÷º¯Êý£¬ÓÃÓÚ½ÓÊÜ²»¶¨³¤Êý¾Ý£¬·ÅÖÃÊý¾Ý´¦Àíº¯Êý
-?* @note ?¸Ãº¯ÊýÎªHAL¿âÖÐ¶Ïº¯Êý£¬ÎÞÐèÔÚÖ÷º¯ÊýÖÐµ÷ÓÃ
-?* @param huart ·¢ÉúÖÐ¶ÏµÄ´®¿Ú¾ä±ú
-?* @param Size ?½ÓÊÕµ½µÄÊý¾Ý³¤¶È
+?* @brief ä¸²å£æŽ¥å—ç©ºå›žè°ƒå‡½æ•°ï¼Œç”¨äºŽæŽ¥å—ä¸å®šé•¿æ•°æ®ï¼Œæ”¾ç½®æ•°æ®å¤„ç†å‡½æ•°
+?* @note ?è¯¥å‡½æ•°ä¸ºHALåº“ä¸­æ–­å‡½æ•°ï¼Œæ— éœ€åœ¨ä¸»å‡½æ•°ä¸­è°ƒç”¨
+?* @param huart å‘ç”Ÿä¸­æ–­çš„ä¸²å£å¥æŸ„
+?* @param Size ?æŽ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦
 ?*/
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+static transmit_data *Uart_Context(UART_HandleTypeDef *uart)
 {
-  // Ê¹ÓÃ uintptr_t ½«Ö¸Õë×ª»»ÎªÕûÊýÀàÐÍ£¬ÒÔ±ãÔÚ switch ÖÐÊ¹ÓÃ
-  // huart->Instance Ö¸Ïò´¥·¢ÖÐ¶ÏµÄÓ²¼þ´®¿Ú(Èç USART1, UART5)
-  switch ((uintptr_t)huart->Instance)
-  {
-  case (uintptr_t)USART1: // ×ÔÃéÊý¾Ý
-  {
-    if (Size >= 2 && UART1_data.rev_data[0] == 'S' && UART1_data.rev_data[1] == 'P') // Ö¡Í·Ð£Ñé
-    {
-      Global.Auto.input.Auto_control_online = 20; // ¸üÐÂÔÚÏß×´Ì¬
-      decodeMINIPCdata(&fromMINIPC, UART1_data.rev_data, Size);
-      MINIPC_to_STM32();
-    }
-
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART1_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)USART2:
-  {
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART2_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)USART3:
-  {
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART3_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)UART5: // Ò£¿ØÆ÷
-  {
-    DT7_DecodeData(UART5_data.rev_data);
-   /*¸»Ë¹Ò£¿ØÆ÷  
-   if( UART5_data.rev_data[23] != 12 ) 
-    {
-      FSI6X_DecodeData(UART5_data.rev_data, &FSI6X_data);
-    } 
-    */
-
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART5_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)UART7: // µç¹Ü²ÃÅÐÏµÍ³
-  {
-    fifo_s_puts(&referee_fifo, (char *)UART7_data.rev_data, (int)Size);
-
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART7_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)UART8: // ÔÆÌ¨IMU
-  {
-    /* int i = 0;
-    for (i = 0; i < Size; i++)
-    {
-      hipnuc_input(&IMU_HI_GIMBAL_data, UART8_data.rev_data[i]);
-    } */
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART8_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  case (uintptr_t)USART10: // Í¼´«Á´Â·²ÃÅÐÏµÍ³
-  {
-    if (Size == 21)
-    {
-      VT13_DataSolve(UART10_data.rev_data, &VT13_data);
-    }
-
-    // ÖØÐÂÆô¶¯DMA½ÓÊÕ
-    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART10_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // ¹Ø±Õ°ë´«ÊäÖÐ¶Ï
-    break;
-  }
-
-  default:
-  {
-    // ¿ÉÑ¡£º´¦ÀíÎ´ÖªµÄ huart ÊµÀý
-    break;
-  }
-  }
+    if (uart==&huart1) return &UART1_data;
+    if (uart==&huart2) return &UART2_data;
+    if (uart==&huart3) return &UART3_data;
+    if (uart==&huart5) return &UART5_data;
+    if (uart==&huart7) return &UART7_data;
+    if (uart==&huart8) return &UART8_data;
+    if (uart==&huart10) return &UART10_data;
+    return NULL;
 }
-/**
- * @brief ´®¿Ú½ÓÊÜÍê³ÉÖÐ¶Ï»Øµ÷º¯Êý£¬ÓÃÓÚ½ÓÊÜ¶¨³¤Êý¾Ý
- *
- * @param huart ½ÓÊÜ´®¿ÚºÅ
- */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
 {
+    transmit_data *ctx=Uart_Context(huart);
+    if (!ctx || size>UART_BUFFER_SIZE) return;
+    uint8_t *data=ctx->rev_data;
+    if (!BoardLink_UartRxDispatch(huart,data,size)) {
+#if BOARD_GIMBAL
+        if (huart==&huart1) App_OnVisionBytes(data,size);
+        else if (huart==&huart5) {
+            if (size>=25 && data[0]==0x0F) FSI6X_decode_data(data,&FSI6X_data);
+            else if (size==18) DT7_DecodeData(data);
+        }
+        else if (huart==&huart10 && size==21) VT13_DataSolve(data,&VT13_data);
+#else
+        if (huart==&huart7) fifo_s_puts(&referee_fifo,(char *)data,size);
+#endif
+    }
+    HAL_UARTEx_ReceiveToIdle_DMA(huart,data,UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx,DMA_IT_HT);
 }
-
-// ·¢Éú´íÎóÖØÆô´®¿Ú
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) { (void)huart; }
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { BoardLink_UartTxCpltCallback(huart); }
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-  if (huart == &huart7)
-  {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart7, UART7_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
-  }
-  else if (huart == &huart10)
-  {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart10, UART10_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
-  }
-  else if (huart == &huart5)
-  {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart5, UART5_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
-  }
-  else if (huart == &huart1)
-  {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart1, UART1_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
-  }
-  else if (huart == &huart8)
-  {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart8, UART8_data.rev_data, UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
-  }
+    transmit_data *ctx=Uart_Context(huart);
+    if (!ctx) return;
+    HAL_UART_AbortTransmit(huart);
+    BoardLink_UartErrorCallback(huart);
+    HAL_UARTEx_ReceiveToIdle_DMA(huart,ctx->rev_data,UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx,DMA_IT_HT);
 }
-// end of file

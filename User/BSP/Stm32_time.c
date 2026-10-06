@@ -7,7 +7,7 @@
 /**
  * @file time.c
  * @author sethome
- * @brief STM32F4µÄ¿ª»úÊ±¼ä¼ÆËã
+ * @brief STM32F4çš„å¼€æœºæ—¶é—´è®¡ç®—
  * @version 0.1
  * @date 2022-11-20
  * 

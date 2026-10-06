@@ -1,0 +1,8 @@
+python3 tests/test_boardlink.py
+PASS BoardLink transport 1: bidirectional C roundtrip, modes, freshness, invalid frames, transport isolation
+PASS BoardLink transport 2: bidirectional C roundtrip, modes, freshness, invalid frames, transport isolation
+PASS BoardLink transport 3: bidirectional C roundtrip, modes, freshness, invalid frames, transport isolation
+python3 tests/test_chassis.py
+PASS 2000 C replay steps: original/new wheel targets, PID/feedforward currents, four modes, LOCK, ramps; 2000 FK/IK roundtrips
+python3 tests/test_yaw.py
+PASS 2000 C Yaw replay steps: original/migrated PID, angle wrap, manual/auto transitions, chassis gyro decoupling; stale feedback inhibits command

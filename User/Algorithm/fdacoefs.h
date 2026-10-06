@@ -1,10 +1,10 @@
 /*
- * ÀëÉ¢Ê±¼ä FIR ÂË²¨Æ÷(ÊµÊı)
+ * ç¦»æ•£æ—¶é—´ FIR æ»¤æ³¢å™¨(å®æ•°)
  * ----------------
- * ÂË²¨Æ÷½á¹¹  : Ö±½ÓĞÍ FIR
- * ÂË²¨Æ÷³¤¶È  : 26
- * ÎÈ¶¨     : ÊÇ
- * ÏßĞÔÏàÎ»   : ÊÇ (Type 2)
+ * æ»¤æ³¢å™¨ç»“æ„  : ç›´æ¥å‹ FIR
+ * æ»¤æ³¢å™¨é•¿åº¦  : 26
+ * ç¨³å®š     : æ˜¯
+ * çº¿æ€§ç›¸ä½   : æ˜¯ (Type 2)
  */
 /*
  * Warning - Filter coefficients were truncated to fit specified data type.  
@@ -25,7 +25,7 @@ const float IMU_FIR_COFFES[IMU_FIR_FILTER_LENGTH] = {
 /**
  * @brief 
  * 
- * @param state FIRÂË²¨Æ÷×´Ì¬ ³¤¶ÈÎªFIR_FILTER_LENGTH + 1
+ * @param state FIRæ»¤æ³¢å™¨çŠ¶æ€ é•¿åº¦ä¸ºFIR_FILTER_LENGTH + 1
  * @param x 
  * @param y 
  * @param N 

@@ -2,27 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "DAPlink",
-      "cwd": "${workspaceFolder}",
-      "executable": "${workspaceFolder}/build/26_Code.elf",
+      "name": "STlink",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/build/27_Infantry_Chassis.elf",
       "request": "launch",
       "type": "cortex-debug",
       "device": "STM32H723VGTx",
-      "svdFile": "${workspaceFolder}/debug/STM32H723.svd",
+      "svdFile": "${workspaceRoot}/debug/STM32H723.svd",
       "servertype": "openocd",
-      "serverpath": "/opt/homebrew/bin/openocd",
-      "armToolchainPath": "/opt/homebrew/bin",
-      "gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
-      "searchDir": [
-        "/opt/homebrew/share/openocd/scripts",
-        "${workspaceFolder}"
-      ],
       "configFiles": [
-        "${workspaceFolder}/debug/openocd_dap.cfg"
-      ],
-      "openOCDLaunchCommands": [
-        "adapter speed 1000",
-        "stm32h7x.cpu0 configure -event reset-init { adapter speed 1000 }"
+        "${workspaceRoot}/debug/stlink.cfg",
+        "${workspaceRoot}/debug/stm32h7x.cfg"
       ],
       "liveWatch": {
         "enabled": true,
@@ -33,28 +23,16 @@
       "preLaunchTask": "build task"
     },
     {
-      "name": "STlink",
-      "cwd": "${workspaceFolder}",
-      "executable": "${workspaceFolder}/build/26_Code.elf",
+      "name": "DAPlink",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/build/27_Infantry_Chassis.elf",
       "request": "launch",
       "type": "cortex-debug",
       "device": "STM32H723VGTx",
-      "svdFile": "${workspaceFolder}/debug/STM32H723.svd",
+      "svdFile": "${workspaceRoot}/debug/STM32H723.svd",
       "servertype": "openocd",
-      "serverpath": "/opt/homebrew/bin/openocd",
-      "armToolchainPath": "/opt/homebrew/bin",
-      "gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
-      "searchDir": [
-        "/opt/homebrew/share/openocd/scripts",
-        "${workspaceFolder}"
-      ],
       "configFiles": [
-        "interface/stlink.cfg",
-        "target/stm32h7x.cfg"
-      ],
-      "openOCDLaunchCommands": [
-        "adapter speed 1000",
-        "stm32h7x.cpu0 configure -event reset-init { adapter speed 1000 }"
+        "${workspaceRoot}/debug/openocd_dap.cfg"
       ],
       "liveWatch": {
         "enabled": true,

@@ -7,7 +7,7 @@
 /**
  * @file Power_switch.c
  * @author Siri (lixirui2017@outlook.com)
- * @brief ´ïÃë¿ª·¢°åµçÔ´¿ª¹Ø¹¦ÄÜ
+ * @brief è¾¾ç§’å¼€å‘æ¿ç”µæºå¼€å…³åŠŸèƒ½
  * @version 0.1
  * @date 2024-12-20
  *
@@ -18,7 +18,7 @@
 #include "Power_switch.h"
 
 /**
- * @brief ÉèÖÃµçÔ´×´Ì¬
+ * @brief è®¾ç½®ç”µæºçŠ¶æ€
  *
  * @param power which power you want to set
  * @param status the status you want the power be
@@ -32,7 +32,7 @@ void Power_Set(powertyp power, GPIO_PinState status)
 }
 
 /**
- * @brief ¹Ø±ÕµçÔ´
+ * @brief å…³é—­ç”µæº
  * 
  * @param power the power you want to turn_off
  */
@@ -45,7 +45,7 @@ void Power_TurnOff(powertyp power)
 }
 
 /**
- * @brief ´ò¿ªµçÔ´
+ * @brief æ‰“å¼€ç”µæº
  * 
  * @param power the power you want to turn-on
  */

@@ -1,7 +1,7 @@
 /**
  * @file USB_VirCom.h
  * @author sethome
- * @brief ĞéÄâ´®¿ÚÊı¾İ·¢ËÍ
+ * @brief è™šæ‹Ÿä¸²å£æ•°æ®å‘é€
  * @version 0.1
  * @date 2022-11-20
  * 

@@ -1,7 +1,7 @@
 /**
  * @file referee_system.c
  * @author calliope(2457059857@qq.com)
- * @brief ²ÃÅĞÏµÍ³Ïà¹Ø´úÂë
+ * @brief è£åˆ¤ç³»ç»Ÿç›¸å…³ä»£ç 
  * @version 1.0
  * @date 2025-12-23
  *
@@ -14,71 +14,71 @@
 
 #define REFEREE_FIFO_BUF_LENGTH 1024
 
-// Íâ²¿µ÷ÓÃ²ÃÅĞÏµÍ³Êı¾İ
+// å¤–éƒ¨è°ƒç”¨è£åˆ¤ç³»ç»Ÿæ•°æ®
 REFEREE_DATA_t Referee_data;
 
-// Êı¾İ»º³åÇø
-fifo_s_t referee_fifo;       // ²ÃÅĞÏµÍ³´¦Àífifo
-fifo_s_t referee_image_fifo; // Í¼´«Á´Â·´¦Àífifo
+// æ•°æ®ç¼“å†²åŒº
+fifo_s_t referee_fifo;       // è£åˆ¤ç³»ç»Ÿå¤„ç†fifo
+fifo_s_t referee_image_fifo; // å›¾ä¼ é“¾è·¯å¤„ç†fifo
 uint8_t referee_fifo_buf[REFEREE_FIFO_BUF_LENGTH];
 uint8_t referee_image_fifo_buf[REFEREE_FIFO_BUF_LENGTH];
 unpack_data_t referee_unpack_obj;
 unpack_data_t referee_image_unpack_obj;
 
-// ÄÚ²¿±äÁ¿
-/* ²ÃÅĞÏµÍ³Í¨ĞÅÖ¡Í· */
-frame_header_struct_t referee_receive_header; // ½ÓÊÕÊı¾İÖ¡Í·
-frame_header_struct_t referee_send_header;    // ·¢ËÍÊı¾İÖ¡Í·
-/*----------- ÈüÖÆÏà¹ØÊı¾İ -----------*/
-ext_game_status_t game_status;         // ±ÈÈü×´Ì¬Êı¾İ(1Hz)
-ext_game_result_t game_result;         // ±ÈÈü½á¹ûÊı¾İ(±ÈÈü½áÊøºó·¢ËÍ)
-ext_game_robot_HP_t game_robot_HP;     // »úÆ÷ÈËÑªÁ¿Êı¾İ
-ext_referee_warning_t referee_warning; // ²ÃÅĞ¾¯¸æĞÅÏ¢
-/*----------- »úÆ÷ÈË×´Ì¬Êı¾İ -----------*/
-ext_robot_status_t robot_status;                 // »úÆ÷ÈËĞÔÄÜÊı¾İ(10Hz£¬º¬µ×ÅÌ¡¢µçÔ´µÈ×´Ì¬)
-ext_power_heat_data_t power_heat_data;           // ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ(50Hz£¬º¬µ×ÅÌ¹¦ÂÊ¡¢Ç¹¿ÚÈÈÁ¿µÈ)
-ext_dart_info_t dart_info;                       // ·ÉïÚÏà¹ØĞÅÏ¢
-ext_robot_pos_t robot_pos;                       // »úÆ÷ÈËÎ»ÖÃºÍ²âËÙÄ£¿é³¯Ïò
-ext_buff_t buff;                                 // »úÆ÷ÈËÔöÒæÏà¹Ø
-ext_hurt_data_t hurt_data;                       // ÉËº¦×´Ì¬Êı¾İ(ÊÜµ½¹¥»÷ºó·¢ËÍ)
-ext_shoot_data_t shoot_data;                     // ÊµÊ±Éä»÷Êı¾İ(×Óµ¯ÉäËÙ/ÆµÂÊµÈ)
-ext_projectile_allowance_t projectile_allowance; // µ¯ÍèÊ£Óà·¢ÉäĞí¿É(µ¯Á¿ÏŞÖÆ)
-ext_rfid_status_t rfid_status;                   // »úÆ÷ÈËRFID×´Ì¬(¼ì²éµãÎ»×´Ì¬)
-ext_dart_client_cmd_t dart_client_cmd;           // ·ÉïÚÔÚÑ¡ÊÖ¶ËÏà¹ØĞÅÏ¢
-ext_ground_robot_position_t ground_robot_position; //¼º·½»úÆ÷ÈËÎ»ÖÃ×ø±ê
-ext_radar_mark_data_t radar_mark_data;           // À×´ï±ê¼ÇĞÅÏ¢
-ext_sentry_info_t sentry_info;                   // ÉÚ±ø»úÆ÷ÈËÏà¹ØĞÅÏ¢
-ext_radar_cmd_t radar_cmd;                       // À×´ïÒ×ÉËÈ·ÈÏÓëÃÜÔ¿¸üĞÂ»òÑéÖ¤
-/*----------- ½»»¥Êı¾İ -----------*/
-ext_robot_interaction_data_t robot_interaction_data; // »úÆ÷ÈË½»»¥Êı¾İ(×Ô¶¨ÒåÍ¨ĞÅÄÚÈİ)
-ext_custom_info_t exchange_data;                     // ×Ô¶¨ÒåUIÏÔÊ¾Êı¾İ(Ñ¡ÊÖ¶ËÌØ¶¨Î»ÖÃ×Ö·ûÏÔÊ¾)
-ext_map_command_t map_command;                       // Ñ¡ÊÖ¶ËÏÂ·¢Êı¾İ
-ext_map_robot_data_t map_robot_data;                 // Ñ¡ÊÖ¶Ë½ÓÊÜÊı¾İ
-ext_map_data_t map_data;                             // ÉÚ±øÏòÑ¡ÊÖ¶Ë·¢ËÍÂ·¾¶×ø±êÊı¾İ
-ext_custom_info_t custom_info;                       // »úÆ÷ÈËÏòÑ¡ÊÖ¶Ë·¢ËÍĞÅÏ¢
-/*----------- ¿ØÖÆÊı¾İ -----------*/
-ext_remote_control_t remote_control; // Í¼´«Á´Â·¼üÊóÊı¾İ(Ô¶³Ì¿ØÖÆĞÅºÅ)
-/*----------- ·ÇÁ´Â·Êı¾İ -----------*/
-ext_custom_client_data_t custom_client_data;         //ÓÃ×Ô¶¨Òå¿ØÖÆÆ÷Ä£Äâ¼üÊó
+// å†…éƒ¨å˜é‡
+/* è£åˆ¤ç³»ç»Ÿé€šä¿¡å¸§å¤´ */
+frame_header_struct_t referee_receive_header; // æ¥æ”¶æ•°æ®å¸§å¤´
+frame_header_struct_t referee_send_header;    // å‘é€æ•°æ®å¸§å¤´
+/*----------- èµ›åˆ¶ç›¸å…³æ•°æ® -----------*/
+ext_game_status_t game_status;         // æ¯”èµ›çŠ¶æ€æ•°æ®(1Hz)
+ext_game_result_t game_result;         // æ¯”èµ›ç»“æœæ•°æ®(æ¯”èµ›ç»“æŸåå‘é€)
+ext_game_robot_HP_t game_robot_HP;     // æœºå™¨äººè¡€é‡æ•°æ®
+ext_referee_warning_t referee_warning; // è£åˆ¤è­¦å‘Šä¿¡æ¯
+/*----------- æœºå™¨äººçŠ¶æ€æ•°æ® -----------*/
+ext_robot_status_t robot_status;                 // æœºå™¨äººæ€§èƒ½æ•°æ®(10Hzï¼Œå«åº•ç›˜ã€ç”µæºç­‰çŠ¶æ€)
+ext_power_heat_data_t power_heat_data;           // å®æ—¶åŠŸç‡çƒ­é‡æ•°æ®(50Hzï¼Œå«åº•ç›˜åŠŸç‡ã€æªå£çƒ­é‡ç­‰)
+ext_dart_info_t dart_info;                       // é£é•–ç›¸å…³ä¿¡æ¯
+ext_robot_pos_t robot_pos;                       // æœºå™¨äººä½ç½®å’Œæµ‹é€Ÿæ¨¡å—æœå‘
+ext_buff_t buff;                                 // æœºå™¨äººå¢ç›Šç›¸å…³
+ext_hurt_data_t hurt_data;                       // ä¼¤å®³çŠ¶æ€æ•°æ®(å—åˆ°æ”»å‡»åå‘é€)
+ext_shoot_data_t shoot_data;                     // å®æ—¶å°„å‡»æ•°æ®(å­å¼¹å°„é€Ÿ/é¢‘ç‡ç­‰)
+ext_projectile_allowance_t projectile_allowance; // å¼¹ä¸¸å‰©ä½™å‘å°„è®¸å¯(å¼¹é‡é™åˆ¶)
+ext_rfid_status_t rfid_status;                   // æœºå™¨äººRFIDçŠ¶æ€(æ£€æŸ¥ç‚¹ä½çŠ¶æ€)
+ext_dart_client_cmd_t dart_client_cmd;           // é£é•–åœ¨é€‰æ‰‹ç«¯ç›¸å…³ä¿¡æ¯
+ext_ground_robot_position_t ground_robot_position; //å·±æ–¹æœºå™¨äººä½ç½®åæ ‡
+ext_radar_mark_data_t radar_mark_data;           // é›·è¾¾æ ‡è®°ä¿¡æ¯
+ext_sentry_info_t sentry_info;                   // å“¨å…µæœºå™¨äººç›¸å…³ä¿¡æ¯
+ext_radar_cmd_t radar_cmd;                       // é›·è¾¾æ˜“ä¼¤ç¡®è®¤ä¸å¯†é’¥æ›´æ–°æˆ–éªŒè¯
+/*----------- äº¤äº’æ•°æ® -----------*/
+ext_robot_interaction_data_t robot_interaction_data; // æœºå™¨äººäº¤äº’æ•°æ®(è‡ªå®šä¹‰é€šä¿¡å†…å®¹)
+ext_custom_info_t exchange_data;                     // è‡ªå®šä¹‰UIæ˜¾ç¤ºæ•°æ®(é€‰æ‰‹ç«¯ç‰¹å®šä½ç½®å­—ç¬¦æ˜¾ç¤º)
+ext_map_command_t map_command;                       // é€‰æ‰‹ç«¯ä¸‹å‘æ•°æ®
+ext_map_robot_data_t map_robot_data;                 // é€‰æ‰‹ç«¯æ¥å—æ•°æ®
+ext_map_data_t map_data;                             // å“¨å…µå‘é€‰æ‰‹ç«¯å‘é€è·¯å¾„åæ ‡æ•°æ®
+ext_custom_info_t custom_info;                       // æœºå™¨äººå‘é€‰æ‰‹ç«¯å‘é€ä¿¡æ¯
+/*----------- æ§åˆ¶æ•°æ® -----------*/
+ext_remote_control_t remote_control; // å›¾ä¼ é“¾è·¯é”®é¼ æ•°æ®(è¿œç¨‹æ§åˆ¶ä¿¡å·)
+/*----------- éé“¾è·¯æ•°æ® -----------*/
+ext_custom_client_data_t custom_client_data;         //ç”¨è‡ªå®šä¹‰æ§åˆ¶å™¨æ¨¡æ‹Ÿé”®é¼ 
 static void referee_struct_init(void)
 {
-    // Êı¾İÖ¡
+    // æ•°æ®å¸§
     memset(&referee_receive_header, 0, sizeof(frame_header_struct_t));
     memset(&referee_send_header, 0, sizeof(frame_header_struct_t));
 
-    // ÈüÖÆÏà¹Ø
+    // èµ›åˆ¶ç›¸å…³
     memset(&game_status, 0, sizeof(ext_game_status_t));
     memset(&game_result, 0, sizeof(ext_game_result_t));
     memset(&game_robot_HP, 0, sizeof(ext_game_robot_HP_t));
     memset(&referee_warning, 0, sizeof(ext_referee_warning_t));
 
-    //»úÆ÷ÈË½»»¥Êı¾İ
-    memset(&robot_status, 0, sizeof(ext_robot_status_t));                       // »úÆ÷ÈËĞÔÄÜÊı¾İ 10hz £¡attention please£¡
-    memset(&power_heat_data, 0, sizeof(ext_power_heat_data_t));                 // ÊµÊ±¹¦ÂÊÈÈÁ¿Êı¾İ 50hz !attention please!
-    memset(&hurt_data, 0, sizeof(ext_hurt_data_t));                             // ÉËº¦×´Ì¬Êı¾İ
-    memset(&shoot_data, 0, sizeof(ext_shoot_data_t));                           // ÊµÊ±Éä»÷Êı¾İ
-    memset(&projectile_allowance, 0, sizeof(ext_projectile_allowance_t));       // ÔÊĞí·¢µ¯Á¿
-    memset(&rfid_status, 0, sizeof(ext_rfid_status_t));                         // »úÆ÷ÈËRFID×´Ì¬
+    //æœºå™¨äººäº¤äº’æ•°æ®
+    memset(&robot_status, 0, sizeof(ext_robot_status_t));                       // æœºå™¨äººæ€§èƒ½æ•°æ® 10hz ï¼attention pleaseï¼
+    memset(&power_heat_data, 0, sizeof(ext_power_heat_data_t));                 // å®æ—¶åŠŸç‡çƒ­é‡æ•°æ® 50hz !attention please!
+    memset(&hurt_data, 0, sizeof(ext_hurt_data_t));                             // ä¼¤å®³çŠ¶æ€æ•°æ®
+    memset(&shoot_data, 0, sizeof(ext_shoot_data_t));                           // å®æ—¶å°„å‡»æ•°æ®
+    memset(&projectile_allowance, 0, sizeof(ext_projectile_allowance_t));       // å…è®¸å‘å¼¹é‡
+    memset(&rfid_status, 0, sizeof(ext_rfid_status_t));                         // æœºå™¨äººRFIDçŠ¶æ€
     memset(&dart_info,0,sizeof(ext_dart_info_t));
     memset(&robot_pos,0,sizeof(ext_robot_pos_t));
     memset(&buff,0,sizeof(ext_buff_t));
@@ -88,21 +88,21 @@ static void referee_struct_init(void)
     memset(&sentry_info,0,sizeof(ext_sentry_info_t));
     memset(&radar_cmd,0,sizeof(ext_radar_cmd_t));
     
-    //½»»¥Êı¾İ
-    memset(&robot_interaction_data, 0, sizeof(ext_robot_interaction_data_t));   // »úÆ÷ÈË½»»¥Êı¾İ
-    memset(&exchange_data, 0, sizeof(ext_custom_info_t));                       // Ñ¡ÊÖ¶ËÌØ¶¨Î»ÖÃÏÔÊ¾×Ö·û
+    //äº¤äº’æ•°æ®
+    memset(&robot_interaction_data, 0, sizeof(ext_robot_interaction_data_t));   // æœºå™¨äººäº¤äº’æ•°æ®
+    memset(&exchange_data, 0, sizeof(ext_custom_info_t));                       // é€‰æ‰‹ç«¯ç‰¹å®šä½ç½®æ˜¾ç¤ºå­—ç¬¦
     memset(&map_command,0,sizeof(ext_map_command_t));
     memset(&map_robot_data,0,sizeof(ext_map_robot_data_t));
     memset(&map_data,0,sizeof(ext_map_data_t));
     memset(&custom_info,0,sizeof(ext_custom_info_t));
 
-    //¿ØÖÆÊı¾İ
-    memset(&remote_control, 0, sizeof(ext_remote_control_t));                   // Í¼´«Á´Â·¼üÊóÊı¾İ
+    //æ§åˆ¶æ•°æ®
+    memset(&remote_control, 0, sizeof(ext_remote_control_t));                   // å›¾ä¼ é“¾è·¯é”®é¼ æ•°æ®
 
-    //·ÇÁ´Â·Êı¾İ
+    //éé“¾è·¯æ•°æ®
     memset(&custom_client_data,0,sizeof(ext_custom_client_data_t));
 }
-static void required_Data() //ºóĞø¿É¸ù¾İĞèÒª×ÔĞĞÌí¼Ó
+static void required_Data() //åç»­å¯æ ¹æ®éœ€è¦è‡ªè¡Œæ·»åŠ 
 {
 		Referee_data.Initial_SPEED = shoot_data.initial_speed; 
 		Referee_data.Launching_Frequency = shoot_data.launching_frequency;
@@ -330,7 +330,7 @@ static void referee_data_solve(uint8_t *frame)
     }
 }
 /**
- * @brief ³õÊ¼»¯²ÃÅĞÏµÍ³
+ * @brief åˆå§‹åŒ–è£åˆ¤ç³»ç»Ÿ
  *
  */
 void Refree_system_init(void)
@@ -341,10 +341,10 @@ void Refree_system_init(void)
 }
 
 /**
- * @brief ²ÃÅĞÏµÍ³½â°ü
+ * @brief è£åˆ¤ç³»ç»Ÿè§£åŒ…
  * 
- * @param p_fifo »º³åfifo
- * @param p_obj ½â°üÁ÷³Ì
+ * @param p_fifo ç¼“å†²fifo
+ * @param p_obj è§£åŒ…æµç¨‹
  */
 void Referee_unpack_fifo_data(fifo_s_t* p_fifo,unpack_data_t* p_obj)
 {

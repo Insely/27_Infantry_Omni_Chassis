@@ -57,17 +57,17 @@
 #define    IF_KEY_PRESSED_CTRL    ( (RC_data.key.v & KEY_PRESSED_OFFSET_CTRL) != 0 )
 #define    IF_KEY_PRESSED_SHIFT   ( (RC_data.key.v & KEY_PRESSED_OFFSET_SHIFT) != 0 )
 
-/* »ñÈ¡Êó±êÈıÖáµÄÒÆ¶¯ËÙ¶È */
+/* è·å–é¼ æ ‡ä¸‰è½´çš„ç§»åŠ¨é€Ÿåº¦ */
 #define    MOUSE_X_MOVE_SPEED    (RC_data.mouse.x)
 #define    MOUSE_Y_MOVE_SPEED    (RC_data.mouse.y)
 #define    MOUSE_Z_MOVE_SPEED    (RC_data.mouse.z)
 
-/* ¼ì²âÊó±ê°´¼ü×´Ì¬ 
-   °´ÏÂÎª1£¬Ã»°´ÏÂÎª0*/
+/* æ£€æµ‹é¼ æ ‡æŒ‰é”®çŠ¶æ€ 
+   æŒ‰ä¸‹ä¸º1ï¼Œæ²¡æŒ‰ä¸‹ä¸º0*/
 #define    IF_MOUSE_PRESSED_LEFT    (RC_data.mouse.press_l == 1)
 #define    IF_MOUSE_PRESSED_RIGH    (RC_data.mouse.press_r == 1)
 
-// ²¦Å¥×´Ì¬ºê¶¨Òå
+// æ‹¨é’®çŠ¶æ€å®å®šä¹‰
 #define UP 1
 #define MIDDLE 3
 #define DOWN 2
@@ -75,25 +75,25 @@
 #pragma pack(1)
 typedef struct
 {
-    /*Ò£¿ØÆ÷Êı¾İ*/
+    /*é¥æ§å™¨æ•°æ®*/
     struct
     {
-        int16_t ch[5]; // Ò¡¸ËÊı¾İ +_660
-        char s[2];     // ²¦¸ËÊı¾İ
+        int16_t ch[5]; // æ‘‡æ†æ•°æ® +_660
+        char s[2];     // æ‹¨æ†æ•°æ®
     } rc;
-    /*Êó±êÊı¾İ*/
+    /*é¼ æ ‡æ•°æ®*/
     struct
     {
-        int16_t x;       // xÖáÒÆ¶¯ËÙ¶È
-        int16_t y;       // yÖáÒÆ¶¯ËÙ¶È
-        int16_t z;       // zÖáÒÆ¶¯ËÙ¶È
-        uint8_t press_l; // ×ó¼üÊÇ·ñ°´ÏÂ
-        uint8_t press_r; // ÓÒ¼üÊÇ·ñ°´ÏÂ
+        int16_t x;       // xè½´ç§»åŠ¨é€Ÿåº¦
+        int16_t y;       // yè½´ç§»åŠ¨é€Ÿåº¦
+        int16_t z;       // zè½´ç§»åŠ¨é€Ÿåº¦
+        uint8_t press_l; // å·¦é”®æ˜¯å¦æŒ‰ä¸‹
+        uint8_t press_r; // å³é”®æ˜¯å¦æŒ‰ä¸‹
     } mouse;
-    /*¼üÅÌÊı¾İ*/
+    /*é”®ç›˜æ•°æ®*/
     struct
     {
-        uint16_t v; // ¼üÅÌ°´¼üÊı¾İ
+        uint16_t v; // é”®ç›˜æŒ‰é”®æ•°æ®
     } key;
     int online;
 }DT7_data_s;

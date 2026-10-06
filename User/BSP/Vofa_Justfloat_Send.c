@@ -4,7 +4,7 @@
 void Vofa_SendFloat(float *data, uint8_t num)
 {
     
-    static uint8_t tx_buf[4 * 8 + 4];  // ×î¶à8Í¨µÀ£¬°´Ğè¸Ä´ó
+    static uint8_t tx_buf[4 * 8 + 4];  // æœ€å¤š8é€šé“ï¼ŒæŒ‰éœ€æ”¹å¤§
     const uint8_t tail[4] = {0x00, 0x00, 0x80, 0x7F};
 
     if (num > 8) num = 8;

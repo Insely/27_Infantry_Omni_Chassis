@@ -21,30 +21,30 @@ struct IMU_t
 {
 	fp32 gyro[3];  // rad/s
 	fp32 accel[3]; // m/s^2
-	fp32 mag[3];   // ´ÅÁ¦¼Æut
-	fp32 temp;	   // ÎÂ¶È
+	fp32 mag[3];   // ç£åŠ›è®¡ut
+	fp32 temp;	   // æ¸©åº¦
 	
-	float calibration[3];//½ÇËÙ¶ÈĞ£×¼error
+	float calibration[3];//è§’é€Ÿåº¦æ ¡å‡†error
 	float cali_end[3];
 
-	Attitude_3D_t KF; //¿¨¶ûÂüÂË²¨½á¹û
+	Attitude_3D_t KF; //å¡å°”æ›¼æ»¤æ³¢ç»“æœ
 
 	struct
 	{
-		fp32 q[4];			   //ËÄÔªÊı
-		fp32 pitch, yaw, roll; //Å·À­½Ç
+		fp32 q[4];			   //å››å…ƒæ•°
+		fp32 pitch, yaw, roll; //æ¬§æ‹‰è§’
 	} Mahony;
 
 	struct
 	{
-		fp32 q[4];			   //ËÄÔªÊı
-		fp32 pitch, yaw, roll; //Å·À­½Ç
+		fp32 q[4];			   //å››å…ƒæ•°
+		fp32 pitch, yaw, roll; //æ¬§æ‹‰è§’
 	} madgwick;
 
 	struct
 	{
-		fp32 q[4];			   //ËÄÔªÊı
-		fp32 pitch, yaw, roll; //Å·À­½Ç
+		fp32 q[4];			   //å››å…ƒæ•°
+		fp32 pitch, yaw, roll; //æ¬§æ‹‰è§’
 		int8_t err_code;
 		fp32 last_yaw;
 		fp32 yaw_rad_cnt;
@@ -54,20 +54,20 @@ struct IMU_t
 };
 
 extern struct IMU_t IMU_data;
-extern struct IMU_t IMU_data_history[10]; // IMUÀúÊ·Êı¾İ½á¹¹Ìå
+extern struct IMU_t IMU_data_history[10]; // IMUå†å²æ•°æ®ç»“æ„ä½“
 extern hipnuc_raw_t IMU_HI_GIMBAL_data;
 extern unsigned  long ulTdleCycleCount;	
 
 
-// Íâ²¿µ÷ÓÃ
-void IMU_Init(void);   // IMU³õÊ¼»¯
-void IMU_Updata(void); // IMUÊı¾İ¸üĞÂ
-void MagUpdate(void);  // ´ÅÁ¦¼ÆÊı¾İ¸üĞÂ
-void MagZero(void); // ÇåÁãµØ´Å¼Æ
-void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll);//·Çµ÷ÓÃLib°æ±¾
+// å¤–éƒ¨è°ƒç”¨
+void IMU_Init(void);   // IMUåˆå§‹åŒ–
+void IMU_Updata(void); // IMUæ•°æ®æ›´æ–°
+void MagUpdate(void);  // ç£åŠ›è®¡æ•°æ®æ›´æ–°
+void MagZero(void); // æ¸…é›¶åœ°ç£è®¡
+void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll);//éè°ƒç”¨Libç‰ˆæœ¬
 void Process_IMUData();
 float get_history_data(uint8_t yaw_or_pitch,uint32_t history_time);
-float get_history_q_data(uint8_t i,uint32_t history_time);//»ñÈ¡ÀúÊ·Êı¾İº¯Êı
+float get_history_q_data(uint8_t i,uint32_t history_time);//è·å–å†å²æ•°æ®å‡½æ•°
 float rad2degree(float a);
 float degree2rad(float a);
 void IMU_CailProgram(void);

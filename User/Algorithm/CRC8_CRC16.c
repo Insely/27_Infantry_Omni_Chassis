@@ -2,7 +2,7 @@
   ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       crc8_crc16.c/h
   * @brief      crc8 and crc16 calculate function, verify function, append function.
-  *             crc8和crc16计算函数,校验函数,添加函数
+  *             crc8鍜宑rc16璁＄畻鍑芥暟,鏍￠獙鍑芥暟,娣诲姞鍑芥暟
   * @note       
   * @history
   *  Version    Date            Author          Modification
@@ -15,7 +15,7 @@
   @endverbatim
   ****************************(C) COPYRIGHT 2019 DJI****************************
   */
-#include "crc8_crc16.h"
+#include "CRC8_CRC16.h"
 //include "NUC_communication.h"
 //crc8 generator polynomial:G(x)=x8+x5+x4+1
 const uint8_t CRC8_INIT = 0xff;
@@ -84,11 +84,11 @@ const uint16_t wCRC_table[256] =
    * @retval         calculated crc8
    */
  /**
-   * @brief          计算CRC8
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
-   * @param[in]      ucCRC8:初始CRC8
-   * @retval         计算完的CRC8
+   * @brief          璁＄畻CRC8
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
+   * @param[in]      ucCRC8:鍒濆CRC8
+   * @retval         璁＄畻瀹岀殑CRC8
    */
  uint8_t get_CRC8_check_sum(unsigned char *pch_message,unsigned int dw_length,unsigned char ucCRC8)
  {
@@ -109,10 +109,10 @@ const uint16_t wCRC_table[256] =
    * @retval         true of false
    */
  /**
-   * @brief          CRC8校验函数
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
-   * @retval         真或者假
+   * @brief          CRC8鏍￠獙鍑芥暟
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
+   * @retval         鐪熸垨鑰呭亣
    */
  uint32_t verify_CRC8_check_sum(unsigned char *pch_message, unsigned int dw_length)
  {
@@ -133,9 +133,9 @@ const uint16_t wCRC_table[256] =
    * @retval         none
    */
  /**
-   * @brief          添加CRC8到数据的结尾
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
+   * @brief          娣诲姞CRC8鍒版暟鎹殑缁撳熬
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
    * @retval         none
    */
  void append_CRC8_check_sum(unsigned char *pch_message, unsigned int dw_length)
@@ -158,11 +158,11 @@ const uint16_t wCRC_table[256] =
    * @retval         calculated crc16
    */
  /**
-   * @brief          计算CRC16
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
-   * @param[in]      wCRC:初始CRC16
-   * @retval         计算完的CRC16
+   * @brief          璁＄畻CRC16
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
+   * @param[in]      wCRC:鍒濆CRC16
+   * @retval         璁＄畻瀹岀殑CRC16
    */
  uint16_t get_CRC16_check_sum(uint8_t *pch_message,uint32_t dw_length,uint16_t wCRC)
  {
@@ -187,10 +187,10 @@ const uint16_t wCRC_table[256] =
    * @retval         true of false
    */
  /**
-   * @brief          CRC16校验函数
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
-   * @retval         真或者假
+   * @brief          CRC16鏍￠獙鍑芥暟
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
+   * @retval         鐪熸垨鑰呭亣
    */
  uint32_t verify_CRC16_check_sum(uint8_t *pchMessage, uint32_t dwLength)
  {
@@ -211,9 +211,9 @@ const uint16_t wCRC_table[256] =
    * @retval         none
    */
  /**
-   * @brief          添加CRC16到数据的结尾
-   * @param[in]      pch_message: 数据
-   * @param[in]      dw_length: 数据和校验的长度
+   * @brief          娣诲姞CRC16鍒版暟鎹殑缁撳熬
+   * @param[in]      pch_message: 鏁版嵁
+   * @param[in]      dw_length: 鏁版嵁鍜屾牎楠岀殑闀垮害
    * @retval         none
    */
  void append_CRC16_check_sum(uint8_t * pchMessage,uint32_t dwLength)

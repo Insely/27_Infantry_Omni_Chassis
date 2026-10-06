@@ -1,50 +1,51 @@
 {
-  "configurations": [
-    {
-      "name": "STM32H723 (Arm GCC / macOS)",
-      "compilerPath": "/opt/homebrew/bin/arm-none-eabi-gcc",
-      "compilerArgs": [
-        "-mcpu=cortex-m7",
-        "-mthumb",
-        "-mfpu=fpv5-d16",
-        "-mfloat-abi=hard"
-      ],
-      "intelliSenseMode": "gcc-arm",
-      "includePath": [
-        "${workspaceFolder}/Core/Inc",
-        "${workspaceFolder}/USB_DEVICE/App",
-        "${workspaceFolder}/USB_DEVICE/Target",
-        "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc",
-        "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",
-        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
-        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
-        "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
-        "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
-        "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
-        "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
-        "${workspaceFolder}/Drivers/CMSIS/Include",
-        "${workspaceFolder}/Drivers/Chip/bmi088",
-        "${workspaceFolder}/Drivers/Chip/ws2812",
-        "${workspaceFolder}/Drivers/Chip/w25q64",
-        "${workspaceFolder}/User/Algorithm",
-        "${workspaceFolder}/User/Algorithm/Include",
-        "${workspaceFolder}/User/BSP",
-        "${workspaceFolder}/User/Hardware",
-        "${workspaceFolder}/User/Hardware/IMU",
-        "${workspaceFolder}/User/Hardware/Motor",
-        "${workspaceFolder}/User/Hardware/Remote",
-        "${workspaceFolder}/User/Software",
-        "${workspaceFolder}/User/ui",
-        "${workspaceFolder}/User/System"
-      ],
-      "defines": [
-        "USE_PWR_LDO_SUPPLY",
-        "USE_HAL_DRIVER",
-        "STM32H723xx"
-      ],
-      "cStandard": "gnu17",
-      "cppStandard": "gnu++17"
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "name": "STM32H723",
+            "includePath": [
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/USB_DEVICE/App",
+                "${workspaceFolder}/USB_DEVICE/Target",
+                "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc",
+                "${workspaceFolder}/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
+                "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+                "${workspaceFolder}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+                "${workspaceFolder}/Drivers/CMSIS/Include",
+                "${workspaceFolder}/Drivers/Chip/bmi088",
+                "${workspaceFolder}/Drivers/Chip/ws2812",
+                "${workspaceFolder}/Drivers/Chip/w25q64",
+                "${workspaceFolder}/User/Algorithm",
+                "${workspaceFolder}/User/Algorithm/Include",
+                "${workspaceFolder}/User/BSP",
+                "${workspaceFolder}/User/Hardware",
+                "${workspaceFolder}/User/Hardware/IMU",
+                "${workspaceFolder}/User/Hardware/Motor",
+                "${workspaceFolder}/User/Hardware/Remote",
+                "${workspaceFolder}/User/Software/Infantry",
+                "${workspaceFolder}/User/Software/Infantry/ui",
+                "${workspaceFolder}/User/Software/Sentry",
+                "${workspaceFolder}/User/System"
+            ],
+            "defines": [
+                "USE_PWR_LDO_SUPPLY",
+                "USE_HAL_DRIVER",
+                "STM32H723xx"
+            ],
+            "compilerPath": "arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mcpu=cortex-m7",
+                "-mthumb",
+                "-mfpu=fpv5-d16",
+                "-mfloat-abi=hard"
+            ],
+            "intelliSenseMode": "gcc-arm",
+            "cStandard": "c11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
 }
