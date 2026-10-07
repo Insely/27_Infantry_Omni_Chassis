@@ -29,7 +29,9 @@ void App_LinkStep(void);
 
 /* 外部事件与硬件定时器入口。 */
 void App_RequestUiReset(void);
+void App_OnUsbFrame(const uint8_t *data, uint16_t len);
 void App_OnVisionBytes(const uint8_t *data, uint16_t len);
+void App_OnNavigationBytes(const uint8_t *data, uint16_t len);
 void App_SendVisionTelemetry(void);
 void App_ImuStep(void);
 

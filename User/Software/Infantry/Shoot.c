@@ -25,8 +25,8 @@ void Shoot_Init()
 	TriggerMotor_init(DJI_M2006, TRIGGER_MOTOR);
 
 	// 拨弹电机
-	PID_Set(&Shoot.trigger_speed_pid, 5, 0, 3, SHOOTMOTOR_MAX_CURRENT, 0);
-	PID_Set(&Shoot.trigger_location_pid, 5, 0, 0, SHOOTMOTOR_MAX_CURRENT, 0);
+	PID_Set(&Shoot.trigger_speed_pid, 5, 0, 3, 0.0f, SHOOTMOTOR_MAX_CURRENT, 0);
+	PID_Set(&Shoot.trigger_location_pid, 5, 0, 0, 0.0f, SHOOTMOTOR_MAX_CURRENT, 0);
 
 	//初始化角度目标
 	trigger_angle_target = 0;

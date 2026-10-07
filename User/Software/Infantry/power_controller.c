@@ -196,7 +196,7 @@ void Power_Control_Init(void)
 {
     limiter_init(0);
     limiter_init(1);
-    PID_Set(&power_pid, 0.1f, 0.01f, 0.0f, 10.0f, 10.0f);
+    PID_Set(&power_pid, 0.1f, 0.01f, 0.0f, 0.0f, 10.0f, 10.0f);
 }
 
 /* =================================================================== */
@@ -246,7 +246,7 @@ void Chassis_PowerControl(float *steer_curr, float *steer_spd,
         limiter_init(0);
         limiter_init(1);
         s_filtered_power = 0.0f;
-        PID_Set(&power_pid, 0.1f, 0.01f, 0.0f, 10.0f, 10.0f);
+        PID_Set(&power_pid, 0.1f, 0.01f, 0.0f, 0.0f, 10.0f, 10.0f);
         Supercap_SetPower(0);
         return;
     }

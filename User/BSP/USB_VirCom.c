@@ -1,8 +1,8 @@
 /*
  * @Date: 2025-08-31 21:36:57
- * @LastEditors: hao && (hao@qlu.edu.cn)
- * @LastEditTime: 2025-10-30 20:22:21
- * @FilePath: \Season-26-Code\User\BSP\USB_VirCom.c
+ * @LastEditors: Nas(1319621819@qq.com)
+ * @LastEditTime: 2025-12-24 00:06:06
+ * @FilePath: \Reserve_Sentry\User\BSP\USB_VirCom.c
  */
 /**
  * @file USB_VirCom.c
@@ -16,33 +16,19 @@
  */
 #include "usbd_cdc_if.h"
 #include "USB_VirCom.h"
-#include "CRC8_CRC16.h"
-#include "Stm32_time.h"
-#include "fifo.h"
-
-#include "Global_status.h"
-#include "Auto_control.h"
-
-
+#include "app_api.h"
+#include <stdio.h>
 
 void Vircom_Send(uint8_t data[], uint16_t len)
 {
-  // if (CDC_Transmit_HS(data, len) == 1) // 判断数据是否发送
-  // {
-  //   // USB忙碌数据转入缓冲区
-
-  //   fifo_s_puts(&USB_send_fifo, (char *)data, (int)len);
-  // }
   CDC_Transmit_HS(data, len);
-
 }
 
 void Vircom_Rev(uint8_t data[], uint16_t len)
 {
-
+  App_OnUsbFrame(data, len);
 }
 
-#include "stdio.h"
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else

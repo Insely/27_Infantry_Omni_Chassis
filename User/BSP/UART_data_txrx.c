@@ -16,6 +16,7 @@
 #include "UART_data_txrx.h"
 
 #include "DT7.h"
+#include "FSI6X.h"
 #include "VT13.h"
 #include "IMU_updata.h"
 #include "referee_system.h"
@@ -25,6 +26,9 @@
 #include "Auto_control.h"
 #include "app_api.h"
 #include "BoardLink.h"
+#include "stp_23.h"
+#include "vofa+.h"
+#include "supercup.h"
 
 
 // DMA控制变量
@@ -118,45 +122,215 @@ void UART_SendData(transmit_data uart, uint8_t data[], uint16_t size)
 ?* @param huart 发生中断的串口句柄
 ?* @param Size ?接收到的数据长度
 ?*/
-static transmit_data *Uart_Context(UART_HandleTypeDef *uart)
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-    if (uart==&huart1) return &UART1_data;
-    if (uart==&huart2) return &UART2_data;
-    if (uart==&huart3) return &UART3_data;
-    if (uart==&huart5) return &UART5_data;
-    if (uart==&huart7) return &UART7_data;
-    if (uart==&huart8) return &UART8_data;
-    if (uart==&huart10) return &UART10_data;
-    return NULL;
-}
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
-{
-    transmit_data *ctx=Uart_Context(huart);
-    if (!ctx || size>UART_BUFFER_SIZE) return;
-    uint8_t *data=ctx->rev_data;
-    if (!BoardLink_UartRxDispatch(huart,data,size)) {
+  if (Size > UART_BUFFER_SIZE)
+    return;
+
+  // 使用 uintptr_t 将指针转换为整数类型，以便在 switch 中使用
+  // huart->Instance 指向触发中断的硬件串口(如 USART1, UART5)
+  switch ((uintptr_t)huart->Instance)
+  {
+  case (uintptr_t)USART1: // 双板普通 UART 通信 / 自瞄数据
+  {
+    if (!BoardLink_UartRxDispatch(huart, UART1_data.rev_data, Size))
+    {
 #if BOARD_GIMBAL
-        if (huart==&huart1) App_OnVisionBytes(data,size);
-        else if (huart==&huart5) {
-            if (size>=25 && data[0]==0x0F) FSI6X_decode_data(data,&FSI6X_data);
-            else if (size==18) DT7_DecodeData(data);
-        }
-        else if (huart==&huart10 && size==21) VT13_DataSolve(data,&VT13_data);
-#else
-        if (huart==&huart7) fifo_s_puts(&referee_fifo,(char *)data,size);
+      App_OnVisionBytes(UART1_data.rev_data, Size);
 #endif
     }
-    HAL_UARTEx_ReceiveToIdle_DMA(huart,data,UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx,DMA_IT_HT);
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART1_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)USART2:
+  {
+    (void)BoardLink_UartRxDispatch(huart, UART2_data.rev_data, Size);
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART2_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)USART3:
+  {
+    (void)BoardLink_UartRxDispatch(huart, UART3_data.rev_data, Size);
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART3_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)UART5: // 遥控器
+  {
+    if (!BoardLink_UartRxDispatch(huart, UART5_data.rev_data, Size))
+    {
+      // 与原步兵工程相同：SBUS 帧头优先，其余按 DT7 解包。
+      // 保留最小长度检查，防止不足 18 字节时读取缓冲区旧数据。
+      if (Size >= 25 && UART5_data.rev_data[0] == 0x0F)
+      {
+        FSI6X_decode_data(UART5_data.rev_data, &FSI6X_data);
+      }
+      else if (Size >= RC_FRAME_LENGTH)
+      {
+        DT7_DecodeData(UART5_data.rev_data);
+      }
+    }
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART5_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)UART7: // 导航 / 电管裁判系统
+  {
+    if (!BoardLink_UartRxDispatch(huart, UART7_data.rev_data, Size))
+    {
+#if BOARD_GIMBAL
+      App_OnNavigationBytes(UART7_data.rev_data, Size);
+#else
+      fifo_s_puts(&referee_fifo, (char *)UART7_data.rev_data, (int)Size);
+#endif
+    }
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART7_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)UART8: // 云台IMU
+  {
+    (void)BoardLink_UartRxDispatch(huart, UART8_data.rev_data, Size);
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART8_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  case (uintptr_t)USART10: // 图传链路裁判系统 -> STP-23协议
+  {
+    if (!BoardLink_UartRxDispatch(huart, UART10_data.rev_data, Size))
+    {
+      if (Size == 21 &&
+          UART10_data.rev_data[0] == 0xA9 && UART10_data.rev_data[1] == 0x53)
+      {
+        VT13_DataSolve(UART10_data.rev_data, &VT13_data);
+      }
+
+#if BOARD_GIMBAL
+      /* STP-23 是字节流协议。
+         DMA接收到的是一串数据（Buffer），长度为 Size。
+         我们需要遍历 Buffer，把每个字节传给状态机处理。
+      */
+      if (!(Size == 21 &&
+            UART10_data.rev_data[0] == 0xA9 && UART10_data.rev_data[1] == 0x53))
+      {
+        for (uint16_t i = 0; i < Size; i++)
+          STP23_ProcessByte(UART10_data.rev_data[i]);
+      }
+#else
+      VOFA_UploadData(cap.Chassis_power, 0, 0, 0);
+#endif
+    }
+
+    // 重新启动DMA接收
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, UART10_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // 关闭半传输中断
+    break;
+  }
+
+  default:
+  {
+    // 可选：处理未知的 huart 实例
+    break;
+  }
+  }
 }
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) { (void)huart; }
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) { BoardLink_UartTxCpltCallback(huart); }
+
+/**
+ * @brief 串口接受完成中断回调函数，用于接受定长数据
+ *
+ * @param huart 接受串口号
+ */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  (void)huart;
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+  BoardLink_UartTxCpltCallback(huart);
+}
+
+// 发生错误重启串口
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-    transmit_data *ctx=Uart_Context(huart);
-    if (!ctx) return;
-    HAL_UART_AbortTransmit(huart);
-    BoardLink_UartErrorCallback(huart);
-    HAL_UARTEx_ReceiveToIdle_DMA(huart,ctx->rev_data,UART_BUFFER_SIZE);
-    __HAL_DMA_DISABLE_IT(huart->hdmarx,DMA_IT_HT);
+  HAL_UART_AbortTransmit(huart);
+  BoardLink_UartErrorCallback(huart);
+
+  switch ((uintptr_t)huart->Instance)
+  {
+  case (uintptr_t)USART1:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart1, UART1_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)USART2:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart2, UART2_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)USART3:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart3, UART3_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)UART5:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart5, UART5_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)UART7:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart7, UART7_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)UART8:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart8, UART8_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  case (uintptr_t)USART10:
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart10, UART10_data.rev_data, UART_BUFFER_SIZE);
+    __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
+    break;
+  }
+
+  default:
+  {
+    break;
+  }
+  }
 }
+// end of file

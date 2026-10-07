@@ -112,7 +112,7 @@ static UART_HandleTypeDef *BoardLink_SerialHandle(void)
  * @return uint16_t CRC16，多项式 0x1021，初值 0xFFFF。
  * @note CRC 在线上按低字节、高字节顺序发送。
  */
-static uint16_t BoardLink_Crc16Ccitt(const uint8_t *data, uint16_t len)
+static uint16_t BoardLink_CRC16CCITT(const uint8_t *data, uint16_t len)
 {
     uint16_t crc = 0xFFFFU;
 
@@ -227,7 +227,7 @@ static uint8_t BoardLink_SerialCommitPacket(void)
 
     frame_len = (uint16_t)BOARD_LINK_RS485_HEADER_LEN +
                 rs485_tx_payload_len + BOARD_LINK_RS485_CRC_LEN;
-    crc = BoardLink_Crc16Ccitt(rs485_tx_buffer,
+    crc = BoardLink_CRC16CCITT(rs485_tx_buffer,
                               (uint16_t)(frame_len - BOARD_LINK_RS485_CRC_LEN));
     rs485_tx_buffer[frame_len - 2U] = (uint8_t)(crc & 0xFFU);
     rs485_tx_buffer[frame_len - 1U] = (uint8_t)(crc >> 8);
@@ -263,7 +263,7 @@ static uint8_t BoardLink_SerialParsePacket(void)
     uint16_t payload_end = (uint16_t)BOARD_LINK_RS485_HEADER_LEN + rs485_rx_buffer[5];
     uint16_t received_crc = (uint16_t)rs485_rx_buffer[payload_end] |
                             ((uint16_t)rs485_rx_buffer[payload_end + 1U] << 8);
-    uint16_t calculated_crc = BoardLink_Crc16Ccitt(rs485_rx_buffer, payload_end);
+    uint16_t calculated_crc = BoardLink_CRC16CCITT(rs485_rx_buffer, payload_end);
     uint16_t offset = BOARD_LINK_RS485_HEADER_LEN;
     uint8_t handled = 0U;
 
@@ -460,12 +460,12 @@ static uint8_t BoardLink_TransportCommit(void)
 }
 
 /* 线协议统一显式使用小端编码，避免未对齐访问和指针别名转换。 */
-static void StoreFloat(float value, uint8_t *data)
+static void BoardLink_StoreFloat(float value, uint8_t *data)
 {
     uint32_t bits; memcpy(&bits,&value,sizeof(bits));
     for (unsigned i=0;i<4;++i) data[i]=(uint8_t)(bits>>(8*i));
 }
-static float LoadFloat(uint8_t *data)
+static float BoardLink_LoadFloat(uint8_t *data)
 {
     uint32_t bits=(uint32_t)data[0] | ((uint32_t)data[1]<<8) |
                   ((uint32_t)data[2]<<16) | ((uint32_t)data[3]<<24);
@@ -477,29 +477,29 @@ static float LoadFloat(uint8_t *data)
 
 static uint8_t tx_tick;
 
-static uint16_t LoadUint16(uint8_t *data)
+static uint16_t BoardLink_LoadUint16(uint8_t *data)
 {
     return (uint16_t)data[0] | ((uint16_t)data[1]<<8);
 }
 
-static uint8_t LoadUint8(uint8_t *data)
+static uint8_t BoardLink_LoadUint8(uint8_t *data)
 {
     return data[0];
 }
 
-static void Pack_ChassisSpeedXY(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackChassisSpeedXY(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.vx, &data[0]);
-    StoreFloat(BoardLink.vy, &data[4]);
+    BoardLink_StoreFloat(BoardLink.vx, &data[0]);
+    BoardLink_StoreFloat(BoardLink.vy, &data[4]);
 }
 
-static void Pack_ChassisSpeedW(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackChassisSpeedW(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.w, &data[0]);
-    StoreFloat(BoardLink.yaw_speed_cmd, &data[4]);
+    BoardLink_StoreFloat(BoardLink.w, &data[0]);
+    BoardLink_StoreFloat(BoardLink.yaw_speed_cmd, &data[4]);
 }
 
-static void Pack_ChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
     data[0] = BoardLink.control_mode;
     data[1] = BoardLink.chassis_mode;
@@ -509,19 +509,19 @@ static void Pack_ChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
     data[7] = 2U; /* 协议版本号，用于拒绝旧版浮点枚举格式。 */
 }
 
-static void Pack_ImuAttitude(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackIMUAttitude(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.pitch, &data[0]);
-    StoreFloat(BoardLink.yaw_cnt, &data[4]);
+    BoardLink_StoreFloat(BoardLink.pitch, &data[0]);
+    BoardLink_StoreFloat(BoardLink.yaw_cnt, &data[4]);
 }
 
-static void Pack_ImuGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackIMUGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.gyro[0], &data[0]);
-    StoreFloat(BoardLink.gyro[2], &data[4]);
+    BoardLink_StoreFloat(BoardLink.gyro[0], &data[0]);
+    BoardLink_StoreFloat(BoardLink.gyro[2], &data[4]);
 }
 
-static void Pack_TriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackTriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
     data[0] = BoardLink.trigger_mode;
     data[1] = BoardLink.auto_mode;
@@ -529,67 +529,67 @@ static void Pack_TriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
     data[7] = 2U;
 }
 
-static void Receive_YawFeedback(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveYawFeedback(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    float angle = LoadFloat(data), speed = LoadFloat(data + 4);
+    float angle = BoardLink_LoadFloat(data), speed = BoardLink_LoadFloat(data + 4);
     if (!isfinite(angle) || !isfinite(speed)) return;
     BoardLink.yaw_angle_cnt = angle; BoardLink.yaw_spd = speed;
 }
 
-static void Receive_BodyGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveBodyGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    float gyro = LoadFloat(data);
+    float gyro = BoardLink_LoadFloat(data);
     if (!isfinite(gyro) || fabsf(gyro) > 40.0f) return;
     BoardLink.body_gyro_z = gyro;
 }
 
-static void Receive_RefereeShootData(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveRefereeShootData(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    BoardLink.initial_speed = LoadFloat(&data[0]);
-    BoardLink.barrel_heat = LoadUint16(&data[4]);
-    BoardLink.heat_limit = LoadUint16(&data[6]);
+    BoardLink.initial_speed = BoardLink_LoadFloat(&data[0]);
+    BoardLink.barrel_heat = BoardLink_LoadUint16(&data[4]);
+    BoardLink.heat_limit = BoardLink_LoadUint16(&data[6]);
 }
 
-static void Receive_RefereeAmmoData(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveRefereeAmmoData(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    BoardLink.projectile_allowance_17mm = LoadUint16(&data[0]);
-    BoardLink.launching_frequency = LoadUint8(&data[2]);
+    BoardLink.projectile_allowance_17mm = BoardLink_LoadUint16(&data[0]);
+    BoardLink.launching_frequency = BoardLink_LoadUint8(&data[2]);
 }
 
 static const BoardLinkTxFrame_t tx_frames[] = {
-    { BOARD_LINK_CHASSIS_SPEED_W,  Pack_ChassisSpeedW,  1, 0 },
-    { BOARD_LINK_CHASSIS_MODE,     Pack_ChassisMode,    5, 1 },
-    { BOARD_LINK_TRIGGER_MODE,     Pack_TriggerMode,    5, 3 },
-    { BOARD_LINK_CHASSIS_SPEED_XY, Pack_ChassisSpeedXY, 2, 0 },
-    { BOARD_LINK_IMU_ATTITUDE,     Pack_ImuAttitude,    4, 0 },
-    { BOARD_LINK_IMU_GYRO,         Pack_ImuGyro,        4, 2 },
+    { BOARD_LINK_CHASSIS_SPEED_W,  BoardLink_PackChassisSpeedW,  1, 0 },
+    { BOARD_LINK_CHASSIS_MODE,     BoardLink_PackChassisMode,    5, 1 },
+    { BOARD_LINK_TRIGGER_MODE,     BoardLink_PackTriggerMode,    5, 3 },
+    { BOARD_LINK_CHASSIS_SPEED_XY, BoardLink_PackChassisSpeedXY, 2, 0 },
+    { BOARD_LINK_IMU_ATTITUDE,     BoardLink_PackIMUAttitude,    4, 0 },
+    { BOARD_LINK_IMU_GYRO,         BoardLink_PackIMUGyro,        4, 2 },
 };
 
 static const BoardLinkRxFrame_t rx_frames[] = {
-    { BOARD_LINK_YAW_FEEDBACK,       Receive_YawFeedback },
-    { BOARD_LINK_BODY_GYRO, Receive_BodyGyro },
-    { BOARD_LINK_REFEREE_SHOOT_DATA, Receive_RefereeShootData },
-    { BOARD_LINK_REFEREE_AMMO_DATA,  Receive_RefereeAmmoData },
+    { BOARD_LINK_YAW_FEEDBACK,       BoardLink_ReceiveYawFeedback },
+    { BOARD_LINK_BODY_GYRO, BoardLink_ReceiveBodyGyro },
+    { BOARD_LINK_REFEREE_SHOOT_DATA, BoardLink_ReceiveRefereeShootData },
+    { BOARD_LINK_REFEREE_AMMO_DATA,  BoardLink_ReceiveRefereeAmmoData },
 };
 
 static uint8_t fast_resend[sizeof(tx_frames) / sizeof(tx_frames[0])];
 static uint32_t last_control_mode;
 static uint32_t last_trigger_mode;
 
-static uint32_t SampleControlMode(void)
+static uint32_t BoardLink_SampleControlMode(void)
 {
     return ((uint32_t)BoardLink.control_mode << 24) | ((uint32_t)BoardLink.cap_mode << 20) | ((uint32_t)BoardLink.reset << 19) | ((uint32_t)BoardLink.ui_sequence << 8) | BoardLink.chassis_mode;
 }
 
-static uint32_t SampleTriggerMode(void)
+static uint32_t BoardLink_SampleTriggerMode(void)
 {
     return ((uint32_t)BoardLink.trigger_mode << 16) | ((uint32_t)BoardLink.shoot_mode << 8) | BoardLink.auto_mode;
 }
 
-static void DetectModeChange(void)
+static void BoardLink_DetectModeChange(void)
 {
-    uint32_t control_mode = SampleControlMode();
-    uint32_t trigger_mode = SampleTriggerMode();
+    uint32_t control_mode = BoardLink_SampleControlMode();
+    uint32_t trigger_mode = BoardLink_SampleTriggerMode();
 
     if (control_mode != last_control_mode)
     {
@@ -609,8 +609,8 @@ void BoardLink_Init(void)
     BoardLink.control_mode = BL_LOCK;
     tx_tick = 0;
     memset(fast_resend, 0, sizeof(fast_resend));
-    last_control_mode = SampleControlMode();
-    last_trigger_mode = SampleTriggerMode();
+    last_control_mode = BoardLink_SampleControlMode();
+    last_trigger_mode = BoardLink_SampleTriggerMode();
     BoardLink_TransportInit();
 }
 
@@ -631,7 +631,7 @@ void BoardLink_TxStep(void)
     uint8_t data[BOARD_LINK_FRAME_LEN];
     uint32_t accepted_mask = 0U;
 
-    DetectModeChange();
+    BoardLink_DetectModeChange();
 
     if (!BoardLink_TransportBegin())
         goto advance_tick;
@@ -674,55 +674,55 @@ advance_tick:
 
 static uint8_t tx_tick;
 
-static void StoreUint16(uint16_t value, uint8_t *data)
+static void BoardLink_StoreUint16(uint16_t value, uint8_t *data)
 {
     data[0]=(uint8_t)value; data[1]=(uint8_t)(value>>8);
 }
 
-static void StoreUint8(uint8_t value, uint8_t *data)
+static void BoardLink_StoreUint8(uint8_t value, uint8_t *data)
 {
     data[0]=value;
 }
 
-static void Pack_YawFeedback(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackYawFeedback(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.yaw_angle_cnt, &data[0]);
-    StoreFloat(BoardLink.yaw_spd, &data[4]);
+    BoardLink_StoreFloat(BoardLink.yaw_angle_cnt, &data[0]);
+    BoardLink_StoreFloat(BoardLink.yaw_spd, &data[4]);
 }
 
-static void Pack_BodyGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackBodyGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.body_gyro_z, data);
+    BoardLink_StoreFloat(BoardLink.body_gyro_z, data);
 }
 
-static void Pack_RefereeShootData(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackRefereeShootData(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreFloat(BoardLink.initial_speed, &data[0]);
-    StoreUint16(BoardLink.barrel_heat, &data[4]);
-    StoreUint16(BoardLink.heat_limit, &data[6]);
+    BoardLink_StoreFloat(BoardLink.initial_speed, &data[0]);
+    BoardLink_StoreUint16(BoardLink.barrel_heat, &data[4]);
+    BoardLink_StoreUint16(BoardLink.heat_limit, &data[6]);
 }
 
-static void Pack_RefereeAmmoData(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_PackRefereeAmmoData(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    StoreUint16(BoardLink.projectile_allowance_17mm, &data[0]);
-    StoreUint8(BoardLink.launching_frequency, &data[2]);
+    BoardLink_StoreUint16(BoardLink.projectile_allowance_17mm, &data[0]);
+    BoardLink_StoreUint8(BoardLink.launching_frequency, &data[2]);
 }
 
-static void Receive_ChassisSpeedXY(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveChassisSpeedXY(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    float x = LoadFloat(data), y = LoadFloat(data + 4);
+    float x = BoardLink_LoadFloat(data), y = BoardLink_LoadFloat(data + 4);
     if (!isfinite(x) || !isfinite(y) || fabsf(x) > 10.0f || fabsf(y) > 10.0f) return;
     BoardLink.vx = x; BoardLink.vy = y;
 }
 
-static void Receive_ChassisSpeedW(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveChassisSpeedW(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    float w = LoadFloat(data), yaw = LoadFloat(data + 4);
+    float w = BoardLink_LoadFloat(data), yaw = BoardLink_LoadFloat(data + 4);
     if (!isfinite(w) || !isfinite(yaw) || fabsf(w) > 20.0f || fabsf(yaw) > BOARD_LINK_YAW_SPEED_LIMIT_RAD_S) return;
     BoardLink.w = w; BoardLink.yaw_speed_cmd = yaw;
 }
 
-static void Receive_ChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
     if (data[7] != 2U || data[0] > BL_KEY ||
         (data[1] != BL_FLOW && data[1] != BL_SPIN_P && data[1] != BL_SPIN_N && data[1] != BL_NO_FOLLOW) ||
@@ -731,19 +731,19 @@ static void Receive_ChassisMode(uint8_t data[BOARD_LINK_FRAME_LEN])
     BoardLink.cap_mode = data[2]; BoardLink.reset = data[3]; BoardLink.ui_sequence = data[4];
 }
 
-static void Receive_ImuAttitude(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveIMUAttitude(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    BoardLink.pitch = LoadFloat(&data[0]);
-    BoardLink.yaw_cnt = LoadFloat(&data[4]);
+    BoardLink.pitch = BoardLink_LoadFloat(&data[0]);
+    BoardLink.yaw_cnt = BoardLink_LoadFloat(&data[4]);
 }
 
-static void Receive_ImuGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveIMUGyro(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
-    BoardLink.gyro[0] = LoadFloat(&data[0]);
-    BoardLink.gyro[2] = LoadFloat(&data[4]);
+    BoardLink.gyro[0] = BoardLink_LoadFloat(&data[0]);
+    BoardLink.gyro[2] = BoardLink_LoadFloat(&data[4]);
 }
 
-static void Receive_TriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
+static void BoardLink_ReceiveTriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
 {
     if (data[7] != 2U ||
         (data[0] != BL_CLOSE && data[0] != BL_HIGH && data[0] != BL_SINGLE && data[0] != BL_DEBUG) ||
@@ -752,19 +752,19 @@ static void Receive_TriggerMode(uint8_t data[BOARD_LINK_FRAME_LEN])
 }
 
 static const BoardLinkTxFrame_t tx_frames[] = {
-    { BOARD_LINK_YAW_FEEDBACK,       Pack_YawFeedback,       1,  0 },
-    { BOARD_LINK_BODY_GYRO, Pack_BodyGyro, 1, 0 },
-    { BOARD_LINK_REFEREE_SHOOT_DATA, Pack_RefereeShootData, 20,  2 },
-    { BOARD_LINK_REFEREE_AMMO_DATA,  Pack_RefereeAmmoData,  20,  9 },
+    { BOARD_LINK_YAW_FEEDBACK,       BoardLink_PackYawFeedback,       1,  0 },
+    { BOARD_LINK_BODY_GYRO, BoardLink_PackBodyGyro, 1, 0 },
+    { BOARD_LINK_REFEREE_SHOOT_DATA, BoardLink_PackRefereeShootData, 20,  2 },
+    { BOARD_LINK_REFEREE_AMMO_DATA,  BoardLink_PackRefereeAmmoData,  20,  9 },
 };
 
 static const BoardLinkRxFrame_t rx_frames[] = {
-    { BOARD_LINK_CHASSIS_SPEED_XY, Receive_ChassisSpeedXY },
-    { BOARD_LINK_CHASSIS_SPEED_W,  Receive_ChassisSpeedW },
-    { BOARD_LINK_CHASSIS_MODE,     Receive_ChassisMode },
-    { BOARD_LINK_IMU_ATTITUDE,     Receive_ImuAttitude },
-    { BOARD_LINK_IMU_GYRO,         Receive_ImuGyro },
-    { BOARD_LINK_TRIGGER_MODE,     Receive_TriggerMode },
+    { BOARD_LINK_CHASSIS_SPEED_XY, BoardLink_ReceiveChassisSpeedXY },
+    { BOARD_LINK_CHASSIS_SPEED_W,  BoardLink_ReceiveChassisSpeedW },
+    { BOARD_LINK_CHASSIS_MODE,     BoardLink_ReceiveChassisMode },
+    { BOARD_LINK_IMU_ATTITUDE,     BoardLink_ReceiveIMUAttitude },
+    { BOARD_LINK_IMU_GYRO,         BoardLink_ReceiveIMUGyro },
+    { BOARD_LINK_TRIGGER_MODE,     BoardLink_ReceiveTriggerMode },
 };
 
 void BoardLink_Init(void)

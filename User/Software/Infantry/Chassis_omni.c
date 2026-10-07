@@ -113,18 +113,18 @@ void Chassis_Init()
 
     // PID初始化
     /*PID速度环初始化*/
-    PID_Set(&Chassis.chassis_speed_pid_FL, 10.5f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_speed_pid_FR, 10.5f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_speed_pid_BL, 10.5f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_speed_pid_BR, 10.5f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_speed_pid_FL, 10.5f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_speed_pid_FR, 10.5f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_speed_pid_BL, 10.5f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_speed_pid_BR, 10.5f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
     /*底盘跟随PID*/
-    PID_Set(&Chassis.chassis_follow_pid, 10.0f, 0.0f, 1.0f, 200, 40);
+    PID_Set(&Chassis.chassis_follow_pid, 10.0f, 0.0f, 1.0f, 0.0f, 200, 40);
     /*底盘力控PID*/
-    PID_Set(&Chassis.chassis_T_pid_x, 40.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_T_pid_y, 40.0f, 0.0, 0, CHASSISMOTOR_MAX_CURRENT, 10000);
-    PID_Set(&Chassis.chassis_T_pid_w, 30.0f, 0.0, 20.0, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_x, 40.0f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_y, 40.0f, 0.0, 0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
+    PID_Set(&Chassis.chassis_T_pid_w, 30.0f, 0.0, 20.0, 0.0f, CHASSISMOTOR_MAX_CURRENT, 10000);
     /*底盘功率控制pid*/
-    PID_Set(&Chassis.chassis_power_pid, 0.01f, 0.0f, 0.0f, 0.1f, 0.1f);
+    PID_Set(&Chassis.chassis_power_pid, 0.01f, 0.0f, 0.0f, 0.0f, 0.1f, 0.1f);
 
     // 底盘运动斜坡
     RampGenerator_Init(&Chassis.Vx_ramp, CHASSIS_TASK_TIME, 40, 40, 2);
@@ -158,8 +158,8 @@ void Chassis_Updater()
 
     /*---------------目标量更新----------------*/
     // 车速
-    RampGenerator_Update(&Chassis.Vx_ramp, Get_SysTime_ms());
-    RampGenerator_Update(&Chassis.Vy_ramp, Get_SysTime_ms());
+    RampGenerator_UpdateTimed(&Chassis.Vx_ramp, Get_SysTime_ms());
+    RampGenerator_UpdateTimed(&Chassis.Vy_ramp, Get_SysTime_ms());
     Chassis.Vx_set = RampGenerator_GetCurrent(&Chassis.Vx_ramp);
     Chassis.Vy_set = RampGenerator_GetCurrent(&Chassis.Vy_ramp);
     Chassis.W_set = Global.Chassis.input.r;

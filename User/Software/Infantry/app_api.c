@@ -7,6 +7,7 @@
 
 #include "robot_param.h"
 #include "BoardLink.h"
+#include "Navigation.h"
 #include "Global_status.h"
 #include "Chassis.h"
 #include "Gimbal.h"
@@ -97,7 +98,7 @@ void App_ShootInit(void)
  * @brief 将 BoardLink 接收数据同步到当前板的业务状态。
  * @note 接收结构由中断更新，因此复制时短暂关闭中断以获得一致快照。
  */
-static void Link_Rx(void)
+static void App_LinkRx(void)
 {
     BoardLink_t rx;
     uint32_t irq = __get_PRIMASK();
@@ -165,7 +166,7 @@ static void Link_Rx(void)
 /**
  * @brief 将当前板业务状态写入 BoardLink 发送结构。
  */
-static void Link_Tx(void)
+static void App_LinkTx(void)
 {
 #if BOARD_GIMBAL
     BoardLink.control_mode = Global.Control.mode == LOCK
@@ -245,7 +246,7 @@ void App_RemoteStep(void)
     if (!App_Ready())
         return;
 
-    Link_Rx();
+    App_LinkRx();
 #if BOARD_GIMBAL
     Remote_Tasks();
 #endif
@@ -338,7 +339,7 @@ void App_LinkStep(void)
     BoardLink.control_mode = BL_LOCK;
     BoardLink.trigger_mode = BL_CLOSE;
 #else
-    Link_Tx();
+    App_LinkTx();
 #endif
     BoardLink_TxStep();
 }
@@ -348,6 +349,10 @@ void App_LinkStep(void)
  */
 void App_RefereeStep(void)
 {
+#if BOARD_GIMBAL
+    if(Navigation_online>0) --Navigation_online;
+    Navigation_SendMessage();
+#endif
 #if BOARD_CHASSIS
     static uint8_t initialized;
     static uint8_t last_ui_sequence;
@@ -451,6 +456,9 @@ void App_OnVisionBytes(const uint8_t *data, uint16_t len)
     (void)len;
 #endif
 }
+
+void App_OnUsbFrame(const uint8_t *data,uint16_t len) { App_OnVisionBytes(data,len); }
+void App_OnNavigationBytes(const uint8_t *data,uint16_t len) { Navigation_RxBytes(data,len); }
 
 /**
  * @brief 发送视觉遥测数据，由 TIM14 中断按原频率触发。

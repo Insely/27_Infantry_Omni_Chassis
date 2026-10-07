@@ -16,9 +16,14 @@
   ****************************(C) COPYRIGHT 2019 DJI****************************
   */
 #ifndef CRC8_CRC16_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CRC8_CRC16_H
 
-#include "main.h"
+#include <stdint.h>
 #include "stdint.h"
 
 /**
@@ -113,5 +118,16 @@ void append_CRC16_check_sum(uint8_t * pchMessage,uint32_t dwLength);
 uint16_t Get_CRC16_Check_Sum(const uint8_t *pchMessage, uint32_t dwLength, uint16_t wCRC);
 uint32_t Verify_CRC16_Check_Sum(const uint8_t *pchMessage, uint32_t dwLength);
 void Append_CRC16_Check_Sum(void *pchMessage, uint32_t dwLength, int dataType);
+/**
+ * @brief 计算/验证 Modbus CRC16
+ * @param buffer 数据指针
+ * @param len 数据长度（不包含CRC本身）
+ * @return 计算出的 CRC 值
+ */
+uint16_t Get_Modbus_CRC16(uint8_t *buffer, uint16_t len);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif
